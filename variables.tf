@@ -6,7 +6,7 @@
 # # Project settings
 #-----------------------------------------------------------
 variable "project_id" {
-  description = "Project ID (GCP)"
+  description = "GCP Project ID"
   type        = string
 }
 # variable "project_name" {
@@ -22,6 +22,20 @@ variable "project_id" {
 #   description = "Labels to apply to the project"
 #   type        = map(string)
 # }
+
+#------------------------------------------------------------
+# Resource settings
+#-----------------------------------------------------------
+variable "region" {
+  description = "GCP Region where the resources will be deployed"
+  type        = string
+  default     = "europe-west2"
+}
+variable "zone" {
+  description = "Zone where the resources will be deployed"
+  type        = string
+  default     = ""
+}
 
 #-----------------------------------------------------------
 # # Environment settings
@@ -51,16 +65,6 @@ variable "environment_type" {
   description = "Type of environment (e.g., dev, staging, prod)"
   type        = string
 }
-variable "region" {
-  description = "GCP Region where the resources will be deployed"
-  type        = string
-  default     = "europe-west2"
-}
-variable "zone" {
-  description = "Zone where the resources will be deployed"
-  type        = string
-  default     = ""
-}
 #-----------------------------------------------------------
 # # Resource prefix and suffix
 #-----------------------------------------------------------
@@ -75,69 +79,69 @@ variable "name_suffix" {
   default = "${var.environment}"
 }
 
-#-----------------------------------------------------------
-# Kubernetes cluster variables
-#-----------------------------------------------------------
-variable "cluster_name" {
-  description = "Name of the Kubernetes cluster"
-  type        = string
-}
-variable "cluster_description" {
-  description = "Description of the Kubernetes cluster"
-  type        = string
-}
-variable "cluster_labels" {
-  description = "Labels to apply to the Kubernetes cluster"
-  type        = map(string)
-}
-variable "istio_ip_names" {
-  description = "IP names for Istio (GCP only)"
-  type        = list(string)
-}
-variable "bucket_infix" {
-  description = "Infix for bucket names"
-  type        = string
-}
-variable "security_group" {
-  description = "Security group for the Kubernetes cluster (GCP only)"
-  type        = string
-}
-variable "node_pools" {
-  description = "Node pools for the Kubernetes cluster"
-  type        = list(object({
-    name       = string
-    node_count = number
-    machine_type = string
-    disk_size   = number
-  }))
-}
-
-# variable "region" {
-#   description = "Region for the Kubernetes cluster"
+# #-----------------------------------------------------------
+# # Kubernetes cluster variables
+# #-----------------------------------------------------------
+# variable "cluster_name" {
+#   description = "Name of the Kubernetes cluster"
 #   type        = string
 # }
-# variable "zone" {
-#   description = "Zone for the Kubernetes cluster (GCP only)"
+# variable "cluster_description" {
+#   description = "Description of the Kubernetes cluster"
 #   type        = string
 # }
-variable "flux_sa_email" {
-  description = "Email address of the Flux service account"
-  type        = string
-}
-variable "flux_sa" {
-  description = "Flux service account details"
-  type        = object({
-    email       = string
-    display_name = string
-  })
-}
+# variable "cluster_labels" {
+#   description = "Labels to apply to the Kubernetes cluster"
+#   type        = map(string)
+# }
+# variable "istio_ip_names" {
+#   description = "IP names for Istio (GCP only)"
+#   type        = list(string)
+# }
+# variable "bucket_infix" {
+#   description = "Infix for bucket names"
+#   type        = string
+# }
+# variable "security_group" {
+#   description = "Security group for the Kubernetes cluster (GCP only)"
+#   type        = string
+# }
+# variable "node_pools" {
+#   description = "Node pools for the Kubernetes cluster"
+#   type        = list(object({
+#     name       = string
+#     node_count = number
+#     machine_type = string
+#     disk_size   = number
+#   }))
+# }
 
-variable "master_authorized_networks" {
-  description = "List of authorized networks for the Kubernetes master (GCP only)"
-  type        = list(object({
-    cidr_block   = string
-    display_name = string
-  }))
-  default = []
-}
+# # variable "region" {
+# #   description = "Region for the Kubernetes cluster"
+# #   type        = string
+# # }
+# # variable "zone" {
+# #   description = "Zone for the Kubernetes cluster (GCP only)"
+# #   type        = string
+# # }
+# variable "flux_sa_email" {
+#   description = "Email address of the Flux service account"
+#   type        = string
+# }
+# variable "flux_sa" {
+#   description = "Flux service account details"
+#   type        = object({
+#     email       = string
+#     display_name = string
+#   })
+# }
+
+# variable "master_authorized_networks" {
+#   description = "List of authorized networks for the Kubernetes master (GCP only)"
+#   type        = list(object({
+#     cidr_block   = string
+#     display_name = string
+#   }))
+#   default = []
+# }
 

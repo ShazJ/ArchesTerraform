@@ -1,4 +1,5 @@
 resource "google_compute_network" "vpc" {
+  project                 = var.project_id
   name                    = "${var.project_id}-vpc-${var.environment}"
   auto_create_subnetworks = false
 }
@@ -9,3 +10,5 @@ resource "google_compute_subnetwork" "subnet" {
   region        = var.region
   network       = google_compute_network.vpc.id
 }
+
+# sji pretty sure there's only 1 subnet here - if not name will incude count

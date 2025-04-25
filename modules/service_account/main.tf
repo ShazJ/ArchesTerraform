@@ -1,5 +1,6 @@
 # modules/service_accounts/main.tf
 resource "google_service_account" "vm" {
+  project      = var.project_id
   account_id   = "${var.project_id}-vm-sa-${var.environment}"
   display_name = "VM Service Account (${var.environment})"
 }

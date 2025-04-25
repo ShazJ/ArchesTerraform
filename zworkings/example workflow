@@ -1,0 +1,53 @@
+name: Terraform CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - uat
+  pull_request:
+    branches:
+      - main
+      - dev
+      - uat
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    environment:
+      name: ${{ github.ref }}
+      url: https://console.cloud.google.com/
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up GCP CLI
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
+
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.3.9 # or any version you prefer
+
+    - name: Terraform Init
+      run: |
+        terraform init \
+          -backend-config="bucket=${{ secrets.GCS_BUCKET_NAME }}" \
+          -backend-config="prefix=terraform/state"
+
+    - name: Terraform Plan
+      run: |
+        terraform workspace select ${{ github.ref }} || terraform workspace new ${{ github.ref }}
+        terraform plan -var-file="envs/${{ github.ref }}/${{ github.ref }}.tfvars"
+
+    - name: Terraform Apply (on push to main only)
+      if: github.ref == 'refs/heads/main'
+      run: |
+        terraform workspace select ${{ github.ref }} || terraform workspace new ${{ github.ref }}
+        terraform apply -auto-approve -var-file="envs/${{ github.ref }}/${{ github.ref }}.tfvars"

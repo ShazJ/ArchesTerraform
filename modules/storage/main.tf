@@ -13,4 +13,4 @@ resource "google_storage_bucket" "logs" { #crl_log_store_eu_west_2_prd
   uniform_bucket_level_access = true
 }
 
-"tf-state-store"
+#"tf-state-store"

@@ -1,17 +1,20 @@
-# modules/network/variables.tf
 variable "project_id" {
-  type = string
+  description = "GCP project ID"
+  type        = string
 }
 
 variable "environment" {
-  type = string
+  description = "Environment name (dev, uat, prod)"
+  type        = string
 }
 
 variable "region" {
-  type = string
+  description = "GCP region"
+  type        = string
 }
 
-variable "subnet_cidr" {
-  type    = string
+variable "subnet_cidrs" {
+  description = "List of subnet CIDR ranges"
+  type        = list(string)
   default = "10.0.0.0/24"
 }

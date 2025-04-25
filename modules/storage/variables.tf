@@ -1,12 +1,24 @@
-# modules/storage/variables.tf
 variable "project_id" {
-  type = string
+  description = "GCP project ID"
+  type        = string
 }
 
 variable "environment" {
-  type = string
+  description = "Environment name (dev, uat, prod)"
+  type        = string
+}
+
+variable "bucket_name" {
+  description = "Name of the tenant GCS bucket"
+  type        = string
+}
+
+variable "logs_bucket_name" {
+  description = "Name of the logs GCS bucket"
+  type        = string
 }
 
 variable "region" {
-  type = string
+  description = "GCP region"
+  type        = string
 }

@@ -1,12 +1,14 @@
-# modules/service_accounts/variables.tf
 variable "project_id" {
-  type = string
+  description = "GCP project ID"
+  type        = string
 }
 
 variable "environment" {
-  type = string
+  description = "Environment name (dev, uat, prod)"
+  type        = string
 }
-
-variable "tenant_data_bucket" {
-  type = string
+#sji there are a few...s
+variable "sa_name" {
+  description = "Name of the service account"
+  type        = string
 }
