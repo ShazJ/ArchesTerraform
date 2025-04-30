@@ -8,8 +8,18 @@ variable "region" {
   type        = string
 }
 
-variable "subnet_cidr" {
-  description = "The CIDR range for the subnet"
+variable "subnet_id" {
+  description = "The ID of the subnet"
+  type        = string
+}
+
+variable "machine_type" {
+  description = "The machine type for the VM"
+  type        = string
+}
+
+variable "service_account_email" {
+  description = "The email of the service account for the VM"
   type        = string
 }
 

@@ -9,19 +9,6 @@ variable "project_id" {
   description = "GCP Project ID"
   type        = string
 }
-# variable "project_name" {
-#   description = "Name of the project"
-#   type        = string
-#   default = "value"
-# }
-# variable "project_description" {
-#   description = "Description of the project"
-#   type        = string
-# }
-# variable "project_labels" {
-#   description = "Labels to apply to the project"
-#   type        = map(string)
-# }
 
 #------------------------------------------------------------
 # Resource settings
@@ -31,11 +18,7 @@ variable "region" {
   type        = string
   default     = "europe-west2"
 }
-variable "zone" {
-  description = "Zone where the resources will be deployed"
-  type        = string
-  default     = ""
-}
+
 
 #-----------------------------------------------------------
 # # Environment settings
@@ -48,36 +31,19 @@ variable "environment" {
     error_message = "Environment must be 'dev', 'stg', 'uat' or 'prod'."
   }
 }
-variable "environment_description" {
-  description = "Description of the environment"
-  type        = string
-}
-variable "environment_labels" {
-  description = "Labels to apply to the environment"
-  type        = map(string)
-    default     = {
-        "environment" = var.environment
-        "name" = var.name_prefix
-        "project" = var.project_id 
-    }
-}
-variable "environment_type" {
-  description = "Type of environment (e.g., dev, staging, prod)"
-  type        = string
-}
-#-----------------------------------------------------------
-# # Resource prefix and suffix
-#-----------------------------------------------------------
-variable "name_prefix" {
-  description = "Suffix to append to resource names"
-  type        = string
-  default = "${var.project_id}"
-}
-variable "name_suffix" {
-  description = "Suffix to append to resource names"
-  type        = string
-  default = "${var.environment}"
-}
+# variable "environment_description" {
+#   description = "Description of the environment"
+#   type        = string
+# }
+# variable "environment_labels" {
+#   description = "Labels to apply to the environment"
+#   type        = map(string)
+#   default = {
+#     "environment" = var.environment
+#     "name"        = var.name_prefix
+#     "project"     = var.project_id
+#   }
+# }
 
 # #-----------------------------------------------------------
 # # Kubernetes cluster variables

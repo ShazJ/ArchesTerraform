@@ -1,24 +1,16 @@
-variable "project_id" {
-  description = "GCP project ID"
-  type        = string
-}
-
+# This file defines the input variables for the storage module.
 variable "environment" {
-  description = "Environment name (dev, uat, prod)"
+  description = "The deployment environment"
   type        = string
 }
 
-variable "bucket_name" {
-  description = "Name of the tenant GCS bucket"
-  type        = string
-}
-
-variable "logs_bucket_name" {
-  description = "Name of the logs GCS bucket"
+variable "project_id" {
+  description = "The GCP project ID"
   type        = string
 }
 
 variable "region" {
-  description = "GCP region"
+  description = "The GCP region"
   type        = string
+  default     = "europe-west2"
 }

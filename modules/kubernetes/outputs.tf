@@ -1,6 +1,5 @@
-# modules/compute/outputs.tf
-output "vm_name" {
-  value = google_compute_instance.k8s_vm.name
+output "vm_id" {
+  value = google_compute_instance.k8s_vm.id
 }
 
 output "vm_external_ip" {

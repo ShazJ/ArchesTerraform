@@ -1,16 +1,17 @@
-terraform {
-  required_providers {
-    google = { # update to latest stable 5.0 i think? sji
-      source  = "hashicorp/google"
-      version = ">= 4.45.0"
-    }
-  }
-}
-
 provider "google" {
   project = var.project_id
   region  = var.region
-  zone    = var.zone #?
 }
 
-# ?should i version pi tf? probs sji
+terraform {
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 5.0"
+    }
+  }
+  backend "gcs" {
+    bucket = "terraform-state-bucket"
+    prefix = "terraform/state"
+  }
+}

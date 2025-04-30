@@ -15,27 +15,28 @@ resource "google_service_account" "storage" {
   display_name = "Storage Service Account (${var.environment})"
 }
 
-coral_arches_uat_prd
-coral_ci_prd "Coral Production Arches Service Account"
-coral_gl_ci_prd  "Coral Production Data Operations Service Account"
-coral_flux_prd  "Coral Production Flux Service Account"
-707500278544_compute
 
-# IAM bindings for least privilege
-resource "google_project_iam_member" "vm_compute" {
-  project = var.project_id
-  role    = "roles/compute.instanceAdmin.v1"
-  member  = "serviceAccount:${google_service_account.vm.email}"
-}
+# coral_arches_uat_prd
+# coral_ci_prd "Coral Production Arches Service Account"
+# coral_gl_ci_prd  "Coral Production Data Operations Service Account"
+# coral_flux_prd  "Coral Production Flux Service Account"
+# 707500278544_compute
 
-resource "google_project_iam_member" "k8s_container" {
-  project = var.project_id
-  role    = "roles/container.admin"
-  member  = "serviceAccount:${google_service_account.k8s.email}"
-}
+# # IAM bindings for least privilege
+# resource "google_project_iam_member" "vm_compute" {
+#   project = var.project_id
+#   role    = "roles/compute.instanceAdmin.v1"
+#   member  = "serviceAccount:${google_service_account.vm.email}"
+# }
 
-resource "google_storage_bucket_iam_member" "storage_access" {
-  bucket = var.tenant_data_bucket
-  role   = "roles/storage.objectAdmin"
-  member = "serviceAccount:${google_service_account.storage.email}"
-}
+# resource "google_project_iam_member" "k8s_container" {
+#   project = var.project_id
+#   role    = "roles/container.admin"
+#   member  = "serviceAccount:${google_service_account.k8s.email}"
+# }
+
+# resource "google_storage_bucket_iam_member" "storage_access" {
+#   bucket = var.tenant_data_bucket
+#   role   = "roles/storage.objectAdmin"
+#   member = "serviceAccount:${google_service_account.storage.email}"
+# }
