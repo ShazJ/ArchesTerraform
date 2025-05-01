@@ -12,6 +12,6 @@ terraform {
   }
   backend "gcs" {
     bucket = "terraform-state-bucket"
-    prefix = "terraform/state"
+    prefix = "terraform/state/${var.environment}"
   }
 }

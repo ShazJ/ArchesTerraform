@@ -1,4 +1,4 @@
-name: Continuous integration
+name: Continuous integration - Lint Terraform
 on:
   pull_request:
 jobs:
