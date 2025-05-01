@@ -2,7 +2,7 @@ name: Terraform Deployment
 
 # on: sji!
 #     workflow_run:
-#       workflows: ["Security Scan"]
+#       workflows: ["Security Scan"] sonar?!
 #       types:
 #         - completed
 
@@ -10,8 +10,8 @@ on:
   push:
     branches:
       - dev
-      - uat
-      - prod
+    #   - uat
+    #   - prod
     paths:
       - 'terraform/**'
 

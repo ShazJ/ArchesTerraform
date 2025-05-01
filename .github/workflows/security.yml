@@ -1,9 +1,9 @@
-on:
-    # Trigger analysis when pushing to all branches, and when creating a pull request.
-    push:
-      branches:
-        '**'   
-    pull_request:
-        types: [opened, synchronize, reopened]
+# on:
+#     # Trigger analysis when pushing to all branches, and when creating a pull request.
+#     push:
+#       branches:
+#         '**'   
+#     pull_request:
+#         types: [opened, synchronize, reopened]
 
         
