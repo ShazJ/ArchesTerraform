@@ -1,0 +1,29 @@
+name: Security Scans
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday at midnight UTC
+  workflow_run:
+    workflows: ['Build and Push Docker Image to GitHub Packages']
+    types: [completed]
+  workflow_dispatch:  # Allows manual trigger
+
+jobs:
+    security_scan:
+        runs-on: ubuntu-latest
+        steps:
+        - name: Checkout repository
+            uses: actions/checkout@v4
+    
+        - name: Log in to GitHub Container Registry
+            run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+    
+        - name: Pull container image
+            run: docker pull ghcr.io/flaxandteal/arches_coral_static_py:v7.6.19-RELEASE
+    
+        - name: Run Snyk scan
+            uses: snyk/actions/docker@master
+            env:
+            SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+            with:
+            image: ghcr.io/flaxandteal/arches_coral_static_py:v7.6.19-RELEASE
+            args: --severity-threshold=high #--file=Dockerfile

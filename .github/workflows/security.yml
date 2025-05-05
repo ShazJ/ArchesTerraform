@@ -1,9 +1,21 @@
-# on:
-#     # Trigger analysis when pushing to all branches, and when creating a pull request.
-#     push:
-#       branches:
-#         '**'   
-#     pull_request:
-#         types: [opened, synchronize, reopened]
+name: Security Scanning
 
-        
+# TODO
+
+on:
+    # Trigger analysis when pushing to all branches, and when creating a pull request.
+    push:
+      branches:
+        - all
+    pull_request:
+        types: [opened, synchronize, reopened]
+
+jobs:
+    security-scanning:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+# sast/sca/image
+
+#trivy!

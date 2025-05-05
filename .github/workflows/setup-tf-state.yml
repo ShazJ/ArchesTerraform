@@ -1,0 +1,70 @@
+# chicken and egg - not sure if this is the best way? sji
+# still requires a sevice account to be created first with permissions to create the bucket and obv the project itself must be created - LZ required
+# service account should be diferent for bucket creation and needs roles/storage.admin, roles/serviceusage.serviceUsageAdmin.
+name: Setup Terraform State Bucket
+
+on:
+  workflow_dispatch:  # Manual trigger for initial setup
+#   push:
+#     branches:
+#       - main
+#     paths:
+#       - 'scripts/create_tf_state_service_account.sh'
+#       - 'scripts/create_tf_state_bucket.sh'
+
+jobs:
+  setup-service-account:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout repo
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Install gcloud CLI
+      - name: Setup gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_BOOTSTRAP_SA_KEY }}  # Bootstrap SA for creating new SA
+          export_default_credentials: true
+
+      # Run sa creation script
+      - name: Create Terraform State Service Account
+        run: |
+          chmod +x scripts/setup_tf/create_tf_state_service_account.sh
+          scripts/setup_tf/create_tf_state_service_account.sh
+        env:
+          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          BUCKET_NAME: "${{ secrets.GCP_PROJECT_ID }}-tf-state"
+          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          DEVELOPER_EMAIL: ${{ secrets.DEVELOPER_EMAIL }}
+
+      # Store service account key in secrets (optional, requires manual handling)
+      - name: Store Service Account Key
+        run: |
+          echo "IMPORTANT! Service account key generated at sa-tf-state-key.json"
+          echo "Please manually store this key in GitHub Secrets as GCP_TF_STATE_SA_KEY"
+
+  setup-bucket:
+    needs: setup-service-account
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_TF_SA_KEY }}  # Key from script
+          export_default_credentials: true
+
+      - name: Create Terraform State Bucket
+        run: |
+          chmod +x scripts/setup_tf/create_tf_state_bucket.sh
+          scripts/setup_tf/create_tf_state_bucket.sh
+        env:
+          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          BUCKET_NAME: "${{ secrets.GCP_PROJECT_ID }}-tf-state"
+          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          DEVELOPER_EMAIL: ${{ secrets.DEVELOPER_EMAIL }}
