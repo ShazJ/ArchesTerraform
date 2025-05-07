@@ -43,16 +43,16 @@ ROLES=(
   "roles/editor" # sji todo - custom role here - this is too broad
 )
 
-# Authenticate with GCP (assumes CI provides credentials or user is authenticated)
-echo "Authenticating with GCP..."
-if [[ -n "$GOOGLE_APPLICATION_CREDENTIALS" ]]; then
-  gcloud auth activate-service-account --key-file="$GOOGLE_APPLICATION_CREDENTIALS"
-else
-  echo "Warning: GOOGLE_APPLICATION_CREDENTIALS not set. Assuming default credentials."
-fi
+# # Authenticate with GCP (assumes CI provides credentials or user is authenticated)
+# echo "Authenticating with GCP..."
+# if [[ -n "$GOOGLE_APPLICATION_CREDENTIALS" ]]; then
+#   gcloud auth activate-service-account --key-file="$GOOGLE_APPLICATION_CREDENTIALS"
+# else
+#   echo "Warning: GOOGLE_APPLICATION_CREDENTIALS not set. Assuming default credentials."
+# fi
 
 # Set the project
-gcloud config set project "$PROJECT_ID"
+#gcloud config set project "$PROJECT_ID"
 
 # Create the service account
 echo "Creating service account ${TF_SA_NAME}..."
