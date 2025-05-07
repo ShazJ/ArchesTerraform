@@ -99,6 +99,7 @@ gcloud iam service-accounts keys create "${BOOTSTRAP_KEY_FILE}" \
 echo "Setting GOOGLE_APPLICATION_CREDENTIALS to ${BOOTSTRAP_KEY_FILE}..."
 export GOOGLE_APPLICATION_CREDENTIALS="${BOOTSTRAP_KEY_FILE}"
 
+# Create required secrets
 chmod +x ./add_github_secret.sh
 ./add_github_secret.sh ${BOOTSTRAP_SA_SECRET} ${BOOTSTRAP_KEY_FILE}
 

@@ -1,29 +1,47 @@
-# This script creates a service account for managing a Google Cloud Storage bucket
-# for Terraform state. It assigns necessary roles and generates a key for the service account.
-# It also configures IAM permissions for the bucket and provides instructions for next steps.  
-# State bucket is critical for Terraform operations, so ensure the service account has the right permissions.
-# Run before bucket creation script!
-# remember backup  -sji!
-
+#sji todo! duplicate files sort it!
 #!/bin/bash
 
 # Exit on error
 set -e
 
-# Configuration variables
-PROJECT_ID="<your-gcp-project-id>"              # Replace with your GCP project ID
-BUCKET_NAME="<your-bucket-name>"                # e.g., my-project-tf-state
-SERVICE_ACCOUNT_NAME="sa-tf-state"              # Name of the service account
-SERVICE_ACCOUNT_EMAIL=""                        # Will be set dynamically
-ADMIN_EMAIL="<admin-email>"                     # e.g., admin@example.com
-DEVELOPER_EMAIL="<developer-email>"             # e.g., dev@example.com (optional)
-KEY_FILE="sa-tf-state-key.json"                 # Output file for the service account key
+# Path to the configuration file
+CONFIG_FILE="config.env"
+echo "Using configuration file: ${CONFIG_FILE}"
 
-# Validate inputs
-if [[ -z "$PROJECT_ID" || -z "$BUCKET_NAME" || -z "$ADMIN_EMAIL" ]]; then
-  echo "Error: PROJECT_ID, BUCKET_NAME, and ADMIN_EMAIL must be set."
+# Check if the config file exists
+if [ ! -f "${CONFIG_FILE}" ]; then
+  echo "Error: Configuration file '${CONFIG_FILE}' not found."
+  echo "Please create '${CONFIG_FILE}' with the following format:"
+  echo "PROJECT_ID=your-project-id"
+  echo "TF_SA_NAME=terraformsa"
+  echo "TF_SA_DISPLAY_NAME=Terraform Service Account"
+  echo "TF_KEY_FILE=/path/to/terraform.json"
   exit 1
 fi
+echo "config file found"
+
+# Source the configuration file
+source "${CONFIG_FILE}"
+echo "checking config file"
+
+# Validate required variables
+REQUIRED_VARS=("PROJECT_ID" "TF_SA_NAME" "TF_SA_DISPLAY_NAME" "TF_KEY_FILE")
+for VAR in "${REQUIRED_VARS[@]}"; do
+  if [ -z "${!VAR}" ]; then
+    echo "Error: Required variable '${VAR}' is not set in '${CONFIG_FILE}'."
+    exit 1
+  fi
+done
+
+# Define roles to assign - starting with least privs! sji todo
+ROLES=(
+  "roles/compute.admin"
+  "roles/iam.serviceAccountUser"
+  "roles/storage.admin"
+  "roles/iam.serviceAccountKeyAdmin"
+  "roles/resourcemanager.projectIamAdmin"
+  "roles/editor" # sji todo - custom role here - this is too broad
+)
 
 # Authenticate with GCP (assumes CI provides credentials or user is authenticated)
 echo "Authenticating with GCP..."
@@ -36,48 +54,47 @@ fi
 # Set the project
 gcloud config set project "$PROJECT_ID"
 
-# Check if service account exists
-SERVICE_ACCOUNT_EMAIL="${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
-if gcloud iam service-accounts list --filter="email:${SERVICE_ACCOUNT_EMAIL}" --format="value(email)" | grep -q "$SERVICE_ACCOUNT_EMAIL"; then
-  echo "Service account $SERVICE_ACCOUNT_EMAIL already exists. Skipping creation."
-else
-  echo "Creating service account $SERVICE_ACCOUNT_NAME..."
-  gcloud iam service-accounts create "$SERVICE_ACCOUNT_NAME" \
-    --display-name="Terraform State Bucket Manager" \
-    --description="Service account for managing Terraform state bucket"
+# Create the service account
+echo "Creating service account ${TF_SA_NAME}..."
+gcloud iam service-accounts create "${TF_SA_NAME}" \
+  --display-name="${TF_SA_DISPLAY_NAME}" \
+  --project="${PROJECT_ID}" \
+  --description="Service account for Terraform"
+
+# Delay to ensure the service account is created before assigning roles
+#without this the assign roles command fails
+sleep 5
+
+# Check if the service account was created successfully
+if ! gcloud iam service-accounts list --project="${PROJECT_ID}" | grep -q "${TF_SA_NAME}"; then
+  echo "Error: Service account '${TF_SA_NAME}' was not created successfully."
+  exit 1
 fi
 
 # Assign roles to the service account
-echo "Assigning roles to service account..."
-gcloud projects add-iam-policy-binding "$PROJECT_ID" \
-  --member="serviceAccount:$SERVICE_ACCOUNT_EMAIL" \
-  --role="roles/storage.admin"
-gcloud projects add-iam-policy-binding "$PROJECT_ID" \
-  --member="serviceAccount:$SERVICE_ACCOUNT_EMAIL" \
-  --role="roles/serviceusage.serviceUsageAdmin"
+for ROLE in "${ROLES[@]}"; do
+  echo "Assigning role ${ROLE} to service account..."
+  gcloud projects add-iam-policy-binding "${PROJECT_ID}" \
+    --member="serviceAccount:${BOOTSTRAP_SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" \
+    --role="${ROLE}"
+done
 
-# Generate a key for the service account
+# Create and download the service account key
 echo "Generating service account key..."
-if [[ -f "$KEY_FILE" ]]; then
-  echo "Key file $KEY_FILE already exists. Skipping key creation."
-else
-  gcloud iam service-accounts keys create "$KEY_FILE" \
-    --iam-account="$SERVICE_ACCOUNT_EMAIL"
-  echo "Service account key saved to $KEY_FILE"
-fi
+gcloud iam service-accounts keys create "${TF_KEY_FILE}" \
+  --iam-account="${TF_SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" \
+  --project="${PROJECT_ID}"
 
-# Set bucket IAM permissions (for bucket creation or updates)
-echo "Configuring bucket IAM permissions..."
-if gsutil ls "gs://$BUCKET_NAME" >/dev/null 2>&1; then
-  gsutil iam ch "serviceAccount:$SERVICE_ACCOUNT_EMAIL:admin" "gs://$BUCKET_NAME"
-  gsutil iam ch "user:$ADMIN_EMAIL:admin" "gs://$BUCKET_NAME"
-  if [[ -n "$DEVELOPER_EMAIL" ]]; then
-    gsutil iam ch "user:$DEVELOPER_EMAIL:objectCreator,objectViewer" "gs://$BUCKET_NAME"
-  fi
-else
-  echo "Warning: Bucket gs://$BUCKET_NAME does not exist yet. Run bucket creation script first."
-fi
+# Set GOOGLE_APPLICATION_CREDENTIALS environment variable
+echo "Setting GOOGLE_APPLICATION_CREDENTIALS to ${TF_KEY_FILE}..."
+export GOOGLE_APPLICATION_CREDENTIALS="${TF_KEY_FILE}"
 
-echo "Service account $SERVICE_ACCOUNT_EMAIL is ready for Terraform state bucket management."
-echo "Key file: $KEY_FILE"
-echo "Next steps: Store $KEY_FILE securely in CI secrets and use it for bucket creation."
+# Create required secrets
+chmod +x ./add_github_secret.sh
+./add_github_secret.sh ${TF_SA_SECRET} ${TF_KEY_FILE}
+
+# Check if the secret was added successfully
+if [ $? -ne 0 ]; then
+  echo "Error: Failed to add the secret to GitHub."
+  exit 1
+fi

@@ -5,13 +5,15 @@ You must have the following installed locally to bootstrap this:
 GitHub CLI (gh --version to check)
 GCP CLI (gcloud version to check)
 Authenticate to both.
+Store the resultant bootstrap json somewhere sensible. We'd probably want to remove the bootstrap secret at some point to - todo sji
 
 ## Bootstrap Terraform
 1. Update the /scrips/setup_tf config.env file with correct values
-2. Manually run /scripts/setup_tf/create_bootstrap_sa.sh. This will create BOOTSTRAP_SA_KEY and store as GitHub secret.
-3. Manually run Setup Terraform State Bucket (.github/workflows/setup-tf-state.yml) GitHub Action. This will create the service account needed for Terraform as well as the state bucket.
+2. Manually run /scripts/setup_tf/create_bootstrap_sa.sh. This will create the bootstrap service account and store as GitHub secret.
 
 ## Terraform
+### Environment Setup
+Manually run Setup Terraform State (.github/workflows/setup-tf-state.yml) GitHub Action. This will create the service account needed for Terraform as well as the state bucket.
 
 
 # Scribbles
