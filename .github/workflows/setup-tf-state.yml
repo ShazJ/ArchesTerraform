@@ -19,6 +19,10 @@ jobs:
         with:
           credentials_json: '${{ secrets.TF_BOOTSTRAP_SA }}'  # Key from script
 
+      - name: Checkout
+        uses: actions/checkout@v4
+
+          
       # Install gcloud CLI
       - name: Setup gcloud CLI
         uses: google-github-actions/setup-gcloud@v2
