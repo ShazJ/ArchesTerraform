@@ -36,7 +36,7 @@ jobs:
       - name: Create Terraform State Service Account
         run: |
           chmod +x scripts/setup_tf/create_tf_state_service_account.sh
-          scripts/setup_tf/create_tf_state_service_account.sh ${{ env.PROJECT_ID }} 
+          scripts/setup_tf/create_tf_state_service_account.sh
         # env:
         #   PROJECT_ID: ${{ env.PROJECT_ID }}
         #   BUCKET_NAME: "${{ env.BUCKET_NAME }}" # -ENVIRONMENT  #SJI ALSO ADD REGION POSTFIX? crl-state-store-uat-eu-west-2?
