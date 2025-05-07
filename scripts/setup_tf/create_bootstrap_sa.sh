@@ -109,6 +109,16 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
+# Create required secrets
+chmod +x ./add_github_secret.sh
+./add_github_secret.sh GCP_PROJECT_ID ${PROJECT_ID}
+
+# Check if the secret was added successfully
+if [ $? -ne 0 ]; then
+  echo "Error: Failed to add the secret to GitHub."
+  exit 1
+fi
+
 # Instructions for Terraform - tweak sji
 echo "Service account created and credentials set."
 echo "To initialize Terraform for the 'dev' environment, run:"

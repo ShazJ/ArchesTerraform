@@ -4,9 +4,6 @@ name: Setup Terraform
 # and obv the GCP project itself must be created - LZ required sji
 
 on:
-  push:
-    branches:
-      - dev
   workflow_dispatch:  # Manual trigger for initial setup
 #todo! backup state bucket somewhere using bootstrap account and schedule  it sji 
 jobs:
@@ -17,14 +14,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Authenticate with GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.TF_BOOTSTRAP_SA }}'  # Key from script
+
       # Install gcloud CLI
       - name: Setup gcloud CLI
         uses: google-github-actions/setup-gcloud@v2
         with:
-          project_id: ${{ env.PROJECT_ID }}
-          service_account_key: ${{ secrets.TF_BOOTSTRAP_SA }}  # Bootstrap SA
-          export_default_credentials: true #important for gcloud commands to work
-
+          project_id: ${{ env.GCP_PROJECT_ID }}
+ 
       # Run sa creation script
       - name: Create Terraform State Service Account
         run: |
