@@ -75,7 +75,7 @@ echo "roles"
 for ROLE in "${ROLES[@]}"; do
   echo "Assigning role ${ROLE} to service account..."
   gcloud projects add-iam-policy-binding "${PROJECT_ID}" \
-    --member="serviceAccount:${BOOTSTRAP_SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" \
+    --member="serviceAccount:${TF_SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" \
     --role="${ROLE}"
 done
 
