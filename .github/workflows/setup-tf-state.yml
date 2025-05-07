@@ -21,11 +21,13 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           credentials_json: '${{ secrets.TF_BOOTSTRAP_SA }}'  # Key from script
+         
+      - name: Set up gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+  
+      - name: Run gcloud command
+        run: gcloud projects list
 
-      - name: Checkout
-        uses: actions/checkout@v4
-
-          
       # Install gcloud CLI
       - name: Setup gcloud CLI
         uses: google-github-actions/setup-gcloud@v2
