@@ -17,27 +17,31 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Authenticate with GCP
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: '${{ secrets.TF_BOOTSTRAP_SA }}'  # Key from script
-         
-      - name: Set up gcloud CLI
-        uses: google-github-actions/setup-gcloud@v2
-          
-      - name: Enable IAM API # sji todo - hmmm - probs need elsewhere
+      - name: Authenticate GitHub CLI
         run: |
-          gcloud services enable iam.googleapis.com
-          gcloud services enable cloudresourcemanager.googleapis.com
-          sleep 60  # Wait 60 seconds for propagation
-        env:
-          PROJECT_ID: coral-459111
+          echo "${{ secrets.GH_TOKEN }}" | gh auth login --with-token
+
+      # - name: Authenticate with GCP
+      #   uses: google-github-actions/auth@v2
+      #   with:
+      #     credentials_json: '${{ secrets.TF_BOOTSTRAP_SA }}'  # Key from script
+         
+      # - name: Set up gcloud CLI
+      #   uses: google-github-actions/setup-gcloud@v2
+          
+      # - name: Enable IAM API # sji todo - hmmm - probs need elsewhere
+      #   run: |
+      #     gcloud services enable iam.googleapis.com
+      #     gcloud services enable cloudresourcemanager.googleapis.com
+      #     sleep 60  # Wait 60 seconds for propagation
+      #   env:
+      #     PROJECT_ID: coral-459111
 
       # Run sa creation script
-      - name: Create Terraform State Service Account
+      - name: Create Terraform Service Account
         run: |
-          chmod +x scripts/setup_tf/create_tf_state_service_account.sh
-          scripts/setup_tf/create_tf_state_service_account.sh
+          chmod +x scripts/setup_tf/create_tf_service_account.sh
+          scripts/setup_tf/create_tf_service_account.sh
         env:
           PROJECT_ID: coral-459111
         # env:

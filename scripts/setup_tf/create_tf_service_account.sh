@@ -91,7 +91,7 @@ export GOOGLE_APPLICATION_CREDENTIALS="${TF_KEY_FILE}"
 
 # Create required secrets
 chmod +x ./add_github_secret.sh
-./add_github_secret.sh ${TF_SA_SECRET} ${TF_KEY_FILE}
+scripts/setup_tf/add_github_secret.sh ${TF_SA_SECRET} ${TF_KEY_FILE}
 
 # Check if the secret was added successfully
 if [ $? -ne 0 ]; then
