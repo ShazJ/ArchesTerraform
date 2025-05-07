@@ -5,7 +5,7 @@
 set -e
 
 # Path to the configuration file
-CONFIG_FILE="config.env"
+CONFIG_FILE="scripts/setup_tf/config.env"
 echo "Using configuration file: ${CONFIG_FILE}"
 
 # Check if the config file exists
