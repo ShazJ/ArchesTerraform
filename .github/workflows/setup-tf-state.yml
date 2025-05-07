@@ -1,7 +1,7 @@
+name: Setup Terraform
 # requires /scripts/setup_tf/create_bootstrap_sa.sh to be run manually first
 # this will bootstrap a terraform service account with permissions to create the bucket 
 # and obv the GCP project itself must be created - LZ required sji
-name: Setup Terraform
 
 on:
   workflow_dispatch:  # Manual trigger for initial setup
