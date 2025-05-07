@@ -28,6 +28,7 @@ jobs:
       - name: Enable IAM API # sji todo - hmmm - probs need elsewhere
         run: |
           gcloud services enable iam.googleapis.com
+          gcloud services enable cloudresourcemanager.googleapis.com
           sleep 60  # Wait 60 seconds for propagation
         env:
           PROJECT_ID: coral-459111
@@ -37,9 +38,11 @@ jobs:
         run: |
           chmod +x scripts/setup_tf/create_tf_state_service_account.sh
           scripts/setup_tf/create_tf_state_service_account.sh
+        env:
+          PROJECT_ID: coral-459111
         # env:
-        #   PROJECT_ID: ${{ env.PROJECT_ID }}
-        #   BUCKET_NAME: "${{ env.BUCKET_NAME }}" # -ENVIRONMENT  #SJI ALSO ADD REGION POSTFIX? crl-state-store-uat-eu-west-2?
+        #   PROJECT_ID: {{ env.PROJECT_ID }}
+        #   BUCKET_NAME: "{{ env.BUCKET_NAME }}" # -ENVIRONMENT  #SJI ALSO ADD REGION POSTFIX? crl-state-store-uat-eu-west-2?
           # ADMIN_EMAIL: ADMIN_EMAIL  #SJI SHOULD WE?
           # DEVELOPER_EMAIL: DEVELOPER_EMAIL #SJI SHOULD WE?
           
