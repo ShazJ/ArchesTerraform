@@ -37,6 +37,7 @@ ROLES=(
   "roles/iam.serviceAccountAdmin" # to create service accounts
   "roles/iam.serviceAccountKeyAdmin" # to create service account keys 
   "roles/storage.admin" # to create a storage bucket
+  "roles/serviceusage.serviceUsageAdmin" # to enable APIs
 )
 #sji tidy!
 #"roles/iam.serviceAccountKeyViewer" # to view service account keys - sji remove? not strictly needed

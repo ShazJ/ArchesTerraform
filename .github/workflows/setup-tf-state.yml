@@ -25,6 +25,13 @@ jobs:
       - name: Set up gcloud CLI
         uses: google-github-actions/setup-gcloud@v2
           
+      - name: Enable IAM API
+        run: |
+          gcloud services enable iam.googleapis.com
+          sleep 60  # Wait 60 seconds for propagation
+        env:
+          PROJECT_ID: coral-459111
+
       # Run sa creation script
       - name: Create Terraform State Service Account
         run: |
