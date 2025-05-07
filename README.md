@@ -1,14 +1,22 @@
 # Setup Environment
 
-## Github Secrets
-GCP_PROJECT_ID
+## Prerequisites
+You must have the following installed locally to bootstrap this:
+GitHub CLI (gh --version to check)
+GCP CLI (gcloud version to check)
+Authenticate to both.
 
-## Terraform State
-Create GCP_BOOTSTRAP_SA_KEY and store as GitHub secret.
-Manually run Setup Terraform State Bucket GitHub Action.
-The first run of the service account creation script will generate sa-tf-state-key.json. Add this key to GitHub Secrets as GCP_TF_STATE_SA_KEY.
+## Bootstrap Terraform
+1. Update the /scrips/setup_tf config.env file with correct values
+2. Manually run /scripts/setup_tf/create_bootstrap_sa.sh. This will create BOOTSTRAP_SA_KEY and store as GitHub secret.
+3. Manually run Setup Terraform State Bucket (.github/workflows/setup-tf-state.yml) GitHub Action. This will create the service account needed for Terraform as well as the state bucket.
+
+## Terraform
+
 
 # Scribbles
+## Github Secrets
+GCP_PROJECT_ID
 projectid-type-store-env-region
 e.g. crl-data-store-uat-eu-west-2
 
@@ -24,6 +32,7 @@ create secrets
 ## Destroy Environment
 cd terraform
 terraform destroy -var-file="environments/dev.tfvars"
+
 ## Delete State bucket  ??? sji
 gsutil rm -r gs://terraform-state-bucket
 

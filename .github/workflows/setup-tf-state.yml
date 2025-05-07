@@ -1,16 +1,10 @@
-# chicken and egg - not sure if this is the best way? sji
-# still requires a sevice account to be created first with permissions to create the bucket and obv the project itself must be created - LZ required
-# service account should be diferent for bucket creation and needs roles/storage.admin, roles/serviceusage.serviceUsageAdmin.
+# requires /scripts/setup_tf/create_bootstrap_sa.sh to be run manually first
+# this will bootstrap a terraform service account with permissions to create the bucket 
+# and obv the project itself must be created - LZ required sji
 name: Setup Terraform State Bucket
 
 on:
   workflow_dispatch:  # Manual trigger for initial setup
-#   push:
-#     branches:
-#       - main
-#     paths:
-#       - 'scripts/create_tf_state_service_account.sh'
-#       - 'scripts/create_tf_state_bucket.sh'
 
 jobs:
   setup-service-account:
@@ -24,8 +18,8 @@ jobs:
       - name: Setup gcloud CLI
         uses: google-github-actions/setup-gcloud@v2
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_BOOTSTRAP_SA_KEY }}  # Bootstrap SA for creating new SA
+          project_id: ${{ secrets.PROJECT_ID }}
+          service_account_key: ${{ secrets.BOOTSTRAP_SA_NAME }}  # Bootstrap SA for creating new SA
           export_default_credentials: true
 
       # Run sa creation script
@@ -34,16 +28,28 @@ jobs:
           chmod +x scripts/setup_tf/create_tf_state_service_account.sh
           scripts/setup_tf/create_tf_state_service_account.sh
         env:
-          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-          BUCKET_NAME: "${{ secrets.GCP_PROJECT_ID }}-tf-state"
-          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
-          DEVELOPER_EMAIL: ${{ secrets.DEVELOPER_EMAIL }}
-
-      # Store service account key in secrets (optional, requires manual handling)
-      - name: Store Service Account Key
+          PROJECT_ID: ${{ secrets.PROJECT_ID }}
+          BUCKET_NAME: "${{ secrets.PROJECT_PREFIX }}-${{ secrets.TF_BUCKET_NAME }}" # -ENVIRONMENT  #SJI ALSO ADD REGION POSTFIX? crl-state-store-uat-eu-west-2?
+          # ADMIN_EMAIL: ADMIN_EMAIL  #SJI SHOULD WE?
+          # DEVELOPER_EMAIL: DEVELOPER_EMAIL #SJI SHOULD WE?
+          
+      # Store service account key in secrets
+      - name: Add Secret - TF Service Account Key 
         run: |
-          echo "IMPORTANT! Service account key generated at sa-tf-state-key.json"
-          echo "Please manually store this key in GitHub Secrets as GCP_TF_STATE_SA_KEY"
+          chmod +x scripts/setup_tf/create_github_secret.sh
+          scripts/setup_tf/create_github_secret.sh
+        env:
+          PROJECT_ID: ${{ secrets.PROJECT_ID }}
+          BUCKET_NAME: "${{ secrets.PROJECT_PREFIX }}-${{ secrets.TF_BUCKET_NAME }}" # -ENVIRONMENT  #SJI ALSO ADD REGION POSTFIX? crl-state-store-uat-eu-west-2?
+          # ADMIN_EMAIL: ADMIN_EMAIL  #SJI SHOULD WE?
+          # DEVELOPER_EMAIL: DEVELOPER_EMAIL #SJI SHOULD WE?
+          #?token here??
+          
+      # # Store service account key in secrets (optional, requires manual handling)
+      # - name: Store Service Account Key - Manual Step !IMPORTANT!
+      #   run: |
+      #     echo "IMPORTANT! Service account key generated at sa-tf-state-key.json"
+      #     echo "Please manually store this key in GitHub Secrets as GCP_TF_STATE_SA_KEY"          
 
   setup-bucket:
     needs: setup-service-account
@@ -55,8 +61,8 @@ jobs:
       - name: Setup gcloud CLI
         uses: google-github-actions/setup-gcloud@v2
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_TF_SA_KEY }}  # Key from script
+          project_id: ${{ secrets.PROJECT_ID }}
+          service_account_key: ${{ secrets.TF_SA_KEY }}  # Key from script
           export_default_credentials: true
 
       - name: Create Terraform State Bucket
@@ -66,5 +72,5 @@ jobs:
         env:
           PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
           BUCKET_NAME: "${{ secrets.GCP_PROJECT_ID }}-tf-state"
-          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
-          DEVELOPER_EMAIL: ${{ secrets.DEVELOPER_EMAIL }}
+          # ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          # DEVELOPER_EMAIL: ${{ secrets.DEVELOPER_EMAIL }}
