@@ -63,7 +63,7 @@ gcloud iam service-accounts create "${TF_SA_NAME}" \
 echo "here"
 # Delay to ensure the service account is created before assigning roles
 #without this the assign roles command fails
-sleep 5
+sleep 10
 echo "slept"
 # Check if the service account was created successfully
 if ! gcloud iam service-accounts list --project="${PROJECT_ID}" | grep -q "${TF_SA_NAME}"; then
