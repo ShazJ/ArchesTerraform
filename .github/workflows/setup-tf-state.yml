@@ -21,13 +21,13 @@ jobs:
         run: |
           echo "${{ secrets.GH_TOKEN }}" | gh auth login --with-token
 
-      # - name: Authenticate with GCP
-      #   uses: google-github-actions/auth@v2
-      #   with:
-      #     credentials_json: '${{ secrets.TF_BOOTSTRAP_SA }}'  # Key from script
+      - name: Authenticate with GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.TF_BOOTSTRAP_SA }}'  # Key from script
          
-      # - name: Set up gcloud CLI
-      #   uses: google-github-actions/setup-gcloud@v2
+      - name: Set up gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
           
       # - name: Enable IAM API # sji todo - hmmm - probs need elsewhere
       #   run: |
