@@ -19,27 +19,67 @@ Manually run Setup Terraform State (.github/workflows/setup-tf-state.yml) GitHub
 ## Project Structure
 
 terraform-project/
-├── main.tf                   # Root module calling modules with for_each
-├── variables.tf             # Variable definitions, including maps for resources
+├── main.tf                   # Root module calling modules
+├── variables.tf             # Variable definitions, including maps
 ├── outputs.tf               # Outputs for resource details
 ├── providers.tf             # Google provider configuration
 ├── modules/
 │   ├── artifact_registry/
-│   │   ├── main.tf          # Artifact Registry resource definition
-│   │   ├── variables.tf     # Module-specific variables
-│   │   ├── outputs.tf       # Module-specific outputs
+│   │   ├── main.tf          # Artifact Registry resource
+│   │   ├── variables.tf     # Module variables
+│   │   ├── outputs.tf       # Module outputs
 │   │   └── README.md        # Module documentation
 │   ├── compute_address/
-│   │   ├── main.tf          # Compute Address resource definition
-│   │   ├── variables.tf     # Module-specific variables
-│   │   ├── outputs.tf       # Module-specific outputs
+│   │   ├── main.tf          # Compute Address resource
+│   │   ├── variables.tf     # Module variables
+│   │   ├── outputs.tf       # Module outputs
 │   │   └── README.md        # Module documentation
-│   └── compute_firewall/
-│       ├── main.tf          # Compute Firewall resource definition
-│       ├── variables.tf     # Module-specific variables
-│       ├── outputs.tf       # Module-specific outputs
+│   ├── compute_firewall/
+│   │   ├── main.tf          # Compute Firewall resource
+│   │   ├── variables.tf     # Module variables
+│   │   ├── outputs.tf       # Module outputs
+│   │   └── README.md        # Module documentation
+│   ├── storage_bucket/
+│   │   ├── main.tf          # Storage Bucket resource
+│   │   ├── variables.tf     # Module variables
+│   │   ├── outputs.tf       # Module outputs
+│   │   └── README.md        # Module documentation
+│   ├── service_account/
+│   │   ├── main.tf          # Service Account resource
+│   │   ├── variables.tf     # Module variables
+│   │   ├── outputs.tf       # Module outputs
+│   │   └── README.md        # Module documentation
+│   ├── compute_network/
+│   │   ├── main.tf          # Compute Network resource
+│   │   ├── variables.tf     # Module variables
+│   │   ├── outputs.tf       # Module outputs
+│   │   └── README.md        # Module documentation
+│   ├── compute_subnetwork/
+│   │   ├── main.tf          # Compute Subnetwork resource
+│   │   ├── variables.tf     # Module variables
+│   │   ├── outputs.tf       # Module outputs
+│   │   └── README.md        # Module documentation
+│   ├── compute_router/
+│   │   ├── main.tf          # Compute Router resource
+│   │   ├── variables.tf     # Module variables
+│   │   ├── outputs.tf       # Module outputs
+│   │   └── README.md        # Module documentation
+│   ├── compute_route/
+│   │   ├── main.tf          # Compute Route resource
+│   │   ├── variables.tf     # Module variables
+│   │   ├── outputs.tf       # Module outputs
+│   │   └── README.md        # Module documentation
+│   ├── compute_resource_policy/
+│   │   ├── main.tf          # Compute Resource Policy resource
+│   │   ├── variables.tf     # Module variables
+│   │   ├── outputs.tf       # Module outputs
+│   │   └── README.md        # Module documentation
+│   └── kms_key_ring/
+│       ├── main.tf          # KMS Key Ring resource
+│       ├── variables.tf     # Module variables
+│       ├── outputs.tf       # Module outputs
 │       └── README.md        # Module documentation
-├── terraform.tfvars         # Variable values for resources
+├── terraform.tfvars         # Variable values
 └── README.md                # Project documentation
 
 

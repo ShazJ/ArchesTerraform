@@ -10,8 +10,8 @@ terraform {
       version = "~> 5.0"
     }
   }
-  backend "gcs" {
-    bucket = "terraform-state-bucket"
-    prefix = "terraform/state/${var.environment}"
-  }
+  # backend "gcs" {
+  #   bucket = "terraform-state-bucket"
+  #   prefix = "terraform/state/${var.environment}"
+  # }
 }
