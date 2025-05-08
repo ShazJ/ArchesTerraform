@@ -98,7 +98,7 @@ gcloud iam service-accounts keys create "${BOOTSTRAP_KEY_FILE}" \
   --iam-account="${BOOTSTRAP_SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" \
   --project="${PROJECT_ID}"
 
-# Set GOOGLE_APPLICATION_CREDENTIALS environment variable
+# Set GOOGLE_APPLICATION_CREDENTIALS environment variable - todo remove?
 echo "Setting GOOGLE_APPLICATION_CREDENTIALS to ${BOOTSTRAP_KEY_FILE}..."
 export GOOGLE_APPLICATION_CREDENTIALS="${BOOTSTRAP_KEY_FILE}"
 

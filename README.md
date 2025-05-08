@@ -1,6 +1,7 @@
 # Setup Environment
 
 ## Prerequisites
+Create a Github classic token: GH_TOKEN - maybe script? todo sji
 You must have the following installed locally to bootstrap this:
 GitHub CLI (gh --version to check)
 GCP CLI (gcloud version to check)
@@ -11,9 +12,37 @@ Store the resultant bootstrap json somewhere sensible. We'd probably want to rem
 1. Update the /scrips/setup_tf config.env file with correct values
 2. Manually run /scripts/setup_tf/create_bootstrap_sa.sh. This will create the bootstrap service account and store as GitHub secret.
 
-## Terraform
 ### Environment Setup
 Manually run Setup Terraform State (.github/workflows/setup-tf-state.yml) GitHub Action. This will create the service account needed for Terraform as well as the state bucket.
+
+# Terraform
+## Project Structure
+
+terraform-project/
+├── main.tf                   # Root module calling modules with for_each
+├── variables.tf             # Variable definitions, including maps for resources
+├── outputs.tf               # Outputs for resource details
+├── providers.tf             # Google provider configuration
+├── modules/
+│   ├── artifact_registry/
+│   │   ├── main.tf          # Artifact Registry resource definition
+│   │   ├── variables.tf     # Module-specific variables
+│   │   ├── outputs.tf       # Module-specific outputs
+│   │   └── README.md        # Module documentation
+│   ├── compute_address/
+│   │   ├── main.tf          # Compute Address resource definition
+│   │   ├── variables.tf     # Module-specific variables
+│   │   ├── outputs.tf       # Module-specific outputs
+│   │   └── README.md        # Module documentation
+│   └── compute_firewall/
+│       ├── main.tf          # Compute Firewall resource definition
+│       ├── variables.tf     # Module-specific variables
+│       ├── outputs.tf       # Module-specific outputs
+│       └── README.md        # Module documentation
+├── terraform.tfvars         # Variable values for resources
+└── README.md                # Project documentation
+
+
 
 
 # Scribbles

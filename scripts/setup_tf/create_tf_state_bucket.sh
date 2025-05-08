@@ -3,18 +3,32 @@
 # Exit on error
 set -e
 
-# Configuration variables
-PROJECT_ID="<your-gcp-project-id>"  # Replace with your GCP project ID
-BUCKET_NAME="<your-bucket-name>"    # e.g., my-project-tf-state
-LOCATION="US"                       # Multi-region location (e.g., US, EU, ASIA)
-ADMIN_EMAIL="<admin-email>"         # e.g., admin@example.com
-DEVELOPER_EMAIL="<developer-email>" # e.g., dev@example.com (optional)
+# Path to the configuration file
+CONFIG_FILE="scripts/setup_tf/config.env"
+echo "Using configuration file: ${CONFIG_FILE}"
 
-# Validate inputs
-if [[ -z "$PROJECT_ID" || -z "$BUCKET_NAME" || -z "$ADMIN_EMAIL" ]]; then
-  echo "Error: PROJECT_ID, BUCKET_NAME, and ADMIN_EMAIL must be set."
+# Check if the config file exists
+if [ ! -f "${CONFIG_FILE}" ]; then
+  echo "Error: Configuration file '${CONFIG_FILE}' not found."
+  echo "Please create '${CONFIG_FILE}' with the following format:"
+  echo "PROJECT_ID=your-project-id"
+  echo "TF_BUCKET_NAME=state-store"
   exit 1
 fi
+echo "config file found"
+
+# Source the configuration file
+source "${CONFIG_FILE}"
+echo "checking config file"
+
+# Validate required variables
+REQUIRED_VARS=("PROJECT_ID" "TF_BUCKET_NAME" )
+for VAR in "${REQUIRED_VARS[@]}"; do
+  if [ -z "${!VAR}" ]; then
+    echo "Error: Required variable '${VAR}' is not set in '${CONFIG_FILE}'."
+    exit 1
+  fi
+done
 
 # Authenticate with GCP (assumes CI provides credentials)
 echo "Authenticating with GCP..."
@@ -32,16 +46,16 @@ echo "Enabling Cloud Storage API if not already enabled..."
 gcloud services enable storage.googleapis.com --project="$PROJECT_ID"
 
 # Check if bucket exists
-if gsutil ls "gs://$BUCKET_NAME" >/dev/null 2>&1; then
-  echo "Bucket gs://$BUCKET_NAME already exists. Skipping creation."
+if gsutil ls "gs://${BUCKET_NAME}" >/dev/null 2>&1; then
+    echo "Bucket gs://${BUCKET_NAME} already exists. Skipping creation."
 else
-  echo "Creating bucket gs://$BUCKET_NAME..."
-  gsutil mb -p "$PROJECT_ID" -l "$LOCATION" -b on "gs://$BUCKET_NAME"
+  echo "Creating bucket gs://${BUCKET_NAME}..."
+  gsutil mb -p "$PROJECT_ID" -l "$LOCATION" -b on "gs://${BUCKET_NAME}"
 fi
 
 # Enable versioning
 echo "Enabling versioning on bucket..."
-gsutil versioning set on "gs://$BUCKET_NAME"
+gsutil versioning set on "gs://${BUCKET_NAME}"
 
 # Set lifecycle rule (optional: keep last 10 versions)
 echo "Configuring lifecycle rules..."
@@ -55,14 +69,14 @@ cat <<EOF > lifecycle.json
   ]
 }
 EOF
-gsutil lifecycle set lifecycle.json "gs://$BUCKET_NAME"
+gsutil lifecycle set lifecycle.json "gs://${BUCKET_NAME}"
 rm lifecycle.json
 
-# Set IAM permissions
-echo "Configuring IAM permissions..."
-gsutil iam ch "user:$ADMIN_EMAIL:admin" "gs://$BUCKET_NAME"
-if [[ -n "$DEVELOPER_EMAIL" ]]; then
-  gsutil iam ch "user:$DEVELOPER_EMAIL:objectCreator,objectViewer" "gs://$BUCKET_NAME"
-fi
+# # Set IAM permissions
+# echo "Configuring IAM permissions..."
+# gsutil iam ch "user:$ADMIN_EMAIL:admin" "gs://${BUCKET_NAME}"
+# if [[ -n "$DEVELOPER_EMAIL" ]]; then
+#   gsutil iam ch "user:$DEVELOPER_EMAIL:objectCreator,objectViewer" "gs://$BUCKET_NAME"
+# fi
 
-echo "Bucket gs://$BUCKET_NAME is ready for Terraform state."
+echo "Bucket gs://${BUCKET_NAME} is ready for Terraform state."

@@ -43,51 +43,51 @@ ROLES=(
   "roles/editor" # sji todo - custom role here - this is too broad
 )
 
-# # Authenticate with GCP (assumes CI provides credentials or user is authenticated)
-# echo "Authenticating with GCP..."
-# if [[ -n "$GOOGLE_APPLICATION_CREDENTIALS" ]]; then
-#   gcloud auth activate-service-account --key-file="$GOOGLE_APPLICATION_CREDENTIALS"
-# else
-#   echo "Warning: GOOGLE_APPLICATION_CREDENTIALS not set. Assuming default credentials."
-# fi
+# Authenticate with GCP (assumes CI provides credentials or user is authenticated)
+echo "Authenticating with GCP..."
+if [[ -n "$GOOGLE_APPLICATION_CREDENTIALS" ]]; then
+  gcloud auth activate-service-account --key-file="$GOOGLE_APPLICATION_CREDENTIALS"
+else
+  echo "Warning: GOOGLE_APPLICATION_CREDENTIALS not set. Assuming default credentials."
+fi
 
-# Set the project
-#gcloud config set project "$PROJECT_ID"
+Set the project
+gcloud config set project "$PROJECT_ID"
 
-# Create the service account
-# echo "Creating service account ${TF_SA_NAME}..."
-# gcloud iam service-accounts create "${TF_SA_NAME}" \
-#   --display-name="${TF_SA_DISPLAY_NAME}" \
-#   --project="${PROJECT_ID}" \
-#   --description="Service account for Terraform"
-# echo "here"
-# # Delay to ensure the service account is created before assigning roles
-# #without this the assign roles command fails
-# sleep 10
-# echo "slept"
-# # Check if the service account was created successfully
-# if ! gcloud iam service-accounts list --project="${PROJECT_ID}" | grep -q "${TF_SA_NAME}"; then
-#   echo "Error: Service account '${TF_SA_NAME}' was not created successfully."
-#   exit 1
-# fi
-# echo "roles"
-# # Assign roles to the service account
-# for ROLE in "${ROLES[@]}"; do
-#   echo "Assigning role ${ROLE} to service account..."
-#   gcloud projects add-iam-policy-binding "${PROJECT_ID}" \
-#     --member="serviceAccount:${TF_SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" \
-#     --role="${ROLE}"
-# done
+Create the service account
+echo "Creating service account ${TF_SA_NAME}..."
+gcloud iam service-accounts create "${TF_SA_NAME}" \
+  --display-name="${TF_SA_DISPLAY_NAME}" \
+  --project="${PROJECT_ID}" \
+  --description="Service account for Terraform"
+echo "here"
+# Delay to ensure the service account is created before assigning roles
+#without this the assign roles command fails
+sleep 10
+echo "slept"
+# Check if the service account was created successfully
+if ! gcloud iam service-accounts list --project="${PROJECT_ID}" | grep -q "${TF_SA_NAME}"; then
+  echo "Error: Service account '${TF_SA_NAME}' was not created successfully."
+  exit 1
+fi
+echo "roles"
+# Assign roles to the service account
+for ROLE in "${ROLES[@]}"; do
+  echo "Assigning role ${ROLE} to service account..."
+  gcloud projects add-iam-policy-binding "${PROJECT_ID}" \
+    --member="serviceAccount:${TF_SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" \
+    --role="${ROLE}"
+done
 
-# # Create and download the service account key
-# echo "Generating service account key..."
-# gcloud iam service-accounts keys create "${TF_KEY_FILE}" \
-#   --iam-account="${TF_SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" \
-#   --project="${PROJECT_ID}"
+# Create and download the service account key
+echo "Generating service account key..."
+gcloud iam service-accounts keys create "${TF_KEY_FILE}" \
+  --iam-account="${TF_SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" \
+  --project="${PROJECT_ID}"
 
-# # Set GOOGLE_APPLICATION_CREDENTIALS environment variable
-# echo "Setting GOOGLE_APPLICATION_CREDENTIALS to ${TF_KEY_FILE}..."
-# export GOOGLE_APPLICATION_CREDENTIALS="${TF_KEY_FILE}"
+# Set GOOGLE_APPLICATION_CREDENTIALS environment variable
+echo "Setting GOOGLE_APPLICATION_CREDENTIALS to ${TF_KEY_FILE}..."
+export GOOGLE_APPLICATION_CREDENTIALS="${TF_KEY_FILE}"
 
 # Create required secrets
 chmod +x scripts/setup_tf/add_github_secret.sh

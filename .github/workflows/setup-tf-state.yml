@@ -38,12 +38,12 @@ jobs:
       #     PROJECT_ID: coral-459111
 
       # Run sa creation script
-      - name: Create Terraform Service Account
-        run: |
-          chmod +x scripts/setup_tf/create_tf_service_account.sh
-          scripts/setup_tf/create_tf_service_account.sh
-        env:
-          PROJECT_ID: coral-459111
+      # - name: Create Terraform Service Account
+      #   run: |
+      #     chmod +x scripts/setup_tf/create_tf_service_account.sh
+      #     scripts/setup_tf/create_tf_service_account.sh
+      #   env:
+      #     PROJECT_ID: coral-459111
         # env:
         #   PROJECT_ID: {{ env.PROJECT_ID }}
         #   BUCKET_NAME: "{{ env.BUCKET_NAME }}" # -ENVIRONMENT  #SJI ALSO ADD REGION POSTFIX? crl-state-store-uat-eu-west-2?
@@ -71,17 +71,15 @@ jobs:
 
       - name: Setup gcloud CLI
         uses: google-github-actions/setup-gcloud@v2
-        with:
-          project_id: ${{ env.PROJECT_ID }}
-          service_account_key: ${{ secrets.TF_SA_KEY }}  # Key from script
-          export_default_credentials: true
+        env:
+          PROJECT_ID: coral-459111
 
       - name: Create Terraform State Bucket
         run: |
           chmod +x scripts/setup_tf/create_tf_state_bucket.sh
           scripts/setup_tf/create_tf_state_bucket.sh
         env:
-          PROJECT_ID: ${{ env.PROJECT_ID }}
-          BUCKET_NAME: "${{ env.BUCKET_NAME }}"
+          PROJECT_ID: coral-459111
+          #BUCKET_NAME: "${{ env.BUCKET_NAME }}"
           # ADMIN_EMAIL:  secrets.ADMIN_EMAIL }}
           # DEVELOPER_EMAIL: secrets.DEVELOPER_EMAIL }}
