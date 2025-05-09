@@ -294,9 +294,6 @@ clusters = {
       shielded_instance_config = {
         enable_integrity_monitoring = true
       }
-      advanced_machine_features = {
-        threads_per_core = 0
-      }
       workload_metadata_config = {
         mode = "GKE_METADATA"
       }
@@ -474,6 +471,9 @@ clusters = {
       stack_type                    = "IPV4"
       pod_cidr_overprovision_config = {
         disabled = false
+      }
+      additional_pod_ranges_config = {
+        pod_range_names = []
       }
     }
     addons_config = {
