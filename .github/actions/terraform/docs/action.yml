@@ -4,19 +4,21 @@ description: Renders terraform docs and pushes back to PR
 runs:
   using: "composite"
   steps:
-  - name: Check out code
-    uses: actions/checkout@v4
-    with:
-      ref: ${{ github.event.pull_request.head.ref }}
+    - name: Check out code
+      uses: actions/checkout@v4
 
-  - name: Generate Storage Bucket Module Docs
-    uses: terraform-docs/gh-actions@main
-    with:
-      working-dir: modules/storage_bucket
-      config-file: .terraform-docs.yml
-      output-file: README.md
-      output-method: inject
-      git-push: "true"
+    - name: Authenticate GitHub CLI
+      run: |
+        echo "${{ secrets.GH_TOKEN }}" | gh auth login --with-token
+
+    - name: Generate Storage Bucket Module Docs
+      uses: terraform-docs/gh-actions@main
+      with:
+        working-dir: modules/storage_bucket
+        config-file: .terraform-docs.yml
+        output-file: README.md
+        output-method: inject
+        git-push: "true"
 
   # - name: Render terraform docs and push back to PR
   #   uses: terraform-docs/gh-actions@main
