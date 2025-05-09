@@ -28,18 +28,8 @@ resource "google_container_cluster" "cluster" {
       enable_integrity_monitoring = var.node_config.shielded_instance_config.enable_integrity_monitoring
     }
 
-    dynamic "advanced_machine_features" {
-      for_each = var.node_config.advanced_machine_features != null ? [var.node_config.advanced_machine_features] : []
-      content {
-        threads_per_core = advanced_machine_features.value.threads_per_core
-      }
-    }
-
-    dynamic "workload_metadata_config" {
-      for_each = var.node_config.workload_metadata_config != null ? [var.node_config.workload_metadata_config] : []
-      content {
-        mode = workload_metadata_config.value.mode
-      }
+    workload_metadata_config {
+      mode = var.node_config.workload_metadata_config.mode
     }
   }
 

@@ -39,9 +39,6 @@ variable "node_config" {
     shielded_instance_config = object({
       enable_integrity_monitoring = bool
     })
-    advanced_machine_features = optional(object({
-      threads_per_core = number
-    }))
     workload_metadata_config = object({
       mode = string
     })

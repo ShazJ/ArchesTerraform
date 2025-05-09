@@ -295,8 +295,7 @@ clusters = {
         enable_integrity_monitoring = true
       }
       workload_metadata_config = {
-        mode          = "GKE_METADATA"
-        node_metadata = "GKE_METADATA_SERVER"
+        mode = "GKE_METADATA"
       }
     }
     ip_allocation_policy = {
@@ -461,8 +460,7 @@ clusters = {
       }
       tags = ["gke-k8s-coral-stg-np-tf-cejctx"]
       workload_metadata_config = {
-        mode          = "GKE_METADATA"
-        node_metadata = "GKE_METADATA_SERVER"
+        mode = "GKE_METADATA"
       }
     }
     ip_allocation_policy = {

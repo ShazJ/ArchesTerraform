@@ -149,18 +149,6 @@ module "compute_router" {
   region     = var.region
 }
 
-# module "compute_route" {
-#   for_each         = var.routes
-#   source           = "./modules/compute_route"
-#   project_id       = var.project_id
-#   name             = each.value.name
-#   network          = each.value.network
-#   dest_range       = each.value.dest_range
-#   priority         = each.value.priority
-#   description      = each.value.description
-#   next_hop_gateway = each.value.next_hop_gateway
-# }
-
 module "compute_resource_policy" {
   source     = "./modules/compute_resource_policy"
   project_id = var.project_id
@@ -214,15 +202,9 @@ module "container_cluster" {
     shielded_instance_config = {
       enable_integrity_monitoring = each.value.node_config.shielded_instance_config.enable_integrity_monitoring
     }
-    labels = lookup(each.value.node_config, "labels", {})
-    tags   = lookup(each.value.node_config, "tags", [])
-    advanced_machine_features = lookup(each.value.node_config, "advanced_machine_features", null) != null ? {
-      threads_per_core = each.value.node_config.advanced_machine_features.threads_per_core
-    } : null
-    workload_metadata_config = lookup(each.value.node_config, "workload_metadata_config", null) != null ? {
-      mode          = each.value.node_config.workload_metadata_config.mode
-      node_metadata = each.value.node_config.workload_metadata_config.node_metadata
-    } : null
+    labels                   = lookup(each.value.node_config, "labels", {})
+    tags                     = lookup(each.value.node_config, "tags", [])
+    workload_metadata_config = each.value.node_config.workload_metadata_config
   }
   ip_allocation_policy = {
     cluster_ipv4_cidr_block       = each.value.ip_allocation_policy.cluster_ipv4_cidr_block
@@ -233,9 +215,7 @@ module "container_cluster" {
     pod_cidr_overprovision_config = {
       disabled = each.value.ip_allocation_policy.pod_cidr_overprovision_config.disabled
     }
-    additional_pod_ranges_config = lookup(each.value.ip_allocation_policy, "additional_pod_ranges_config", null) != null ? {
-      pod_range_names = each.value.ip_allocation_policy.additional_pod_ranges_config.pod_range_names
-    } : null
+    additional_pod_ranges_config = lookup(each.value.ip_allocation_policy, "additional_pod_ranges_config", { pod_range_names = [] })
   }
   addons_config = {
     dns_cache_config = {
@@ -291,7 +271,7 @@ module "container_cluster" {
   monitoring_config = {
     advanced_datapath_observability_config = {
       enable_metrics = each.value.monitoring_config.advanced_datapath_observability_config.enable_metrics
-      enable_relay   = each.value.monitoring_config.advanced_datapath_observability_config.enable_relay #sji correct?
+      enable_relay   = each.value.monitoring_config.advanced_datapath_observability_config.enable_relay
     }
     enable_components = each.value.monitoring_config.enable_components
   }
@@ -340,7 +320,5 @@ module "container_cluster" {
   vertical_pod_autoscaling = {
     enabled = each.value.vertical_pod_autoscaling.enabled
   }
-  workload_identity_config = lookup(each.value, "workload_identity_config", null) != null ? {
-    workload_pool = each.value.workload_identity_config.workload_pool
-  } : null
+  workload_identity_config = lookup(each.value, "workload_identity_config", null)
 }
