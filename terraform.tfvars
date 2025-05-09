@@ -1,8 +1,8 @@
-project_id = "coral-459111" #459111 sji!!!
+project_id = "coral-459111"
 location   = "europe-west2"
 region     = "europe-west2"
 format     = "DOCKER"
-mode       = "STANDARD_REPOSITORY"
+mode       = "STANDARD"
 
 repositories = {
   arches = {
@@ -11,12 +11,14 @@ repositories = {
     cleanup_policy_dry_run = true
   },
   arches_prd = {
-    repository_id = "arches-prd"
-    description   = "Core Arches images for Coral (see *static* for deployable)"
+    repository_id          = "arches-prd"
+    description            = "Core Arches images for Coral (see *static* for deployable)"
+    cleanup_policy_dry_run = true
   },
   archesdata_prd = {
-    repository_id = "archesdata-prd"
-    description   = "Core Arches images for Coral (see *static* for deployable)"
+    repository_id          = "archesdata-prd"
+    description            = "Core Arches images for Coral (see *static* for deployable)"
+    cleanup_policy_dry_run = true
   }
 }
 
@@ -26,12 +28,14 @@ addresses = {
     address      = "34.142.75.32"
     address_type = "EXTERNAL"
     network_tier = "PREMIUM"
+    purpose      = "EXTERNAL"
   },
   istio_stg = {
     name         = "istio-default-ingress-coral-stg"
     address      = "34.89.106.198"
     address_type = "EXTERNAL"
     network_tier = "PREMIUM"
+    purpose      = "EXTERNAL"
   },
   nat_auto_1 = {
     name         = "nat-auto-ip-6086885-2-1720490595712813"
@@ -61,6 +65,7 @@ firewalls = {
       protocol = "tcp"
       ports    = ["10250", "443", "15017", "8080", "15000"]
     }]
+    description = "Allow ingress for Coral production GKE cluster"
   },
   coral_stg = {
     name          = "allow-ingress-coral-stg"
@@ -73,6 +78,7 @@ firewalls = {
       protocol = "tcp"
       ports    = ["10250", "443", "15017", "8080", "15000"]
     }]
+    description = "Allow ingress for Coral staging GKE cluster"
   },
   default_icmp = {
     name          = "default-allow-icmp"
@@ -116,6 +122,9 @@ buckets = {
     force_destroy               = false
     public_access_prevention    = "enforced"
     uniform_bucket_level_access = true
+    cors                        = []
+    encryption                  = {}
+    logging                     = {}
   },
   data_store_uat_prd = {
     name                        = "crl-data-store-uat-eu-west-2-prd"
@@ -166,6 +175,9 @@ buckets = {
     force_destroy               = false
     public_access_prevention    = "inherited"
     uniform_bucket_level_access = true
+    cors                        = []
+    encryption                  = {}
+    logging                     = {}
   },
   prd_state_store_uat = {
     name                        = "crl-prd-state-store-uat-eu-west-2"
@@ -174,9 +186,11 @@ buckets = {
     force_destroy               = false
     public_access_prevention    = "inherited"
     uniform_bucket_level_access = true
+    cors                        = []
     encryption = {
       default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat-prd/cryptoKeys/data-store-key-uat-prd"
     }
+    logging = {}
   },
   state_store_uat = {
     name                        = "crl-state-store-uat-eu-west-2"
@@ -185,9 +199,11 @@ buckets = {
     force_destroy               = false
     public_access_prevention    = "inherited"
     uniform_bucket_level_access = true
+    cors                        = []
     encryption = {
       default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat/cryptoKeys/data-store-key-uat"
     }
+    logging = {}
   },
   artifacts_us = {
     name                        = "artifacts.coral-459111.appspot.com"
@@ -196,6 +212,9 @@ buckets = {
     force_destroy               = false
     public_access_prevention    = "inherited"
     uniform_bucket_level_access = false
+    cors                        = []
+    encryption                  = {}
+    logging                     = {}
   },
   artifacts_eu = {
     name                        = "eu.artifacts.coral-459111.appspot.com"
@@ -204,6 +223,9 @@ buckets = {
     force_destroy               = false
     public_access_prevention    = "inherited"
     uniform_bucket_level_access = false
+    cors                        = []
+    encryption                  = {}
+    logging                     = {}
   }
 }
 
@@ -221,26 +243,32 @@ service_accounts = {
   arches_uat_prd = {
     account_id   = "coral-arches-uat-prd"
     display_name = "Coral Production Arches Service Account"
+    description  = "Service account for Coral production Arches"
   },
   arches_uat = {
     account_id   = "coral-arches-uat"
     display_name = "Coral Production Arches Service Account"
+    description  = "Service account for Coral UAT Arches"
   },
   ci_prd = {
     account_id   = "coral-ci-prd"
     display_name = "Coral Production Arches Service Account"
+    description  = "Service account for CI in production"
   },
   ci = {
     account_id   = "coral-ci"
     display_name = "Coral Production Arches Service Account"
+    description  = "Service account for CI"
   },
   flux_prd = {
     account_id   = "coral-flux-prd"
     display_name = "Coral Production Flux Service Account"
+    description  = "Service account for Flux in production"
   },
   gl_ci_prd = {
     account_id   = "coral-gl-ci-prd"
     display_name = "Coral Production Data Operations Service Account"
+    description  = "Service account for data operations in production"
   }
 }
 
@@ -256,11 +284,11 @@ routers = {
 }
 
 key_rings = {
-  data_store_uat_prd = {
-    name = "data-store-keyring-uat-prd"
-  },
   data_store_uat = {
     name = "data-store-keyring-uat"
+  },
+  data_store_uat_prd = {
+    name = "data-store-keyring-uat-prd"
   },
   terraform_state = {
     name = "terraform-state-keyring"
@@ -304,8 +332,6 @@ clusters = {
       tags = ["gke-k8s-coral-prd-np-tf-cejctx"]
     }
     ip_allocation_policy = {
-      cluster_ipv4_cidr_block       = "192.168.64.0/20"
-      services_ipv4_cidr_block      = "192.168.0.0/20"
       cluster_secondary_range_name  = "pod-ranges"
       services_secondary_range_name = "services-range"
       stack_type                    = "IPV4"
@@ -469,8 +495,6 @@ clusters = {
       }
     }
     ip_allocation_policy = {
-      cluster_ipv4_cidr_block       = "192.168.64.0/20"
-      services_ipv4_cidr_block      = "192.168.0.0/20"
       cluster_secondary_range_name  = "pod-ranges"
       services_secondary_range_name = "services-range"
       stack_type                    = "IPV4"
@@ -478,7 +502,7 @@ clusters = {
         disabled = false
       }
       additional_pod_ranges_config = {
-        pod_range_names = []
+        pod_range_names = ["gke-coral-cluster-pods-f3c8dd1b"]
       }
     }
     addons_config = {

@@ -7,7 +7,7 @@ module "artifact_registry" {
   description            = each.value.description
   format                 = var.format
   mode                   = var.mode
-  cleanup_policy_dry_run = lookup(each.value, "cleanup_policy_dry_run", false)
+  cleanup_policy_dry_run = each.value.cleanup_policy_dry_run
 }
 
 module "compute_address" {
@@ -19,7 +19,7 @@ module "compute_address" {
   address      = each.value.address
   address_type = each.value.address_type
   network_tier = each.value.network_tier
-  purpose      = lookup(each.value, "purpose", null)
+  purpose      = each.value.purpose
 }
 
 module "compute_firewall" {
@@ -31,9 +31,9 @@ module "compute_firewall" {
   direction     = each.value.direction
   priority      = each.value.priority
   source_ranges = each.value.source_ranges
-  target_tags   = lookup(each.value, "target_tags", [])
+  target_tags   = each.value.target_tags
   allow         = each.value.allow
-  description   = lookup(each.value, "description", null)
+  description   = each.value.description
 }
 
 module "storage_bucket" {
@@ -46,9 +46,9 @@ module "storage_bucket" {
   force_destroy               = each.value.force_destroy
   public_access_prevention    = each.value.public_access_prevention
   uniform_bucket_level_access = each.value.uniform_bucket_level_access
-  cors                        = lookup(each.value, "cors", [])
-  encryption                  = lookup(each.value, "encryption", null)
-  logging                     = lookup(each.value, "logging", null)
+  cors                        = each.value.cors
+  encryption                  = each.value.encryption
+  logging                     = each.value.logging
 }
 
 module "service_account" {
@@ -57,7 +57,7 @@ module "service_account" {
   project_id   = var.project_id
   account_id   = each.value.account_id
   display_name = each.value.display_name
-  description  = lookup(each.value, "description", null)
+  description  = each.value.description
 }
 
 module "compute_network_prd" {
@@ -202,20 +202,18 @@ module "container_cluster" {
     shielded_instance_config = {
       enable_integrity_monitoring = each.value.node_config.shielded_instance_config.enable_integrity_monitoring
     }
-    labels                   = lookup(each.value.node_config, "labels", {})
-    tags                     = lookup(each.value.node_config, "tags", [])
+    labels                   = each.value.node_config.labels
+    tags                     = each.value.node_config.tags
     workload_metadata_config = each.value.node_config.workload_metadata_config
   }
   ip_allocation_policy = {
-    cluster_ipv4_cidr_block       = each.value.ip_allocation_policy.cluster_ipv4_cidr_block
-    services_ipv4_cidr_block      = each.value.ip_allocation_policy.services_ipv4_cidr_block
     cluster_secondary_range_name  = each.value.ip_allocation_policy.cluster_secondary_range_name
     services_secondary_range_name = each.value.ip_allocation_policy.services_secondary_range_name
     stack_type                    = each.value.ip_allocation_policy.stack_type
     pod_cidr_overprovision_config = {
       disabled = each.value.ip_allocation_policy.pod_cidr_overprovision_config.disabled
     }
-    additional_pod_ranges_config = lookup(each.value.ip_allocation_policy, "additional_pod_ranges_config", { pod_range_names = [] })
+    additional_pod_ranges_config = each.value.ip_allocation_policy.additional_pod_ranges_config
   }
   addons_config = {
     dns_cache_config = {
@@ -320,5 +318,5 @@ module "container_cluster" {
   vertical_pod_autoscaling = {
     enabled = each.value.vertical_pod_autoscaling.enabled
   }
-  workload_identity_config = lookup(each.value, "workload_identity_config", null)
+  workload_identity_config = each.value.workload_identity_config
 }

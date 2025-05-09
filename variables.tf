@@ -69,19 +69,19 @@ variable "buckets" {
     force_destroy               = bool
     public_access_prevention    = string
     uniform_bucket_level_access = bool
-    cors = list(object({
+    cors = optional(list(object({
       max_age_seconds = number
       method          = list(string)
       origin          = list(string)
       response_header = list(string)
-    }))
-    encryption = object({
+    })), [])
+    encryption = optional(object({
       default_kms_key_name = string
-    })
-    logging = object({
+    }), {})
+    logging = optional(object({
       log_bucket        = string
       log_object_prefix = string
-    })
+    }), {})
   }))
 }
 
@@ -135,17 +135,17 @@ variable "clusters" {
       })
     })
     ip_allocation_policy = object({
-      cluster_ipv4_cidr_block       = string
-      services_ipv4_cidr_block      = string
       cluster_secondary_range_name  = string
       services_secondary_range_name = string
       stack_type                    = string
       pod_cidr_overprovision_config = object({
         disabled = bool
       })
-      additional_pod_ranges_config = object({
+      cluster_ipv4_cidr_block  = optional(string)
+      services_ipv4_cidr_block = optional(string)
+      additional_pod_ranges_config = optional(object({
         pod_range_names = list(string)
-      })
+      }))
     })
     addons_config = object({
       dns_cache_config = object({

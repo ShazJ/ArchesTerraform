@@ -48,17 +48,17 @@ variable "node_config" {
 variable "ip_allocation_policy" {
   description = "IP allocation policy for the GKE cluster"
   type = object({
-    cluster_ipv4_cidr_block       = string
-    services_ipv4_cidr_block      = string
     cluster_secondary_range_name  = string
     services_secondary_range_name = string
     stack_type                    = string
     pod_cidr_overprovision_config = object({
       disabled = bool
     })
-    additional_pod_ranges_config = object({
+    cluster_ipv4_cidr_block       = optional(string)
+    services_ipv4_cidr_block      = optional(string)
+    additional_pod_ranges_config   = optional(object({
       pod_range_names = list(string)
-    })
+    }))
   })
 }
 

@@ -32,9 +32,8 @@ resource "google_container_cluster" "cluster" {
       mode = var.node_config.workload_metadata_config.mode
     }
   }
+
   ip_allocation_policy {
-    cluster_ipv4_cidr_block       = var.ip_allocation_policy.cluster_ipv4_cidr_block
-    services_ipv4_cidr_block      = var.ip_allocation_policy.services_ipv4_cidr_block
     cluster_secondary_range_name  = var.ip_allocation_policy.cluster_secondary_range_name
     services_secondary_range_name = var.ip_allocation_policy.services_secondary_range_name
     stack_type                    = var.ip_allocation_policy.stack_type
@@ -44,7 +43,7 @@ resource "google_container_cluster" "cluster" {
     }
 
     dynamic "additional_pod_ranges_config" {
-      for_each = var.ip_allocation_policy.additional_pod_ranges_config != null ? [var.ip_allocation_policy.additional_pod_ranges_config] : []
+      for_each = var.ip_allocation_policy.additional_pod_ranges_config != null && length(var.ip_allocation_policy.additional_pod_ranges_config.pod_range_names) > 0 ? [var.ip_allocation_policy.additional_pod_ranges_config] : []
       content {
         pod_range_names = additional_pod_ranges_config.value.pod_range_names
       }
@@ -118,7 +117,7 @@ resource "google_container_cluster" "cluster" {
       for_each = var.monitoring_config.advanced_datapath_observability_config != null ? [var.monitoring_config.advanced_datapath_observability_config] : []
       content {
         enable_metrics = advanced_datapath_observability_config.value.enable_metrics
-        enable_relay   = try(advanced_datapath_observability_config.value.enable_relay, false)
+        enable_relay   = advanced_datapath_observability_config.value.enable_relay
       }
     }
     enable_components = var.monitoring_config.enable_components
