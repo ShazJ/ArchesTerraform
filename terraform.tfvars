@@ -52,7 +52,7 @@ addresses = {
 firewalls = {
   coral_prd = {
     name          = "allow-ingress-coral-prd"
-    network       = "https://www.googleapis.com/compute/v1/projects/coral-370212/global/networks/coral-network-prd"
+    network       = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/coral-network-prd"
     direction     = "INGRESS"
     priority      = 1000
     source_ranges = ["172.16.0.0/28"]
@@ -64,7 +64,7 @@ firewalls = {
   },
   coral_stg = {
     name          = "allow-ingress-coral-stg"
-    network       = "https://www.googleapis.com/compute/v1/projects/coral-370212/global/networks/coral-network"
+    network       = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/coral-network"
     direction     = "INGRESS"
     priority      = 1000
     source_ranges = ["172.16.0.0/28"]
@@ -76,7 +76,7 @@ firewalls = {
   },
   default_icmp = {
     name          = "default-allow-icmp"
-    network       = "https://www.googleapis.com/compute/v1/projects/coral-370212/global/networks/default"
+    network       = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/default"
     direction     = "INGRESS"
     priority      = 65534
     source_ranges = ["0.0.0.0/0"]
@@ -87,7 +87,7 @@ firewalls = {
   },
   default_internal = {
     name          = "default-allow-internal"
-    network       = "https://www.googleapis.com/compute/v1/projects/coral-370212/global/networks/default"
+    network       = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/default"
     direction     = "INGRESS"
     priority      = 65534
     source_ranges = ["10.128.0.0/9"]
@@ -131,7 +131,7 @@ buckets = {
       response_header = ["Content-Type"]
     }]
     encryption = {
-      default_kms_key_name = "projects/coral-370212/locations/europe-west2/keyRings/data-store-keyring-uat-prd/cryptoKeys/data-store-key-uat-prd"
+      default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat-prd/cryptoKeys/data-store-key-uat-prd"
     }
     logging = {
       log_bucket        = "log-store-eu-west-2"
@@ -152,7 +152,7 @@ buckets = {
       response_header = ["*"]
     }]
     encryption = {
-      default_kms_key_name = "projects/coral-370212/locations/europe-west2/keyRings/data-store-keyring-uat/cryptoKeys/data-store-key-uat"
+      default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat/cryptoKeys/data-store-key-uat"
     }
     logging = {
       log_bucket        = "log-store-eu-west-2"
@@ -175,7 +175,7 @@ buckets = {
     public_access_prevention    = "inherited"
     uniform_bucket_level_access = true
     encryption = {
-      default_kms_key_name = "projects/coral-370212/locations/europe-west2/keyRings/data-store-keyring-uat-prd/cryptoKeys/data-store-key-uat-prd"
+      default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat-prd/cryptoKeys/data-store-key-uat-prd"
     }
   },
   state_store_uat = {
@@ -186,11 +186,11 @@ buckets = {
     public_access_prevention    = "inherited"
     uniform_bucket_level_access = true
     encryption = {
-      default_kms_key_name = "projects/coral-370212/locations/europe-west2/keyRings/data-store-keyring-uat/cryptoKeys/data-store-key-uat"
+      default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat/cryptoKeys/data-store-key-uat"
     }
   },
   artifacts_us = {
-    name                        = "artifacts.coral-370212.appspot.com"
+    name                        = "artifacts.coral-459111.appspot.com"
     location                    = "US"
     storage_class               = "STANDARD"
     force_destroy               = false
@@ -198,7 +198,7 @@ buckets = {
     uniform_bucket_level_access = false
   },
   artifacts_eu = {
-    name                        = "eu.artifacts.coral-370212.appspot.com"
+    name                        = "eu.artifacts.coral-459111.appspot.com"
     location                    = "EU"
     storage_class               = "STANDARD"
     force_destroy               = false
@@ -247,32 +247,13 @@ service_accounts = {
 routers = {
   prd = {
     name    = "coral-network-router-prd"
-    network = "https://www.googleapis.com/compute/v1/projects/coral-370212/global/networks/coral-network-prd"
+    network = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/coral-network-prd"
   },
   stg = {
     name    = "coral-network-router"
-    network = "https://www.googleapis.com/compute/v1/projects/coral-370212/global/networks/coral-network"
+    network = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/coral-network"
   }
 }
-
-# routes = {
-#   peering_2d78a0e4bac140d8 = {
-#     name             = "peering-route-2d78a0e4bac140d8"
-#     network          = "https://www.googleapis.com/compute/v1/projects/coral-370212/global/networks/coral-network"
-#     dest_range       = "172.16.0.0/28"
-#     priority         = 0
-#     description      = "Auto generated route via peering [gke-n3160d8fda93cc2900d2-6468-d2c7-peer]."
-#     next_hop_gateway = "projects/coral-370212/global/gateways/default-internet-gateway"
-#   },
-#   peering_6417c1f2b7f61256 = {
-#     name             = "peering-route-6417c1f2b7f61256"
-#     network          = "https://www.googleapis.com/compute/v1/projects/coral-370212/global/networks/coral-network-prd"
-#     dest_range       = "172.16.0.0/28"
-#     priority         = 0
-#     description      = "Auto generated route via peering [gke-n23223a9b66f638c4458-6e24-4f83-peer]."
-#     next_hop_gateway = "projects/coral-370212/global/gateways/default-internet-gateway"
-#   }
-# }
 
 key_rings = {
   data_store_uat_prd = {
@@ -290,8 +271,8 @@ clusters = {
   prd = {
     name       = "k8s-coral-prd"
     location   = "europe-west2-a"
-    network    = "projects/coral-370212/global/networks/coral-network-prd"
-    subnetwork = "projects/coral-370212/regions/europe-west2/subnetworks/coral-subnetwork-prd"
+    network    = "projects/coral-459111/global/networks/coral-network-prd"
+    subnetwork = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork-prd"
     node_config = {
       disk_size_gb    = 50
       disk_type       = "pd-balanced"
@@ -317,8 +298,7 @@ clusters = {
         threads_per_core = 0
       }
       workload_metadata_config = {
-        mode          = "GKE_METADATA"
-        node_metadata = "GKE_METADATA_SERVER"
+        mode = "GKE_METADATA"
       }
     }
     ip_allocation_policy = {
@@ -372,9 +352,9 @@ clusters = {
     }
     maintenance_policy = {
       recurring_window = {
-        end_time   = "2021-01-02T07:00:00Z"
+        end_time   = "2025-05-11T07:00:00Z"
         recurrence = "FREQ=WEEKLY;BYDAY=FR"
-        start_time = "2021-01-01T19:00:00Z"
+        start_time = "2025-05-10T19:00:00Z"
       }
     }
     master_auth = {
@@ -455,14 +435,14 @@ clusters = {
       enabled = false
     }
     workload_identity_config = {
-      workload_pool = "coral-370212.svc.id.goog"
+      workload_pool = "coral-459111.svc.id.goog"
     }
   },
   stg = {
     name       = "k8s-coral-stg"
     location   = "europe-west2-a"
-    network    = "projects/coral-370212/global/networks/coral-network"
-    subnetwork = "projects/coral-370212/regions/europe-west2/subnetworks/coral-subnetwork"
+    network    = "projects/coral-459111/global/networks/coral-network"
+    subnetwork = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork"
     node_config = {
       disk_size_gb    = 50
       disk_type       = "pd-standard"
@@ -473,7 +453,7 @@ clusters = {
         disable-legacy-endpoints = "true"
       }
       oauth_scopes    = ["https://www.googleapis.com/auth/cloud-platform"]
-      service_account = "coral-arches-k8s-coral-stg@coral-370212.iam.gserviceaccount.com"
+      service_account = "coral-arches-k8s-coral-stg@coral-459111.iam.gserviceaccount.com"
       shielded_instance_config = {
         enable_integrity_monitoring = true
       }
@@ -482,6 +462,9 @@ clusters = {
         TF_used_for = "gke"
       }
       tags = ["gke-k8s-coral-stg-np-tf-cejctx"]
+      workload_metadata_config = {
+        mode = "GKE_METADATA"
+      }
     }
     ip_allocation_policy = {
       cluster_ipv4_cidr_block       = "192.168.64.0/20"
@@ -529,11 +512,11 @@ clusters = {
     logging_config = {
       enable_components = ["SYSTEM_COMPONENTS", "WORKLOADS"]
     }
-    maintenance_policy = {
+    maintenance_policy = { #sji
       recurring_window = {
-        end_time   = "2021-01-01T23:00:00Z"
+        end_time   = "2025-05-11T23:00:00Z"
         recurrence = "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR"
-        start_time = "2021-01-01T19:00:00Z"
+        start_time = "2025-05-11T19:00:00Z"
       }
     }
     master_auth = {
@@ -608,6 +591,9 @@ clusters = {
     }
     vertical_pod_autoscaling = {
       enabled = false
+    }
+    workload_identity_config = {
+      workload_pool = "coral-459111.svc.id.goog"
     }
   }
 }
