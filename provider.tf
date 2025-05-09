@@ -15,8 +15,8 @@ terraform {
     }
   }
   backend "gcs" {
-    bucket = "terraform-state-bucket"
-    prefix = "crl-state-store" #sji todo
+    bucket = "crl-state-store"
+    #prefix = "crl-state-store" #sji todo
     #prefix = "terraform/state/${var.environment}"
   }
 }
