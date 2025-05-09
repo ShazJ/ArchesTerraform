@@ -21,9 +21,11 @@ runs:
 
   - name: Show version
     run: tflint --version
+    shell: bash
 
   - name: Init TFLint
     run: tflint --init
+    shell: bash
     env:
       # https://github.com/terraform-linters/tflint/blob/master/docs/user-guide/plugins.md#avoiding-rate-limiting
       GITHUB_TOKEN: ${{ github.token }}
