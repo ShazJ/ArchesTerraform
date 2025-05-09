@@ -297,6 +297,11 @@ clusters = {
       workload_metadata_config = {
         mode = "GKE_METADATA"
       }
+      labels = {
+        TF_used_by  = "k8s-coral-prd"
+        TF_used_for = "gke"
+      }
+      tags = ["gke-k8s-coral-prd-np-tf-cejctx"]
     }
     ip_allocation_policy = {
       cluster_ipv4_cidr_block       = "192.168.64.0/20"

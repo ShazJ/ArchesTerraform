@@ -41,7 +41,6 @@ variable "node_config" {
     })
     workload_metadata_config = object({
       mode = string
-      node_metadata = string
     })
   })
 }

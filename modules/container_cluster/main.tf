@@ -32,7 +32,6 @@ resource "google_container_cluster" "cluster" {
       mode = var.node_config.workload_metadata_config.mode
     }
   }
-
   ip_allocation_policy {
     cluster_ipv4_cidr_block       = var.ip_allocation_policy.cluster_ipv4_cidr_block
     services_ipv4_cidr_block      = var.ip_allocation_policy.services_ipv4_cidr_block

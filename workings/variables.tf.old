@@ -52,7 +52,7 @@ variable "firewalls" {
     priority      = number
     source_ranges = list(string)
     target_tags   = list(string)
-    allow = list(object({
+    allow         = list(object({
       protocol = string
       ports    = list(string)
     }))
@@ -69,7 +69,7 @@ variable "buckets" {
     force_destroy               = bool
     public_access_prevention    = string
     uniform_bucket_level_access = bool
-    cors = list(object({
+    cors                        = list(object({
       max_age_seconds = number
       method          = list(string)
       origin          = list(string)
