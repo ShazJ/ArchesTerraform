@@ -13,6 +13,7 @@ if [ ! -f "${CONFIG_FILE}" ]; then
   echo "Please create '${CONFIG_FILE}' with the following format:"
   echo "PROJECT_ID=your-project-id"
   echo "TF_BUCKET_NAME=state-store"
+  echo "PROJECT_LOCATION=us-central1"
   exit 1
 fi
 echo "config file found"
@@ -22,7 +23,7 @@ source "${CONFIG_FILE}"
 echo "checking config file"
 
 # Validate required variables
-REQUIRED_VARS=("PROJECT_ID" "TF_BUCKET_NAME" )
+REQUIRED_VARS=("PROJECT_ID" "PROJECT_LOCATION" "TF_BUCKET_NAME" )
 for VAR in "${REQUIRED_VARS[@]}"; do
   if [ -z "${!VAR}" ]; then
     echo "Error: Required variable '${VAR}' is not set in '${CONFIG_FILE}'."
@@ -39,7 +40,7 @@ else
 fi
 
 # Set the project
-gcloud config set project "$PROJECT_ID"
+gcloud config set project "$PROJECT_ID" #sji twice - tidy!
 
 # Check if Cloud Storage API is enabled
 echo "Enabling Cloud Storage API if not already enabled..."
@@ -50,7 +51,7 @@ if gsutil ls "gs://${TF_BUCKET_NAME}" >/dev/null 2>&1; then
     echo "Bucket gs://${TF_BUCKET_NAME} already exists. Skipping creation."
 else
   echo "Creating bucket gs://${TF_BUCKET_NAME}..."
-  gsutil mb -p "$PROJECT_ID" -l "$LOCATION" -b on "gs://${TF_BUCKET_NAME}"
+  gsutil mb -p "$PROJECT_ID" -l "${PROJECT_LOCATION}" -b on "gs://${TF_BUCKET_NAME}"
 fi
 
 # Enable versioning
