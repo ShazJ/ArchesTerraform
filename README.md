@@ -79,10 +79,13 @@ terraform-project/
 │       ├── variables.tf     # Module variables
 │       ├── outputs.tf       # Module outputs
 │       └── README.md        # Module documentation
+│   └── container_cluster/    # New module for GKE clusters
+│       ├── main.tf           # GKE cluster resource
+│       ├── variables.tf      # Module variables
+│       ├── outputs.tf        # Module outputs
+│       └── README.md         # Module documentation
 ├── terraform.tfvars         # Variable values
 └── README.md                # Project documentation
-
-
 
 
 # Scribbles

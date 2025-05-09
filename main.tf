@@ -150,14 +150,15 @@ module "compute_router" {
 }
 
 # module "compute_route" {
-#   for_each    = var.routes
-#   source      = "./modules/compute_route"
-#   project_id  = var.project_id
-#   name        = each.value.name
-#   network     = each.value.network
-#   dest_range  = each.value.dest_range
-#   priority    = each.value.priority
-#   description = each.value.description
+#   for_each         = var.routes
+#   source           = "./modules/compute_route"
+#   project_id       = var.project_id
+#   name             = each.value.name
+#   network          = each.value.network
+#   dest_range       = each.value.dest_range
+#   priority         = each.value.priority
+#   description      = each.value.description
+#   next_hop_gateway = each.value.next_hop_gateway
 # }
 
 module "compute_resource_policy" {
@@ -191,4 +192,155 @@ module "kms_key_ring" {
   project_id = var.project_id
   name       = each.value.name
   location   = var.location
+}
+
+module "container_cluster" {
+  for_each   = var.clusters
+  source     = "./modules/container_cluster"
+  project_id = var.project_id
+  name       = each.value.name
+  location   = each.value.location
+  network    = each.value.network
+  subnetwork = each.value.subnetwork
+  node_config = {
+    disk_size_gb    = each.value.node_config.disk_size_gb
+    disk_type       = each.value.node_config.disk_type
+    image_type      = each.value.node_config.image_type
+    logging_variant = each.value.node_config.logging_variant
+    machine_type    = each.value.node_config.machine_type
+    metadata        = each.value.node_config.metadata
+    oauth_scopes    = each.value.node_config.oauth_scopes
+    service_account = each.value.node_config.service_account
+    shielded_instance_config = {
+      enable_integrity_monitoring = each.value.node_config.shielded_instance_config.enable_integrity_monitoring
+    }
+    labels = lookup(each.value.node_config, "labels", {})
+    tags   = lookup(each.value.node_config, "tags", [])
+    advanced_machine_features = lookup(each.value.node_config, "advanced_machine_features", null) != null ? {
+      threads_per_core = each.value.node_config.advanced_machine_features.threads_per_core
+    } : null
+    workload_metadata_config = lookup(each.value.node_config, "workload_metadata_config", null) != null ? {
+      mode          = each.value.node_config.workload_metadata_config.mode
+      node_metadata = each.value.node_config.workload_metadata_config.node_metadata
+    } : null
+  }
+  ip_allocation_policy = {
+    cluster_ipv4_cidr_block       = each.value.ip_allocation_policy.cluster_ipv4_cidr_block
+    services_ipv4_cidr_block      = each.value.ip_allocation_policy.services_ipv4_cidr_block
+    cluster_secondary_range_name  = each.value.ip_allocation_policy.cluster_secondary_range_name
+    services_secondary_range_name = each.value.ip_allocation_policy.services_secondary_range_name
+    stack_type                    = each.value.ip_allocation_policy.stack_type
+    pod_cidr_overprovision_config = {
+      disabled = each.value.ip_allocation_policy.pod_cidr_overprovision_config.disabled
+    }
+    additional_pod_ranges_config = lookup(each.value.ip_allocation_policy, "additional_pod_ranges_config", null) != null ? {
+      pod_range_names = each.value.ip_allocation_policy.additional_pod_ranges_config.pod_range_names
+    } : null
+  }
+  addons_config = {
+    dns_cache_config = {
+      enabled = each.value.addons_config.dns_cache_config.enabled
+    }
+    gce_persistent_disk_csi_driver_config = {
+      enabled = each.value.addons_config.gce_persistent_disk_csi_driver_config.enabled
+    }
+    horizontal_pod_autoscaling = {
+      disabled = each.value.addons_config.horizontal_pod_autoscaling.disabled
+    }
+    http_load_balancing = {
+      disabled = each.value.addons_config.http_load_balancing.disabled
+    }
+    network_policy_config = {
+      disabled = each.value.addons_config.network_policy_config.disabled
+    }
+  }
+  cluster_autoscaling = {
+    autoscaling_profile = each.value.cluster_autoscaling.autoscaling_profile
+  }
+  cluster_telemetry = {
+    type = each.value.cluster_telemetry.type
+  }
+  database_encryption = {
+    state = each.value.database_encryption.state
+  }
+  default_max_pods_per_node = each.value.default_max_pods_per_node
+  default_snat_status = {
+    disabled = each.value.default_snat_status.disabled
+  }
+  description           = each.value.description
+  enable_shielded_nodes = each.value.enable_shielded_nodes
+  initial_node_count    = each.value.initial_node_count
+  logging_config = {
+    enable_components = each.value.logging_config.enable_components
+  }
+  maintenance_policy = {
+    recurring_window = {
+      end_time   = each.value.maintenance_policy.recurring_window.end_time
+      recurrence = each.value.maintenance_policy.recurring_window.recurrence
+      start_time = each.value.maintenance_policy.recurring_window.start_time
+    }
+  }
+  master_auth = {
+    client_certificate_config = {
+      issue_client_certificate = each.value.master_auth.client_certificate_config.issue_client_certificate
+    }
+  }
+  master_authorized_networks_config = {
+    cidr_blocks = each.value.master_authorized_networks_config.cidr_blocks
+  }
+  monitoring_config = {
+    advanced_datapath_observability_config = {
+      enable_metrics = each.value.monitoring_config.advanced_datapath_observability_config.enable_metrics
+      enable_relay = each.value.monitoring_config.advanced_datapath_observability_config.enable_relay #sji correct?
+    }
+    enable_components = each.value.monitoring_config.enable_components
+  }
+  network_policy = {
+    enabled  = each.value.network_policy.enabled
+    provider = each.value.network_policy.provider
+  }
+  networking_mode = each.value.networking_mode
+  node_pool_defaults = {
+    node_config_defaults = {
+      logging_variant = each.value.node_pool_defaults.node_config_defaults.logging_variant
+    }
+  }
+  node_version = each.value.node_version
+  notification_config = {
+    pubsub = {
+      enabled = each.value.notification_config.pubsub.enabled
+    }
+  }
+  pod_security_policy_config = {
+    enabled = each.value.pod_security_policy_config.enabled
+  }
+  private_cluster_config = {
+    enable_private_nodes   = each.value.private_cluster_config.enable_private_nodes
+    master_ipv4_cidr_block = each.value.private_cluster_config.master_ipv4_cidr_block
+    master_global_access_config = {
+      enabled = each.value.private_cluster_config.master_global_access_config.enabled
+    }
+  }
+  protect_config = {
+    workload_config = {
+      audit_mode = each.value.protect_config.workload_config.audit_mode
+    }
+    workload_vulnerability_mode = each.value.protect_config.workload_vulnerability_mode
+  }
+  release_channel = {
+    channel = each.value.release_channel.channel
+  }
+  security_posture_config = {
+    mode               = each.value.security_posture_config.mode
+    vulnerability_mode = each.value.security_posture_config.vulnerability_mode
+  }
+  service_external_ips_config = {
+    enabled = each.value.service_external_ips_config.enabled
+  }
+  vertical_pod_autoscaling = {
+    enabled = each.value.vertical_pod_autoscaling.enabled
+  }
+  workload_identity_config = lookup(each.value, "workload_identity_config", null) != null ? {
+    workload_pool = each.value.workload_identity_config.workload_pool
+  } : null
 }

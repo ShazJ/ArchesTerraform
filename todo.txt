@@ -1,0 +1,14 @@
+outdated!!
+maintenance_policy = {
+  recurring_window = {
+    end_time   = "2025-05-11T07:00:00Z"
+    recurrence = "FREQ=WEEKLY;BYDAY=FR"
+    start_time = "2025-05-10T19:00:00Z"
+  }
+}
+
+stg does not use workload identity - guessing this is delib?
+if needed must add to tfvars:
+workload_identity_config = {
+  workload_pool = "coral-370212.svc.id.goog"
+}
