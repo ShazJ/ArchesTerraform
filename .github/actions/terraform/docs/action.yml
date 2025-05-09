@@ -6,6 +6,8 @@ runs:
   steps:
     - name: Check out code
       uses: actions/checkout@v4
+      # with:
+      #   ref: ${{ github.event.pull_request.head.ref }} #sji todo
 
     - name: Generate Storage Bucket Module Docs
       uses: terraform-docs/gh-actions@main
