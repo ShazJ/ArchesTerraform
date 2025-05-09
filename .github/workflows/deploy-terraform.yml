@@ -15,6 +15,9 @@ on:
     # paths:
     #   - 'terraform/**'
 
+permissions:
+  contents: write
+
 jobs:
 # iif: == 'success' sji! }}
   terraform-deploy:
