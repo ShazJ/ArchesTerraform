@@ -12,3 +12,8 @@ if needed must add to tfvars:
 workload_identity_config = {
   workload_pool = "coral-459111.svc.id.goog"
 }
+
+terraform docs!
+<!-- BEGIN_TF_DOCS -->
+<!-- END_TF_DOCS --> 
+add the above to readme.md
