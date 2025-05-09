@@ -50,7 +50,7 @@ if gsutil ls "gs://${TF_BUCKET_NAME}" >/dev/null 2>&1; then
     echo "Bucket gs://${TF_BUCKET_NAME} already exists. Skipping creation."
 else
   echo "Creating bucket gs://${TF_BUCKET_NAME}..."
-  gsutil mb -p "$PROJECT_ID" -l "$LOCATION" -b on "gs://${BUCKET_NAME}"
+  gsutil mb -p "$PROJECT_ID" -l "$LOCATION" -b on "gs://${TF_BUCKET_NAME}"
 fi
 
 # Enable versioning
