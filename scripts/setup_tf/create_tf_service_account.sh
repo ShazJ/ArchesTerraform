@@ -51,7 +51,7 @@ else
   echo "Warning: GOOGLE_APPLICATION_CREDENTIALS not set. Assuming default credentials."
 fi
 
-Set the project
+#Set the project
 gcloud config set project "$PROJECT_ID"
 
 Create the service account
@@ -60,17 +60,17 @@ gcloud iam service-accounts create "${TF_SA_NAME}" \
   --display-name="${TF_SA_DISPLAY_NAME}" \
   --project="${PROJECT_ID}" \
   --description="Service account for Terraform"
-echo "here"
+
 # Delay to ensure the service account is created before assigning roles
 #without this the assign roles command fails
 sleep 10
-echo "slept"
+
 # Check if the service account was created successfully
 if ! gcloud iam service-accounts list --project="${PROJECT_ID}" | grep -q "${TF_SA_NAME}"; then
   echo "Error: Service account '${TF_SA_NAME}' was not created successfully."
   exit 1
 fi
-echo "roles"
+
 # Assign roles to the service account
 for ROLE in "${ROLES[@]}"; do
   echo "Assigning role ${ROLE} to service account..."
