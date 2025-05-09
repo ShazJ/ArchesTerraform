@@ -127,7 +127,7 @@ resource "google_container_cluster" "cluster" {
   monitoring_config {
     advanced_datapath_observability_config {
       enable_metrics = var.monitoring_config.advanced_datapath_observability_config.enable_metrics
-      enable_relay   = false # Set to false as a default; adjust based on requirements
+      enable_relay   = var.monitoring_config.advanced_datapath_observability_config.enable_relay
     }
     enable_components = var.monitoring_config.enable_components
   }
