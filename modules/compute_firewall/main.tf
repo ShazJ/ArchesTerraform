@@ -5,14 +5,14 @@ resource "google_compute_firewall" "firewall" {
   direction     = var.direction
   priority      = var.priority
   source_ranges = var.source_ranges
-  target_tags   = var.target_tags
   description   = var.description
+  target_tags   = length(var.target_tags) > 0 ? var.target_tags : null
 
   dynamic "allow" {
     for_each = var.allow
     content {
       protocol = allow.value.protocol
-      ports    = lookup(allow.value, "ports", null)
+      ports    = length(allow.value.ports) > 0 ? allow.value.ports : null
     }
   }
 }

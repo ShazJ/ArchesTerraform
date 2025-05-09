@@ -2,7 +2,7 @@ project_id = "coral-459111"
 location   = "europe-west2"
 region     = "europe-west2"
 format     = "DOCKER"
-mode       = "STANDARD"
+mode       = "STANDARD_REPOSITORY"
 
 repositories = {
   arches = {
@@ -86,9 +86,11 @@ firewalls = {
     direction     = "INGRESS"
     priority      = 65534
     source_ranges = ["0.0.0.0/0"]
+    target_tags   = []
     description   = "Allow ICMP from anywhere"
     allow = [{
       protocol = "icmp"
+      ports    = []
     }]
   },
   default_internal = {
@@ -97,6 +99,7 @@ firewalls = {
     direction     = "INGRESS"
     priority      = 65534
     source_ranges = ["10.128.0.0/9"]
+    target_tags   = []
     description   = "Allow internal traffic on the default network"
     allow = [
       {
@@ -109,6 +112,7 @@ firewalls = {
       },
       {
         protocol = "icmp"
+        ports    = []
       }
     ]
   }
@@ -123,8 +127,6 @@ buckets = {
     public_access_prevention    = "enforced"
     uniform_bucket_level_access = true
     cors                        = []
-    encryption                  = {}
-    logging                     = {}
   },
   data_store_uat_prd = {
     name                        = "crl-data-store-uat-eu-west-2-prd"
@@ -176,8 +178,6 @@ buckets = {
     public_access_prevention    = "inherited"
     uniform_bucket_level_access = true
     cors                        = []
-    encryption                  = {}
-    logging                     = {}
   },
   prd_state_store_uat = {
     name                        = "crl-prd-state-store-uat-eu-west-2"
@@ -190,7 +190,6 @@ buckets = {
     encryption = {
       default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat-prd/cryptoKeys/data-store-key-uat-prd"
     }
-    logging = {}
   },
   state_store_uat = {
     name                        = "crl-state-store-uat-eu-west-2"
@@ -203,7 +202,6 @@ buckets = {
     encryption = {
       default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat/cryptoKeys/data-store-key-uat"
     }
-    logging = {}
   },
   artifacts_us = {
     name                        = "artifacts.coral-459111.appspot.com"
@@ -213,8 +211,6 @@ buckets = {
     public_access_prevention    = "inherited"
     uniform_bucket_level_access = false
     cors                        = []
-    encryption                  = {}
-    logging                     = {}
   },
   artifacts_eu = {
     name                        = "eu.artifacts.coral-459111.appspot.com"
@@ -224,8 +220,6 @@ buckets = {
     public_access_prevention    = "inherited"
     uniform_bucket_level_access = false
     cors                        = []
-    encryption                  = {}
-    logging                     = {}
   }
 }
 

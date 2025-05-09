@@ -51,10 +51,10 @@ variable "firewalls" {
     direction     = string
     priority      = number
     source_ranges = list(string)
-    target_tags   = list(string)
+    target_tags   = optional(list(string), [])
     allow = list(object({
       protocol = string
-      ports    = list(string)
+      ports    = optional(list(string))
     }))
     description = string
   }))
@@ -74,14 +74,14 @@ variable "buckets" {
       method          = list(string)
       origin          = list(string)
       response_header = list(string)
-    })), [])
+    })))
     encryption = optional(object({
       default_kms_key_name = string
-    }), {})
+    }))
     logging = optional(object({
       log_bucket        = string
       log_object_prefix = string
-    }), {})
+    }))
   }))
 }
 
