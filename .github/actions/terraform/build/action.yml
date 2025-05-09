@@ -39,7 +39,7 @@ runs:
       shell: bash
 
     - name: Terraform Init
-      run: terraform init
+      run: terraform init -upgrade
       shell: bash
       #working-directory: ./environments/${{ steps.set-env.outputs.environment }}
 
