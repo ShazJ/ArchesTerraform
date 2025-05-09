@@ -43,7 +43,7 @@ jobs:
         uses: ./.github/actions/terraform/lint
 
       - name: Terraform Build
-        uses: ./.github/actions/terraform/tf-build
+        uses: ./.github/actions/terraform/build
 
 
   render-terraform-docs:      
@@ -56,5 +56,5 @@ jobs:
         with:
           fetch-depth: 0  
       - name: Terraform Docs
-        uses: ./.github/actions/terraform/tf-docs
+        uses: ./.github/actions/terraform/docs
 
