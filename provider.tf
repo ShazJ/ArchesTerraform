@@ -14,8 +14,9 @@ terraform {
       version = "~> 5.0"
     }
   }
-  # backend "gcs" {
-  #   bucket = "terraform-state-bucket"
-  #   prefix = "terraform/state/${var.environment}"
-  # }
+  backend "gcs" {
+    bucket = "terraform-state-bucket"
+    prefix = "terraform/state/${PROJECT_PREFIX}-state-store" #sji todo
+    #prefix = "terraform/state/${var.environment}"
+  }
 }

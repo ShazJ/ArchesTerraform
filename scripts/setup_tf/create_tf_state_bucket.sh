@@ -46,16 +46,16 @@ echo "Enabling Cloud Storage API if not already enabled..."
 gcloud services enable storage.googleapis.com --project="$PROJECT_ID"
 
 # Check if bucket exists
-if gsutil ls "gs://${BUCKET_NAME}" >/dev/null 2>&1; then
-    echo "Bucket gs://${BUCKET_NAME} already exists. Skipping creation."
+if gsutil ls "gs://${TF_BUCKET_NAME}" >/dev/null 2>&1; then
+    echo "Bucket gs://${TF_BUCKET_NAME} already exists. Skipping creation."
 else
-  echo "Creating bucket gs://${BUCKET_NAME}..."
+  echo "Creating bucket gs://${TF_BUCKET_NAME}..."
   gsutil mb -p "$PROJECT_ID" -l "$LOCATION" -b on "gs://${BUCKET_NAME}"
 fi
 
 # Enable versioning
 echo "Enabling versioning on bucket..."
-gsutil versioning set on "gs://${BUCKET_NAME}"
+gsutil versioning set on "gs://${TF_BUCKET_NAME}"
 
 # Set lifecycle rule (optional: keep last 10 versions)
 echo "Configuring lifecycle rules..."
@@ -69,7 +69,7 @@ cat <<EOF > lifecycle.json
   ]
 }
 EOF
-gsutil lifecycle set lifecycle.json "gs://${BUCKET_NAME}"
+gsutil lifecycle set lifecycle.json "gs://${TF_BUCKET_NAME}"
 rm lifecycle.json
 
 # # Set IAM permissions
@@ -79,4 +79,4 @@ rm lifecycle.json
 #   gsutil iam ch "user:$DEVELOPER_EMAIL:objectCreator,objectViewer" "gs://$BUCKET_NAME"
 # fi
 
-echo "Bucket gs://${BUCKET_NAME} is ready for Terraform state."
+echo "Bucket gs://${TF_BUCKET_NAME} is ready for Terraform state."
