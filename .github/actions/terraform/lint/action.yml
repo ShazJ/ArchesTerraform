@@ -1,36 +1,32 @@
 name: tflint
 description: Run TFLint
 
-tflint:
-    runs-on: ${{ matrix.os }}
+runs:
+  using: "composite"
 
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
+  steps:
+  - name: Checkout
+    uses: actions/checkout@v4
+s
+  - name: Cache plugin dir
+    uses: actions/cache@v4      
+    with:
+      path: ~/.tflint.d/plugins
+      key: ${{ matrix.os }}-tflint-${{ hashFiles('.tflint.hcl') }}
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+  - name: Setup TFLint
+    uses: terraform-linters/setup-tflint@v4      
+    with:
+      tflint_version: latest
 
-    - name: Cache plugin dir
-      uses: actions/cache@v4      
-      with:
-        path: ~/.tflint.d/plugins
-        key: ${{ matrix.os }}-tflint-${{ hashFiles('.tflint.hcl') }}
+  - name: Show version
+    run: tflint --version
 
-    - name: Setup TFLint
-      uses: terraform-linters/setup-tflint@v4      
-      with:
-        tflint_version: latest
+  - name: Init TFLint
+    run: tflint --init
+    env:
+      # https://github.com/terraform-linters/tflint/blob/master/docs/user-guide/plugins.md#avoiding-rate-limiting
+      GITHUB_TOKEN: ${{ github.token }}
 
-    - name: Show version
-      run: tflint --version
-
-    - name: Init TFLint
-      run: tflint --init
-      env:
-        # https://github.com/terraform-linters/tflint/blob/master/docs/user-guide/plugins.md#avoiding-rate-limiting
-        GITHUB_TOKEN: ${{ github.token }}
-
-    - name: Run TFLint
-      run: tflint -f compact
+  - name: Run TFLint
+    run: tflint -f compact

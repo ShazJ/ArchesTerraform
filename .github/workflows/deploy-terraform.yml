@@ -30,6 +30,9 @@ jobs:
 
     steps:
 
+      - name: Checkout
+        uses: actions/checkout@v4
+
       # Authenticate to GCP
       - name: Authenticate with GCP
         uses: google-github-actions/auth@v2
