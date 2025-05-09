@@ -40,7 +40,6 @@ ROLES=(
   "roles/storage.admin"
   "roles/iam.serviceAccountKeyAdmin"
   "roles/resourcemanager.projectIamAdmin"
-  "roles/storage.objects.list"
   "roles/editor" # sji todo - custom role here - this is too broad
 )
 
