@@ -39,8 +39,8 @@ jobs:
         with:
           credentials_json: '${{ secrets.TF_SA }}'  # Key from script
 
-      #- name: Terraform Lint
-      #  uses: ./.github/actions/terraform/lint
+      - name: Terraform Lint
+        uses: ./.github/actions/terraform/lint
 
       - name: Terraform Build
         uses: ./.github/actions/terraform/build

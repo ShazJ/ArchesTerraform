@@ -1,7 +1,9 @@
 name: Terraform Docs
+description: Renders terraform docs and pushes back to PR
 
-runs-on: ubuntu-latest
-steps:
+runs:
+  using: "composite"
+  steps:
   - name: Check out code
     uses: actions/checkout@v4
     with:
