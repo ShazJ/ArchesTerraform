@@ -34,6 +34,10 @@ runs:
           echo "environment=dev" >> $GITHUB_OUTPUT
         fi
         
+    - name: Terraform Version
+      run: terraform version
+      shell: bash
+
     - name: Terraform Init
       run: terraform init
       shell: bash
