@@ -10,5 +10,5 @@ maintenance_policy = {
 stg does not use workload identity - guessing this is delib?
 if needed must add to tfvars:
 workload_identity_config = {
-  workload_pool = "coral-370212.svc.id.goog"
+  workload_pool = "coral-459111.svc.id.goog"
 }
