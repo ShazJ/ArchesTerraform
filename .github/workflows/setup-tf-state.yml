@@ -74,6 +74,14 @@ jobs:
         env:
           PROJECT_ID: coral-459111
 
+      - name: Enable IAM API # sji todo - hmmm - probs need elsewhere
+        run: |
+          gcloud services enable iam.googleapis.com
+          gcloud services enable cloudresourcemanager.googleapis.com
+          sleep 60  # Wait 60 seconds for propagation
+        env:
+          PROJECT_ID: coral-459111
+
       - name: Create Terraform State Bucket
         run: |
           chmod +x scripts/setup_tf/create_tf_state_bucket.sh
