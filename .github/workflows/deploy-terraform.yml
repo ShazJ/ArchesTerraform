@@ -31,10 +31,10 @@ jobs:
     steps:
 
       # Authenticate to GCP
-      - name: Authenticate to Google Cloud
+      - name: Authenticate with GCP
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{env.GOOGLE_CREDENTIALS}}
+          credentials_json: '${{ secrets.TF_BOOTSTRAP_SA }}'  # Key from script
 
       - name: Terraform Lint
         uses: ./.github/actions/terraform/tf-lint
