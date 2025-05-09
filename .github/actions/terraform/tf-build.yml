@@ -13,22 +13,12 @@ runs:
     - name: Check out code
       uses: actions/checkout@v4
 
-    # - name: Check for terraform version mismatch
-    #   run: |
-    #     DOTFILE_VERSION=$(cat .terraform-version)
-    #     TERRAFORM_IMAGE_REFERENCES=$(grep "uses: docker://hashicorp/terraform" .github/workflows/continuous-integration-terraform.yml | grep -v TERRAFORM_IMAGE_REFERENCES | wc -l | tr -d ' ')
-    #     if [ "$(grep "docker://hashicorp/terraform:${DOTFILE_VERSION}" .github/workflows/continuous-integration-terraform.yml | wc -l | tr -d ' ')" != "$TERRAFORM_IMAGE_REFERENCES" ]
-    #     then
-    #       echo -e "\033[1;31mError: terraform version in .terraform-version file does not match docker://hashicorp/terraform versions in .github/workflows/continuous-integration-terraform.yml"
-    #       exit 1
-    #     fi
-
-    # Set up Terraform
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v3
-      with:
-        terraform_version: ${{ inputs.terraform_version }}
-
+    # # Set up Terraform
+    # - name: Setup Terraform
+    #   uses: hashicorp/setup-terraform@v3
+    #   with:
+    #     terraform_version: ${{ inputs.terraform_version }}
+    #sji todo - environments
     # Determine environment based on branch
     - name: Set environment
       id: set-env
@@ -47,22 +37,22 @@ runs:
     - name: Terraform Init
       run: terraform init
       shell: bash
-      working-directory: ./environments/${{ steps.set-env.outputs.environment }}
-
-    - name: Terraform Validate
-      run: terraform validate
-      shell: bash
-      working-directory: ./environments/${{ steps.set-env.outputs.environment }}
+      #working-directory: ./environments/${{ steps.set-env.outputs.environment }}
 
     - name: Terraform Format Check
       run: terraform fmt -check=true -diff=true
       shell: bash
-      working-directory: ./environments/${{ steps.set-env.outputs.environment }}
+      #working-directory: ./environments/${{ steps.set-env.outputs.environment }}
+
+    - name: Terraform Validate
+      run: terraform validate
+      shell: bash
+      #working-directory: ./environments/${{ steps.set-env.outputs.environment }}
 
     - name: Terraform Plan
       run: terraform plan -out=tfplan
       shell: bash
-      working-directory: ./environments/${{ steps.set-env.outputs.environment }}
+      #working-directory: ./environments/${{ steps.set-env.outputs.environment }}
 
     # Apply
     # - name: Terraform Apply
