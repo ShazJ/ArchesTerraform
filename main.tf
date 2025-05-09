@@ -291,7 +291,7 @@ module "container_cluster" {
   monitoring_config = {
     advanced_datapath_observability_config = {
       enable_metrics = each.value.monitoring_config.advanced_datapath_observability_config.enable_metrics
-      enable_relay = each.value.monitoring_config.advanced_datapath_observability_config.enable_relay #sji correct?
+      enable_relay   = each.value.monitoring_config.advanced_datapath_observability_config.enable_relay #sji correct?
     }
     enable_components = each.value.monitoring_config.enable_components
   }
