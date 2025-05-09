@@ -34,7 +34,7 @@ jobs:
       - name: Authenticate with GCP
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: '${{ secrets.TF_BOOTSTRAP_SA }}'  # Key from script
+          credentials_json: '${{ secrets.TF_SA_KEY }}'  # Key from script
 
       - name: Terraform Lint
         uses: ./.github/actions/terraform/tf-lint
