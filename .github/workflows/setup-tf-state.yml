@@ -4,9 +4,6 @@ name: Setup Terraform
 # and obv the GCP project itself must be created - LZ required sji
 
 on:
-  push:
-    branches:
-      - dev
   workflow_dispatch:  # Manual trigger for initial setup
 #todo! backup state bucket somewhere using bootstrap account and schedule  it sji 
 jobs:
