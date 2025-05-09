@@ -5,7 +5,7 @@ inputs:
   terraform_version:
     description: Terraform version to use
     required: false
-    default: latest
+    default: "1.11.3" #sji todo
 
 runs:
   using: "composite"
