@@ -54,7 +54,7 @@ fi
 #Set the project
 gcloud config set project "$PROJECT_ID"
 
-Create the service account
+#Create the service account
 echo "Creating service account ${TF_SA_NAME}..."
 gcloud iam service-accounts create "${TF_SA_NAME}" \
   --display-name="${TF_SA_DISPLAY_NAME}" \
