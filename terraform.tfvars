@@ -295,7 +295,8 @@ clusters = {
         enable_integrity_monitoring = true
       }
       workload_metadata_config = {
-        mode = "GKE_METADATA"
+        mode          = "GKE_METADATA"
+        node_metadata = "GKE_METADATA_SERVER"
       }
     }
     ip_allocation_policy = {
@@ -460,7 +461,8 @@ clusters = {
       }
       tags = ["gke-k8s-coral-stg-np-tf-cejctx"]
       workload_metadata_config = {
-        mode = "GKE_METADATA"
+        mode          = "GKE_METADATA"
+        node_metadata = "GKE_METADATA_SERVER"
       }
     }
     ip_allocation_policy = {
@@ -512,7 +514,7 @@ clusters = {
     logging_config = {
       enable_components = ["SYSTEM_COMPONENTS", "WORKLOADS"]
     }
-    maintenance_policy = { #sji
+    maintenance_policy = {
       recurring_window = {
         end_time   = "2025-05-11T23:00:00Z"
         recurrence = "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR"
