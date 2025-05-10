@@ -35,11 +35,8 @@ jobs:
       - name: Authenticate with GCP
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: '${{ secrets.TF_BOOTSTRAP_SA }}'  # Key from script
+          credentials_json: '${{ secrets.TF_SA }}'  # Key from script
          
-      - name: Set up gcloud CLI
-        uses: google-github-actions/setup-gcloud@v2
-
       - name: Terraform Destroy
         uses: ./.github/actions/terraform/destroy
 
