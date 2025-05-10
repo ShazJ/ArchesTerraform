@@ -59,6 +59,7 @@ runs:
       #working-directory: ./environments/${{ steps.set-env.outputs.environment }}
 
     # Apply
-    # - name: Terraform Apply
-    #   run: terraform apply -auto-approve tfplan
-    #   working-directory: ./environments/${{ steps.set-env.outputs.environment }}
+    - name: Terraform Apply
+      run: terraform apply -auto-approve tfplan
+      shell: bash
+      #working-directory: ./environments/${{ steps.set-env.outputs.environment }}

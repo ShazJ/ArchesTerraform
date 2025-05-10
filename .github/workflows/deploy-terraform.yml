@@ -48,23 +48,23 @@ jobs:
       - name: Terraform Build
         uses: ./.github/actions/terraform/build
 
-
-  render-terraform-docs:      
-    name: Terraform Docs
-    needs: terraform-deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  
+#sji run only on main merge
+  # render-terraform-docs:      
+  #   name: Terraform Docs
+  #   needs: terraform-deploy
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check out code
+  #       uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0  
       
-      # Authenticate to GCP
-      - name: Authenticate with GCP
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: '${{ secrets.TF_SA }}'  # Key from script
+  #     # Authenticate to GCP
+  #     - name: Authenticate with GCP
+  #       uses: google-github-actions/auth@v2
+  #       with:
+  #         credentials_json: '${{ secrets.TF_SA }}'  # Key from script
 
-      - name: Terraform Docs
-        uses: ./.github/actions/terraform/docs
+  #     - name: Terraform Docs
+  #       uses: ./.github/actions/terraform/docs
 
