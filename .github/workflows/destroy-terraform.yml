@@ -5,8 +5,10 @@ name: Terraform Destroy
 #       workflows: ["Security Scan"] sonar?!
 #       types:
 #         - completed
-
 on:
+  push:
+    branches:
+      - dev
   workflow_dispatch:
 
 permissions:

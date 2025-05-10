@@ -7,9 +7,11 @@ name: Terraform Deployment
 #         - completed
 
 on:
-  push:
-    branches:
-      - dev
+  workflow_dispatch:
+# on:
+#   push:
+#     branches:
+#       - dev
     #   - uat
     #   - prod
     # paths:
