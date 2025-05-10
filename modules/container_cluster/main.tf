@@ -10,7 +10,8 @@ resource "google_container_cluster" "cluster" {
   enable_shielded_nodes       = var.enable_shielded_nodes
   default_max_pods_per_node   = var.default_max_pods_per_node
   networking_mode             = var.networking_mode
-  node_version                = var.node_version
+  min_master_version      = var.node_version
+  node_version            = var.node_version
 
   node_config {
     disk_size_gb    = var.node_config.disk_size_gb

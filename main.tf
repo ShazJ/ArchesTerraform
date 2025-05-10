@@ -1,3 +1,7 @@
+data "google_project" "project" {
+  project_id = var.project_id
+}
+
 module "artifact_registry" {
   for_each               = var.repositories
   source                 = "./modules/artifact_registry"
@@ -23,8 +27,8 @@ module "compute_address" {
 }
 
 module "compute_firewall" {
-  for_each      = var.firewalls
-  source        = "./modules/compute_firewall"
+  for_each = var.firewalls
+  source   = "./modules/compute_firewall"
   project_id    = var.project_id
   name          = each.value.name
   network       = each.value.network
@@ -34,6 +38,29 @@ module "compute_firewall" {
   target_tags   = each.value.target_tags
   allow         = each.value.allow
   description   = each.value.description
+  depends_on    = [google_compute_network.network]
+}
+
+resource "google_compute_network" "network" {
+  for_each = {
+    prd = "coral-network-prd"
+    stg = "coral-network"
+  }
+  project                 = var.project_id
+  name                    = each.value
+  auto_create_subnetworks = false
+}
+
+resource "google_compute_subnetwork" "subnetwork" {
+  for_each = {
+    prd = "coral-subnetwork-prd"
+    stg = "coral-subnetwork"
+  }
+  project       = var.project_id
+  name          = each.value
+  network       = google_compute_network.network[each.key].name
+  region        = var.region
+  ip_cidr_range = "10.0.0.0/16" # Adjust as needed
 }
 
 module "storage_bucket" {
@@ -141,12 +168,13 @@ module "compute_subnetwork" {
 }
 
 module "compute_router" {
-  for_each   = var.routers
-  source     = "./modules/compute_router"
+  for_each = var.routers
+  source   = "./modules/compute_router"
   project_id = var.project_id
   name       = each.value.name
-  network    = each.value.network
+  network    = google_compute_network.network[each.key].name
   region     = var.region
+  depends_on = [google_compute_network.network]
 }
 
 module "compute_resource_policy" {
@@ -180,6 +208,22 @@ module "kms_key_ring" {
   project_id = var.project_id
   name       = each.value.name
   location   = var.location
+}
+
+resource "google_kms_crypto_key_iam_binding" "data_store_uat" {
+  crypto_key_id = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat/cryptoKeys/data-store-key-uat"
+  role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+  members = [
+    "serviceAccount:${data.google_project.project.number}@gs-project-accounts.iam.gserviceaccount.com"
+  ]
+}
+
+resource "google_kms_crypto_key_iam_binding" "data_store_uat_prd" {
+  crypto_key_id = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat-prd/cryptoKeys/data-store-key-uat-prd"
+  role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+  members = [
+    "serviceAccount:${data.google_project.project.number}@gs-project-accounts.iam.gserviceaccount.com"
+  ]
 }
 
 module "container_cluster" {

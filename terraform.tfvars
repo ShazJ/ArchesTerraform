@@ -80,42 +80,42 @@ firewalls = {
     }]
     description = "Allow ingress for Coral staging GKE cluster"
   },
-  default_icmp = {
-    name          = "default-allow-icmp"
-    network       = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/default"
-    direction     = "INGRESS"
-    priority      = 65534
-    source_ranges = ["0.0.0.0/0"]
-    target_tags   = []
-    description   = "Allow ICMP from anywhere"
-    allow = [{
-      protocol = "icmp"
-      ports    = []
-    }]
-  },
-  default_internal = {
-    name          = "default-allow-internal"
-    network       = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/default"
-    direction     = "INGRESS"
-    priority      = 65534
-    source_ranges = ["10.128.0.0/9"]
-    target_tags   = []
-    description   = "Allow internal traffic on the default network"
-    allow = [
-      {
-        protocol = "tcp"
-        ports    = ["0-65535"]
-      },
-      {
-        protocol = "udp"
-        ports    = ["0-65535"]
-      },
-      {
-        protocol = "icmp"
-        ports    = []
-      }
-    ]
-  }
+  # default_icmp = {
+  #   name          = "default-allow-icmp"
+  #   network       = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/default"
+  #   direction     = "INGRESS"
+  #   priority      = 65534
+  #   source_ranges = ["0.0.0.0/0"]
+  #   target_tags   = []
+  #   description   = "Allow ICMP from anywhere"
+  #   allow = [{
+  #     protocol = "icmp"
+  #     ports    = []
+  #   }]
+  # },
+  # default_internal = {
+  #   name          = "default-allow-internal"
+  #   network       = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/default"
+  #   direction     = "INGRESS"
+  #   priority      = 65534
+  #   source_ranges = ["10.128.0.0/9"]
+  #   target_tags   = []
+  #   description   = "Allow internal traffic on the default network"
+  #   allow = [
+  #     {
+  #       protocol = "tcp"
+  #       ports    = ["0-65535"]
+  #     },
+  #     {
+  #       protocol = "udp"
+  #       ports    = ["0-65535"]
+  #     },
+  #     {
+  #       protocol = "icmp"
+  #       ports    = []
+  #     }
+  #   ]
+  # }
 }
 
 buckets = {
@@ -295,6 +295,7 @@ clusters = {
     location   = "europe-west2-a"
     network    = "projects/coral-459111/global/networks/coral-network-prd"
     subnetwork = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork-prd"
+    node_version = "1.27.3-gke.100" # Adjust to a valid GKE version sji
     node_config = {
       disk_size_gb    = 50
       disk_type       = "pd-balanced"
@@ -465,6 +466,7 @@ clusters = {
     location   = "europe-west2-a"
     network    = "projects/coral-459111/global/networks/coral-network"
     subnetwork = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork"
+    node_version = "1.27.3-gke.100" # Adjust to a valid GKE version sji
     node_config = {
       disk_size_gb    = 50
       disk_type       = "pd-standard"
