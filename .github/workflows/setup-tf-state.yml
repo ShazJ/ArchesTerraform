@@ -30,6 +30,9 @@ jobs:
         run: |
           gcloud services enable iam.googleapis.com
           gcloud services enable cloudresourcemanager.googleapis.com
+          gcloud services enable artifactregistry.googleapis.com
+          gcloud services enable compute.googleapis.com
+          gcloud services enable keymanagement.googleapis.com
           sleep 60  # Wait 60 seconds for propagation
 
       # Run sa creation script
