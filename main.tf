@@ -177,6 +177,19 @@ module "compute_router" {
   depends_on = [google_compute_network.network]
 }
 
+resource "google_compute_router_nat" "nat" {
+  for_each = {
+    prd = "coral-network-router-prd"
+    stg = "coral-network-router"
+  }
+  project                 = var.project_id
+  region                  = var.region
+  name                    = "${each.key}-nat"
+  router                  = each.value
+  nat_ip_allocate_option  = "AUTO_ONLY"
+  source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
+}
+
 module "compute_resource_policy" {
   source     = "./modules/compute_resource_policy"
   project_id = var.project_id
