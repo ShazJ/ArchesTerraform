@@ -291,10 +291,10 @@ key_rings = {
 
 clusters = {
   prd = {
-    name       = "k8s-coral-prd"
-    location   = "europe-west2-a"
-    network    = "projects/coral-459111/global/networks/coral-network-prd"
-    subnetwork = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork-prd"
+    name         = "k8s-coral-prd"
+    location     = "europe-west2-a"
+    network      = "projects/coral-459111/global/networks/coral-network-prd"
+    subnetwork   = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork-prd"
     node_version = "1.27.3-gke.100" # Adjust to a valid GKE version sji
     node_config = {
       disk_size_gb    = 50
@@ -462,10 +462,10 @@ clusters = {
     }
   },
   stg = {
-    name       = "k8s-coral-stg"
-    location   = "europe-west2-a"
-    network    = "projects/coral-459111/global/networks/coral-network"
-    subnetwork = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork"
+    name         = "k8s-coral-stg"
+    location     = "europe-west2-a"
+    network      = "projects/coral-459111/global/networks/coral-network"
+    subnetwork   = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork"
     node_version = "1.27.3-gke.100" # Adjust to a valid GKE version sji
     node_config = {
       disk_size_gb    = 50

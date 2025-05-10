@@ -27,8 +27,8 @@ module "compute_address" {
 }
 
 module "compute_firewall" {
-  for_each = var.firewalls
-  source   = "./modules/compute_firewall"
+  for_each      = var.firewalls
+  source        = "./modules/compute_firewall"
   project_id    = var.project_id
   name          = each.value.name
   network       = each.value.network
@@ -168,8 +168,8 @@ module "compute_subnetwork" {
 }
 
 module "compute_router" {
-  for_each = var.routers
-  source   = "./modules/compute_router"
+  for_each   = var.routers
+  source     = "./modules/compute_router"
   project_id = var.project_id
   name       = each.value.name
   network    = google_compute_network.network[each.key].name
@@ -182,11 +182,11 @@ resource "google_compute_router_nat" "nat" {
     prd = "coral-network-router-prd"
     stg = "coral-network-router"
   }
-  project                 = var.project_id
-  region                  = var.region
-  name                    = "${each.key}-nat"
-  router                  = each.value
-  nat_ip_allocate_option  = "AUTO_ONLY"
+  project                            = var.project_id
+  region                             = var.region
+  name                               = "${each.key}-nat"
+  router                             = each.value
+  nat_ip_allocate_option             = "AUTO_ONLY"
   source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
 }
 
