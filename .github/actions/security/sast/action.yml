@@ -15,6 +15,10 @@ runs:
         pip install checkov
         sudo apt-get update && sudo apt-get install -y jq
 
+    - name: Checkov Version
+      shell: bash
+      run: checkov --version
+      
     - name: Run full Checkov scan (JSON + SARIF)
       shell: bash
       run: |

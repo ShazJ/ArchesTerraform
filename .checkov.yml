@@ -8,9 +8,7 @@ skip_check:
   - CKV_GCP_30        # Example: GCS bucket should have uniform bucket-level access enabled
 
 skip_path:
-  - modules/legacy/   # Ignore legacy Terraform modules
-  - test/             # Ignore test configurations
-  - examples/         # Ignore example usage directories
+  - .github
 
 # Optional: Allow suppressed check annotations to be marked in-line in .tf files
 # suppress_comment: "checkov:skip=<check_id>:<reason>"
