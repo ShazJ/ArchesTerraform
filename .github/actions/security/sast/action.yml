@@ -22,7 +22,7 @@ runs:
     - name: Run full Checkov scan (JSON + SARIF + SBOM)
       shell: bash
       run: |
-        checkov -d . --framework terraform --output json --output sarif --output spdx --output-file-path checkov-results --debug
+        checkov -d . --framework terraform --output json --output sarif --output spdx --output-file-path checkov-results
       #checkov -d . --framework terraform --output github_failed_only
 
     - name: Check for HIGH or CRITICAL findings
