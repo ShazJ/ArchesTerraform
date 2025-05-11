@@ -1,6 +1,6 @@
 # scribbles directory
 **/workings/*
-workings/*
+/workings/*
 
 # Local .terraform directories
 **/.terraform/*
