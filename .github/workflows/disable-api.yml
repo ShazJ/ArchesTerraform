@@ -16,8 +16,9 @@ permissions:
 
 jobs:
 # iif: == 'success' sji! }}
-  terraform-destroy:
-    name: Terraform Destroy
+  disable-apis:
+    name: Disable APIs
+    # This job disables the APIs that were enabled during the setup process
     runs-on: ubuntu-latest
     
     # Specify environment for prod branch

@@ -1,0 +1,46 @@
+# name: Terraform Security Scan
+name: Terraform Security Scan
+description: Run Checkov to scan Terraform code for security issues
+
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Checkov + jq
+      shell: bash
+      run: |
+        pip install checkov
+        sudo apt-get update && sudo apt-get install -y jq
+
+    - name: Run full Checkov scan (JSON + SARIF)
+      shell: bash
+      run: |
+        checkov -d . -f checkov.json --output json
+        checkov -d . -f checkov.sarif --output sarif
+        checkov -d . --output github_failed_only
+      # env:
+      #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Check for HIGH or CRITICAL findings
+      shell: bash
+      id: check_severity
+      run: |
+        count=$(jq '[.results.failed_checks[] | select(.severity=="HIGH" or .severity=="CRITICAL")] | length' checkov.json)
+        echo "HIGH+CRITICAL issues found: $count"
+        if [ "$count" -gt 0 ]; then
+          exit 1
+        fi
+
+    - name: Upload JSON report
+      uses: actions/upload-artifact@v4
+      with:
+        name: checkov-json-report
+        path: checkov.json
+
+    - name: Upload SARIF to GitHub Code Scanning
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: checkov.sarif
