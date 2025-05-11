@@ -21,8 +21,8 @@ runs:
         checkov -d . -f checkov.json --output json
         checkov -d . -f checkov.sarif --output sarif
         checkov -d . --output github_failed_only
-      # env:
-      #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
     - name: Check for HIGH or CRITICAL findings
       shell: bash
@@ -44,3 +44,37 @@ runs:
       uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: checkov.sarif
+
+    - name: Summarize HIGH/CRITICAL Checkov issues and comment on PR
+      shell: bash
+      #if: github.event_name == 'pull_request' #sji - speed an issue?? anything else?
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      run: |
+        echo "Parsing Checkov results for HIGH/CRITICAL findings..."
+        summary=$(jq -r '
+          [.results.failed_checks[] 
+            | select(.severity == "HIGH" or .severity == "CRITICAL") 
+            | "- [" + .severity + "] " + .check_id + ": " + .check_name 
+            + " (`" + .file_path + "`, line " + (.file_line_range[0]|tostring) + ")"
+          ] | .[]' checkov.json)
+
+        if [ -z "$summary" ]; then
+          echo "✅ No HIGH or CRITICAL Checkov issues found."
+          exit 0
+        fi
+
+        echo "🛑 HIGH/CRITICAL Checkov issues found:"
+        echo "$summary"
+
+        comment="### 🚨 Checkov Security Issues Found
+        The following **HIGH** or **CRITICAL** severity issues were detected in this PR:
+
+        $summary
+
+        _This report was generated automatically by Checkov in CI._"
+
+        curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" \
+          -H "Content-Type: application/json" \
+          -d "$(jq -n --arg body "$comment" '{body: $body}')" \
+          "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments"

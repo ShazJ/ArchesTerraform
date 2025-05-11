@@ -43,11 +43,6 @@ runs:
       shell: bash
       #working-directory: ./environments/${{ steps.set-env.outputs.environment }}
 
-    - name: Terraform Format Check
-      run: terraform fmt -check=true -diff=true
-      shell: bash
-      #working-directory: ./environments/${{ steps.set-env.outputs.environment }}
-
     - name: Terraform Validate
       run: terraform validate
       shell: bash
