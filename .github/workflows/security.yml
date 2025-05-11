@@ -3,13 +3,14 @@ name: Security Scanning
 # TODO
 
 on:
-  pull_request:
-    paths:
-      - '**.tf'
-  push:
-    branches:
-      - main
-      - dev
+  workflow_dispatch:  # Manual trigger as currently there are many erors - sji todo!
+  # pull_request:
+  #   paths:
+  #     - '**.tf'
+  # push:
+  #   branches:
+  #     - main
+  #     - dev
 
 permissions:
   contents: read
