@@ -1,4 +1,4 @@
-name: Terraform Destroy
+name: Disable APIs
 
 # on: sji!
 #     workflow_run:
@@ -16,8 +16,9 @@ permissions:
 
 jobs:
 # iif: == 'success' sji! }}
-  terraform-destroy:
-    name: Terraform Destroy
+  disable-apis:
+    name: Disable APIs
+    # This job disables the APIs that were enabled during the setup process
     runs-on: ubuntu-latest
     
     # Specify environment for prod branch
@@ -25,7 +26,7 @@ jobs:
 
     env:
       PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-      GOOGLE_CREDENTIALS: ${{ secrets.TF_SA }}
+      GOOGLE_CREDENTIALS: ${{ secrets.TF_BOOTSTRAP_SA }}
 
     steps:
 
@@ -35,15 +36,12 @@ jobs:
       - name: Authenticate with GCP
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: '${{ secrets.TF_SA }}'  # Key from script
+          credentials_json: '${{ secrets.TF_BOOTSTRAP_SA }}'  # Key from script
          
-      - name: Terraform Destroy
-        uses: ./.github/actions/terraform/destroy
-
-      - name: Disable IAM API
+      - name: Enable IAM API
         run: |
-          gcloud services disable iam.googleapis.com
-          gcloud services disable cloudresourcemanager.googleapis.com
-          gcloud services disable artifactregistry.googleapis.com
-          gcloud services disable compute.googleapis.com
-          gcloud services disable keymanagement.googleapis.com
+          gcloud services enable iam.googleapis.com
+          gcloud services enable cloudresourcemanager.googleapis.com
+          gcloud services enable artifactregistry.googleapis.com
+          gcloud services enable compute.googleapis.com
+          gcloud services enable keymanagement.googleapis.com
