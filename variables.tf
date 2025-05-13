@@ -107,7 +107,7 @@ variable "routers" {
 #   type = map(object({
 #     name = string
 #   }))
-}
+# }
 
 variable "clusters" {
   description = "Map of GKE cluster configurations"
