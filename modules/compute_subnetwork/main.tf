@@ -1,13 +1,13 @@
 resource "google_compute_subnetwork" "subnetwork" {
-  project                     = var.project_id
-  name                        = var.name
-  network                     = var.network
-  region                      = var.region
-  ip_cidr_range               = var.ip_cidr_range
-  private_ip_google_access    = var.private_ip_google_access
-  private_ipv6_google_access  = var.private_ipv6_google_access
-  purpose                     = var.purpose
-  stack_type                  = var.stack_type
+  project                    = var.project_id
+  name                       = var.name
+  network                    = var.network
+  region                     = var.region
+  ip_cidr_range              = var.ip_cidr_range
+  private_ip_google_access   = var.private_ip_google_access
+  private_ipv6_google_access = var.private_ipv6_google_access
+  purpose                    = var.purpose
+  stack_type                 = var.stack_type
 
   dynamic "secondary_ip_range" {
     for_each = var.secondary_ip_ranges

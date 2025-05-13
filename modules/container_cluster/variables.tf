@@ -54,9 +54,9 @@ variable "ip_allocation_policy" {
     pod_cidr_overprovision_config = object({
       disabled = bool
     })
-    cluster_ipv4_cidr_block       = optional(string)
-    services_ipv4_cidr_block      = optional(string)
-    additional_pod_ranges_config   = optional(object({
+    cluster_ipv4_cidr_block  = optional(string)
+    services_ipv4_cidr_block = optional(string)
+    additional_pod_ranges_config = optional(object({
       pod_range_names = list(string)
     }))
   })

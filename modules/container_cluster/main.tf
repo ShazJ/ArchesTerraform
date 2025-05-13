@@ -1,17 +1,17 @@
 resource "google_container_cluster" "cluster" {
-  provider                    = google-beta
-  project                     = var.project_id
-  name                        = var.name
-  location                    = var.location
-  network                     = var.network
-  subnetwork                  = var.subnetwork
-  initial_node_count          = var.initial_node_count
-  description                 = var.description
-  enable_shielded_nodes       = var.enable_shielded_nodes
-  default_max_pods_per_node   = var.default_max_pods_per_node
-  networking_mode             = var.networking_mode
-  min_master_version      = var.node_version
-  node_version            = var.node_version
+  provider                  = google-beta
+  project                   = var.project_id
+  name                      = var.name
+  location                  = var.location
+  network                   = var.network
+  subnetwork                = var.subnetwork
+  initial_node_count        = var.initial_node_count
+  description               = var.description
+  enable_shielded_nodes     = var.enable_shielded_nodes
+  default_max_pods_per_node = var.default_max_pods_per_node
+  networking_mode           = var.networking_mode
+  min_master_version        = var.node_version
+  node_version              = var.node_version
 
   node_config {
     disk_size_gb    = var.node_config.disk_size_gb
@@ -146,7 +146,7 @@ resource "google_container_cluster" "cluster" {
   }
 
   private_cluster_config {
-    enable_private_nodes    = var.private_cluster_config.enable_private_nodes
+    enable_private_nodes   = var.private_cluster_config.enable_private_nodes
     master_ipv4_cidr_block = var.private_cluster_config.master_ipv4_cidr_block
     master_global_access_config {
       enabled = var.private_cluster_config.master_global_access_config.enabled
@@ -165,7 +165,7 @@ resource "google_container_cluster" "cluster" {
   }
 
   security_posture_config {
-    mode              = var.security_posture_config.mode
+    mode               = var.security_posture_config.mode
     vulnerability_mode = var.security_posture_config.vulnerability_mode
   }
 

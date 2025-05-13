@@ -36,10 +36,10 @@ variable "uniform_bucket_level_access" {
 variable "cors" {
   description = "CORS configuration for the bucket"
   type = list(object({
-    max_age_seconds  = optional(number)
-    method           = list(string)
-    origin           = list(string)
-    response_header  = optional(list(string))
+    max_age_seconds = optional(number)
+    method          = list(string)
+    origin          = list(string)
+    response_header = optional(list(string))
   }))
   default = []
 }
