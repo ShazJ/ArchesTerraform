@@ -1,6 +1,7 @@
-data "google_project" "project" {
-  project_id = var.project_id
-}
+#sji keys removed following
+# data "google_project" "project" {
+#   project_id = var.project_id
+# }
 
 module "artifact_registry" {
   for_each               = var.repositories
