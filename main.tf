@@ -74,8 +74,8 @@ module "storage_bucket" {
   public_access_prevention    = each.value.public_access_prevention
   uniform_bucket_level_access = each.value.uniform_bucket_level_access
   cors                        = each.value.cors
-  encryption                  = each.value.encryption
-  logging                     = each.value.logging
+  # encryption                  = each.value.encryption
+  logging = each.value.logging
 }
 
 module "service_account" {
