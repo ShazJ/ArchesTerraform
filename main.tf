@@ -44,7 +44,6 @@ module "compute_firewall" {
 resource "google_compute_network" "network" {
   for_each = {
     prd = "coral-network-prd"
-    
     stg = "coral-network"
   }
   project                 = var.project_id
