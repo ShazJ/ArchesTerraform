@@ -22,36 +22,36 @@ repositories = {
   }
 }
 
-# addresses = {
-#   istio_prd = {
-#     name         = "istio-prd" #"istio-default-ingress-coral-prd"
-#     address      = "34.142.75.32"
-#     address_type = "EXTERNAL"
-#     network_tier = "PREMIUM"
-#     purpose      = "" #"EXTERNAL"
-#   },
-#   # istio_stg = {
-#   #   name         = "istio-stg" #"istio-default-ingress-coral-stg"
-#   #   address      = "34.89.106.198"
-#   #   address_type = "EXTERNAL"
-#   #   network_tier = "PREMIUM"
-#   #   purpose      = "" #"EXTERNAL"
-#   # },
-#   # nat_auto_1 = {
-#   #   name         = "nat-auto-ip-6086885-2-1720490595712813"
-#   #   address      = "34.147.134.205"
-#   #   address_type = "EXTERNAL"
-#   #   network_tier = "PREMIUM"
-#   #   purpose      = "NAT_AUTO"
-#   # },
-#   # nat_auto_2 = {
-#   #   name         = "nat-auto-ip-15970522-0-1676784907194161"
-#   #   address      = "35.234.135.79"
-#   #   address_type = "EXTERNAL"
-#   #   network_tier = "PREMIUM"
-#   #   purpose      = "NAT_AUTO"
-#   # }
-# }
+addresses = {
+  # istio_prd = {
+  #   name         = "istio-prd" #"istio-default-ingress-coral-prd"
+  #   address      = "34.142.75.32"
+  #   address_type = "EXTERNAL"
+  #   network_tier = "PREMIUM"
+  #   purpose      = "" #"EXTERNAL"
+  # },
+  # istio_stg = {
+  #   name         = "istio-stg" #"istio-default-ingress-coral-stg"
+  #   address      = "34.89.106.198"
+  #   address_type = "EXTERNAL"
+  #   network_tier = "PREMIUM"
+  #   purpose      = "" #"EXTERNAL"
+  # },
+  nat_auto_1 = {
+    name         = "nat-auto-ip-6086885-2-1720490595712813"
+    address      = "34.147.134.205"
+    address_type = "EXTERNAL"
+    network_tier = "PREMIUM"
+    purpose      = "NAT_AUTO"
+  },
+  nat_auto_2 = {
+    name         = "nat-auto-ip-15970522-0-1676784907194161"
+    address      = "35.234.135.79"
+    address_type = "EXTERNAL"
+    network_tier = "PREMIUM"
+    purpose      = "NAT_AUTO"
+  }
+}
 
 firewalls = {
   coral_prd = {
