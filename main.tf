@@ -38,7 +38,7 @@ module "compute_firewall" {
   target_tags   = each.value.target_tags
   allow         = each.value.allow
   description   = each.value.description
-  depends_on    = [google_compute_network.network]
+  depends_on    = [module.compute_network]
 }
 
 # resource "google_compute_network" "network" {
@@ -174,7 +174,7 @@ module "compute_router" {
   name       = each.value.name
   network    = google_compute_network.network[each.key].name
   region     = var.region
-  depends_on = [google_compute_network.network]
+  depends_on = [module.compute_network]
 }
 
 # # Cloud NAT
