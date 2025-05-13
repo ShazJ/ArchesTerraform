@@ -120,7 +120,7 @@ firewalls = {
 #sji todo! bucket naming lol
 buckets = {
   data_store_prd = {
-    name                        = "sji.crl-data-store-prd-eu-west-2-flax"
+    name                        = "sjicrl-data-store-prd-eu-west-2-flax"
     location                    = "EUROPE-WEST2"
     storage_class               = "STANDARD"
     force_destroy               = false
@@ -129,18 +129,19 @@ buckets = {
     cors                        = []
   },
   data_store_uat_prd = {
-    name                        = "sji.crl-data-store-uat-eu-west-2-prd"
+    name                        = "sjicrl-data-store-uat-eu-west-2-prd"
     location                    = "EUROPE-WEST2"
     storage_class               = "STANDARD"
     force_destroy               = false
     public_access_prevention    = "inherited"
     uniform_bucket_level_access = true
-    cors = [{
-      max_age_seconds = 3600
-      method          = ["GET"]
-      origin          = ["https://coral-her.flaxandteal.co.uk"]
-      response_header = ["Content-Type"]
-    }]
+    cors                        = []
+    # cors = [{
+    #   max_age_seconds = 3600
+    #   method          = ["GET"]
+    #   origin          = ["https://coral-her.flaxandteal.co.uk"]
+    #   response_header = ["Content-Type"]
+    # }]
     encryption = {
       default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat-prd/cryptoKeys/data-store-key-uat-prd"
     }
@@ -150,18 +151,19 @@ buckets = {
     }
   },
   data_store_uat = {
-    name                        = "sji.crl-data-store-uat-eu-west-2"
+    name                        = "sjicrl-data-store-uat-eu-west-2"
     location                    = "EUROPE-WEST2"
     storage_class               = "STANDARD"
     force_destroy               = false
     public_access_prevention    = "enforced"
     uniform_bucket_level_access = true
-    cors = [{
-      max_age_seconds = 3600
-      method          = ["GET", "HEAD", "PUT", "POST", "DELETE"]
-      origin          = ["https://coral-uat.flaxandteal.co.uk"]
-      response_header = ["*"]
-    }]
+    cors                        = []
+    # cors = [{
+    #   max_age_seconds = 3600
+    #   method          = ["GET", "HEAD", "PUT", "POST", "DELETE"]
+    #   origin          = ["https://coral-uat.flaxandteal.co.uk"]
+    #   response_header = ["*"]
+    # }]
     encryption = {
       default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat/cryptoKeys/data-store-key-uat"
     }
@@ -171,7 +173,7 @@ buckets = {
     }
   },
   log_store_prd = {
-    name                        = "sji.crl-log-store-eu-west-2-prd"
+    name                        = "sjicrl-log-store-eu-west-2-prd"
     location                    = "EUROPE-WEST2"
     storage_class               = "STANDARD"
     force_destroy               = false
@@ -180,7 +182,7 @@ buckets = {
     cors                        = []
   },
   prd_state_store_uat = {
-    name                        = "sji.crl-prd-state-store-uat-eu-west-2"
+    name                        = "sjicrl-prd-state-store-uat-eu-west-2"
     location                    = "EUROPE-WEST2"
     storage_class               = "STANDARD"
     force_destroy               = false
@@ -192,7 +194,7 @@ buckets = {
     }
   },
   state_store_uat = {
-    name                        = "sji.crl-state-store-uat-eu-west-2"
+    name                        = "sjicrl-state-store-uat-eu-west-2"
     location                    = "EUROPE-WEST2"
     storage_class               = "STANDARD"
     force_destroy               = false
@@ -204,7 +206,7 @@ buckets = {
     }
   },
   artifacts_us = {
-    name                        = "sji.artifacts.coral-459111.appspot.com"
+    name                        = "sjiartifacts.coral-459111.appspot.com"
     location                    = "US"
     storage_class               = "STANDARD"
     force_destroy               = false
@@ -213,7 +215,7 @@ buckets = {
     cors                        = []
   },
   artifacts_eu = {
-    name                        = "sji.eu.artifacts.coral-459111.appspot.com"
+    name                        = "sjieu.artifacts.coral-459111.appspot.com"
     location                    = "EU"
     storage_class               = "STANDARD"
     force_destroy               = false
