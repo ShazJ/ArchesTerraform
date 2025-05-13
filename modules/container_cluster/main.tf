@@ -85,9 +85,9 @@ resource "google_container_cluster" "cluster" {
     disabled = var.default_snat_status.disabled
   }
 
-  logging_config {
-    enable_components = var.logging_config.enable_components
-  }
+  # logging_config {
+  #   enable_components = var.logging_config.enable_components
+  # }
 
   maintenance_policy {
     recurring_window {

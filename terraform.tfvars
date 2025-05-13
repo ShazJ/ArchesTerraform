@@ -37,20 +37,20 @@ addresses = {
   #   network_tier = "PREMIUM"
   #   purpose      = "" #"EXTERNAL"
   # },
-  nat_auto_1 = {
-    name         = "nat-auto-ip-6086885-2-1720490595712813"
-    address      = "34.147.134.205"
-    address_type = "EXTERNAL"
-    network_tier = "PREMIUM"
-    purpose      = "NAT_AUTO"
-  },
-  nat_auto_2 = {
-    name         = "nat-auto-ip-15970522-0-1676784907194161"
-    address      = "35.234.135.79"
-    address_type = "EXTERNAL"
-    network_tier = "PREMIUM"
-    purpose      = "NAT_AUTO"
-  }
+  # nat_auto_1 = {
+  #   name         = "nat-auto-ip-6086885-2-1720490595712813"
+  #   address      = "34.147.134.205"
+  #   address_type = "EXTERNAL"
+  #   network_tier = "PREMIUM"
+  #   purpose      = "NAT_AUTO"
+  # },
+  # nat_auto_2 = {
+  #   name         = "nat-auto-ip-15970522-0-1676784907194161"
+  #   address      = "35.234.135.79"
+  #   address_type = "EXTERNAL"
+  #   network_tier = "PREMIUM"
+  #   purpose      = "NAT_AUTO"
+  # }
 }
 
 firewalls = {
@@ -205,24 +205,24 @@ buckets = {
     #   default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat/cryptoKeys/data-store-key-uat"
     # }
   },
-  artifacts_us = {
-    name                        = "sjiartifacts.coral-459111.appspot.com"
-    location                    = "US"
-    storage_class               = "STANDARD"
-    force_destroy               = false
-    public_access_prevention    = "inherited"
-    uniform_bucket_level_access = false
-    cors                        = []
-  },
-  artifacts_eu = {
-    name                        = "sjieu.artifacts.coral-459111.appspot.com"
-    location                    = "EU"
-    storage_class               = "STANDARD"
-    force_destroy               = false
-    public_access_prevention    = "inherited"
-    uniform_bucket_level_access = false
-    cors                        = []
-  }
+  # artifacts_us = {
+  #   name                        = "sjiartifacts.coral-459111.appspot.com"
+  #   location                    = "US"
+  #   storage_class               = "STANDARD"
+  #   force_destroy               = false
+  #   public_access_prevention    = "inherited"
+  #   uniform_bucket_level_access = false
+  #   cors                        = []
+  # },
+  # artifacts_eu = {
+  #   name                        = "sjieu.artifacts.coral-459111.appspot.com"
+  #   location                    = "EU"
+  #   storage_class               = "STANDARD"
+  #   force_destroy               = false
+  #   public_access_prevention    = "inherited"
+  #   uniform_bucket_level_access = false
+  #   cors                        = []
+  # }
 }
 
 service_accounts = {
