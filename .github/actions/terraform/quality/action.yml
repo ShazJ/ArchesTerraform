@@ -1,12 +1,23 @@
 name: tflint
 description: Run TFLint
 
+inputs:
+  terraform_version:
+    description: Terraform version to use
+    required: false
+    default: "1.11.3" #sji todo
+
 runs:
   using: "composite"
 
   steps:
   - name: Checkout
     uses: actions/checkout@v4
+
+  - name: Setup Terraform
+    uses: hashicorp/setup-terraform@v3
+    with:
+      terraform_version: ${{ inputs.terraform_version }}
 
   - name: Terraform FMT
     run: terraform fmt -check -recursive

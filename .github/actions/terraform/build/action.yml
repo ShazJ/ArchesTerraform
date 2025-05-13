@@ -1,5 +1,5 @@
 name: Continuous Integration - Validate Terraform
-description: Runs terraform init, validate, fmt, and plan
+description: Runs terraform init, validate and plan
 
 inputs:
   terraform_version:
@@ -19,7 +19,7 @@ runs:
       with:
         terraform_version: ${{ inputs.terraform_version }}
     #sji todo - environments
-    # Determine environment based on branch
+    # Determine environment based on branch?
     - name: Set environment
       id: set-env
       shell: bash

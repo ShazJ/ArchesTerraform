@@ -43,7 +43,7 @@ jobs:
         with:
           credentials_json: '${{ secrets.TF_SA }}'  # Key from script
 
-      - name: Terraform Lint
+      - name: Terraform Qualits Check
         uses: ./.github/actions/terraform/quality
 
       - name: Terraform Build
