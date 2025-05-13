@@ -44,4 +44,5 @@ jobs:
           gcloud services disable cloudresourcemanager.googleapis.com
           gcloud services disable artifactregistry.googleapis.com
           gcloud services disable compute.googleapis.com
+          gcloud services disable kubernetesengine.googleapis.com
           gcloud services disable keymanagement.googleapis.com

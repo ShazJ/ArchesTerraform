@@ -44,4 +44,5 @@ jobs:
           gcloud services enable cloudresourcemanager.googleapis.com
           gcloud services enable artifactregistry.googleapis.com
           gcloud services enable compute.googleapis.com
+          gcloud services enable kubernetesengine.googleapis.com
           gcloud services enable keymanagement.googleapis.com

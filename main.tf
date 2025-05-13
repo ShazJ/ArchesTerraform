@@ -41,27 +41,27 @@ module "compute_firewall" {
   depends_on    = [google_compute_network.network]
 }
 
-resource "google_compute_network" "network" {
-  for_each = {
-    prd = "coral-network-prd"
-    stg = "coral-network"
-  }
-  project                 = var.project_id
-  name                    = each.value
-  auto_create_subnetworks = false
-}
+# resource "google_compute_network" "network" {
+#   for_each = {
+#     prd = "coral-network-prd"
+#     stg = "coral-network"
+#   }
+#   project                 = var.project_id
+#   name                    = each.value
+#   auto_create_subnetworks = false
+# }
 
-resource "google_compute_subnetwork" "subnetwork" {
-  for_each = {
-    prd = "coral-subnetwork-prd"
-    stg = "coral-subnetwork"
-  }
-  project       = var.project_id
-  name          = each.value
-  network       = google_compute_network.network[each.key].name
-  region        = var.region
-  ip_cidr_range = "10.0.0.0/16" # Adjust as needed
-}
+# resource "google_compute_subnetwork" "subnetwork" {
+#   for_each = {
+#     prd = "coral-subnetwork-prd"
+#     stg = "coral-subnetwork"
+#   }
+#   project       = var.project_id
+#   name          = each.value
+#   network       = google_compute_network.network[each.key].name
+#   region        = var.region
+#   ip_cidr_range = "10.0.0.0/16" # Adjust as needed
+# }
 
 module "storage_bucket" {
   for_each                    = var.buckets
@@ -177,18 +177,39 @@ module "compute_router" {
   depends_on = [google_compute_network.network]
 }
 
-resource "google_compute_router_nat" "nat" {
-  for_each = {
-    prd = "coral-network-router-prd"
-    stg = "coral-network-router"
-  }
-  project                            = var.project_id
+# Cloud NAT
+module "compute_router_nat" {
+  source                             = "./modules/compute_router_nat"
+  project_id                         = var.project_id
   region                             = var.region
-  name                               = "${each.key}-nat"
-  router                             = each.value
+  name                               = "coral-network-router-prd"
+  router                             = module.compute_router.name
   nat_ip_allocate_option             = "AUTO_ONLY"
   source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
+  depends_on                         = [module.compute_router]
 }
+module "compute_router_nat" {
+  source                             = "./modules/compute_router_nat"
+  project_id                         = var.project_id
+  region                             = var.region
+  name                               = "coral-network-router"
+  router                             = module.compute_router.name
+  nat_ip_allocate_option             = "AUTO_ONLY"
+  source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
+  depends_on                         = [module.compute_router]
+}
+# resource "google_compute_router_nat" "nat" {
+#   for_each = {
+#     prd = "coral-network-router-prd"
+#     stg = "coral-network-router"
+#   }
+#   project                            = var.project_id
+#   region                             = var.region
+#   name                               = "${each.key}-nat"
+#   router                             = each.value
+#   nat_ip_allocate_option             = "AUTO_ONLY"
+#   source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
+# }
 
 module "compute_resource_policy" {
   source     = "./modules/compute_resource_policy"

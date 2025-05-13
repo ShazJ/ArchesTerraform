@@ -117,10 +117,10 @@ firewalls = {
   #   ]
   # }
 }
-
+#sji todo! bucket naming lol
 buckets = {
   data_store_prd = {
-    name                        = "crl-data-store-prd-eu-west-2-flax"
+    name                        = "sji.crl-data-store-prd-eu-west-2-flax"
     location                    = "EUROPE-WEST2"
     storage_class               = "STANDARD"
     force_destroy               = false
@@ -129,7 +129,7 @@ buckets = {
     cors                        = []
   },
   data_store_uat_prd = {
-    name                        = "crl-data-store-uat-eu-west-2-prd"
+    name                        = "sji.crl-data-store-uat-eu-west-2-prd"
     location                    = "EUROPE-WEST2"
     storage_class               = "STANDARD"
     force_destroy               = false
@@ -146,11 +146,11 @@ buckets = {
     }
     logging = {
       log_bucket        = "log-store-eu-west-2"
-      log_object_prefix = "crl-data-store-uat-eu-west-2-prd"
+      log_object_prefix = "sji.crl-data-store-uat-eu-west-2-prd"
     }
   },
   data_store_uat = {
-    name                        = "crl-data-store-uat-eu-west-2"
+    name                        = "sji.crl-data-store-uat-eu-west-2"
     location                    = "EUROPE-WEST2"
     storage_class               = "STANDARD"
     force_destroy               = false
@@ -167,11 +167,11 @@ buckets = {
     }
     logging = {
       log_bucket        = "log-store-eu-west-2"
-      log_object_prefix = "crl-data-store-uat-eu-west-2"
+      log_object_prefix = "sji.crl-data-store-uat-eu-west-2"
     }
   },
   log_store_prd = {
-    name                        = "crl-log-store-eu-west-2-prd"
+    name                        = "sji.crl-log-store-eu-west-2-prd"
     location                    = "EUROPE-WEST2"
     storage_class               = "STANDARD"
     force_destroy               = false
@@ -180,7 +180,7 @@ buckets = {
     cors                        = []
   },
   prd_state_store_uat = {
-    name                        = "crl-prd-state-store-uat-eu-west-2"
+    name                        = "sji.crl-prd-state-store-uat-eu-west-2"
     location                    = "EUROPE-WEST2"
     storage_class               = "STANDARD"
     force_destroy               = false
@@ -192,7 +192,7 @@ buckets = {
     }
   },
   state_store_uat = {
-    name                        = "crl-state-store-uat-eu-west-2"
+    name                        = "sji.crl-state-store-uat-eu-west-2"
     location                    = "EUROPE-WEST2"
     storage_class               = "STANDARD"
     force_destroy               = false
@@ -204,7 +204,7 @@ buckets = {
     }
   },
   artifacts_us = {
-    name                        = "artifacts.coral-459111.appspot.com"
+    name                        = "sji.artifacts.coral-459111.appspot.com"
     location                    = "US"
     storage_class               = "STANDARD"
     force_destroy               = false
@@ -213,7 +213,7 @@ buckets = {
     cors                        = []
   },
   artifacts_eu = {
-    name                        = "eu.artifacts.coral-459111.appspot.com"
+    name                        = "sji.eu.artifacts.coral-459111.appspot.com"
     location                    = "EU"
     storage_class               = "STANDARD"
     force_destroy               = false
