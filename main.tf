@@ -172,7 +172,7 @@ module "compute_router" {
   source     = "./modules/compute_router"
   project_id = var.project_id
   name       = each.value.name
-  network    = google_compute_network.network[each.key].name
+  network    = each.value.network
   region     = var.region
   depends_on = [module.compute_network]
 }
