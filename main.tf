@@ -177,27 +177,27 @@ module "compute_router" {
   depends_on = [google_compute_network.network]
 }
 
-# Cloud NAT
-module "compute_router_nat" {
-  source                             = "./modules/compute_router_nat"
-  project_id                         = var.project_id
-  region                             = var.region
-  name                               = "coral-network-router-prd"
-  router                             = module.compute_router.name
-  nat_ip_allocate_option             = "AUTO_ONLY"
-  source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
-  depends_on                         = [module.compute_router]
-}
-module "compute_router_nat" {
-  source                             = "./modules/compute_router_nat"
-  project_id                         = var.project_id
-  region                             = var.region
-  name                               = "coral-network-router"
-  router                             = module.compute_router.name
-  nat_ip_allocate_option             = "AUTO_ONLY"
-  source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
-  depends_on                         = [module.compute_router]
-}
+# # Cloud NAT
+# module "compute_router" {
+#   source                             = "./modules/compute_router"
+#   project_id                         = var.project_id
+#   region                             = var.region
+#   name                               = "coral-network-router-prd"
+#   router                             = module.compute_router.name
+#   nat_ip_allocate_option             = "AUTO_ONLY"
+#   source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
+#   depends_on                         = [module.compute_router]
+# }
+# module "compute_router_nat" {
+#   source                             = "./modules/compute_router_nat"
+#   project_id                         = var.project_id
+#   region                             = var.region
+#   name                               = "coral-network-router"
+#   router                             = module.compute_router.name
+#   nat_ip_allocate_option             = "AUTO_ONLY"
+#   source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
+#   depends_on                         = [module.compute_router]
+# }
 # resource "google_compute_router_nat" "nat" {
 #   for_each = {
 #     prd = "coral-network-router-prd"
