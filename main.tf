@@ -236,29 +236,30 @@ module "compute_resource_policy" {
   }
 }
 
-module "kms_key_ring" {
-  for_each   = var.key_rings
-  source     = "./modules/kms_key_ring"
-  project_id = var.project_id
-  name       = each.value.name
-  location   = var.location
-}
+#kms sji todo
+# module "kms_key_ring" {
+#   for_each   = var.key_rings
+#   source     = "./modules/kms_key_ring"
+#   project_id = var.project_id
+#   name       = each.value.name
+#   location   = var.location
+# }
 
-resource "google_kms_crypto_key_iam_binding" "data_store_uat" {
-  crypto_key_id = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat/cryptoKeys/data-store-key-uat"
-  role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
-  members = [
-    "serviceAccount:${data.google_project.project.number}@gs-project-accounts.iam.gserviceaccount.com"
-  ]
-}
+# resource "google_kms_crypto_key_iam_binding" "data_store_uat" {
+#   crypto_key_id = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat/cryptoKeys/data-store-key-uat"
+#   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+#   members = [
+#     "serviceAccount:${data.google_project.project.number}@gs-project-accounts.iam.gserviceaccount.com"
+#   ]
+# }
 
-resource "google_kms_crypto_key_iam_binding" "data_store_uat_prd" {
-  crypto_key_id = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat-prd/cryptoKeys/data-store-key-uat-prd"
-  role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
-  members = [
-    "serviceAccount:${data.google_project.project.number}@gs-project-accounts.iam.gserviceaccount.com"
-  ]
-}
+# resource "google_kms_crypto_key_iam_binding" "data_store_uat_prd" {
+#   crypto_key_id = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat-prd/cryptoKeys/data-store-key-uat-prd"
+#   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+#   members = [
+#     "serviceAccount:${data.google_project.project.number}@gs-project-accounts.iam.gserviceaccount.com"
+#   ]
+# }
 
 module "container_cluster" {
   for_each   = var.clusters

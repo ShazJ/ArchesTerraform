@@ -54,7 +54,7 @@ output "resource_policy_name" {
   value       = module.compute_resource_policy.policy_name
 }
 
-output "key_ring_names" {
-  description = "Map of KMS Key Ring names created"
-  value       = { for k, v in module.kms_key_ring : k => v.key_ring_name }
-}
+# output "key_ring_names" {
+#   description = "Map of KMS Key Ring names created"
+#   value       = { for k, v in module.kms_key_ring : k => v.key_ring_name }
+# }

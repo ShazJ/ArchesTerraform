@@ -22,36 +22,36 @@ repositories = {
   }
 }
 
-addresses = {
-  istio_prd = {
-    name         = "istio-prd" #"istio-default-ingress-coral-prd"
-    address      = "34.142.75.32"
-    address_type = "EXTERNAL"
-    network_tier = "PREMIUM"
-    purpose      = "" #"EXTERNAL"
-  },
-  istio_stg = {
-    name         = "istio-stg" #"istio-default-ingress-coral-stg"
-    address      = "34.89.106.198"
-    address_type = "EXTERNAL"
-    network_tier = "PREMIUM"
-    purpose      = "" #"EXTERNAL"
-  },
-  # nat_auto_1 = {
-  #   name         = "nat-auto-ip-6086885-2-1720490595712813"
-  #   address      = "34.147.134.205"
-  #   address_type = "EXTERNAL"
-  #   network_tier = "PREMIUM"
-  #   purpose      = "NAT_AUTO"
-  # },
-  # nat_auto_2 = {
-  #   name         = "nat-auto-ip-15970522-0-1676784907194161"
-  #   address      = "35.234.135.79"
-  #   address_type = "EXTERNAL"
-  #   network_tier = "PREMIUM"
-  #   purpose      = "NAT_AUTO"
-  # }
-}
+# addresses = {
+#   istio_prd = {
+#     name         = "istio-prd" #"istio-default-ingress-coral-prd"
+#     address      = "34.142.75.32"
+#     address_type = "EXTERNAL"
+#     network_tier = "PREMIUM"
+#     purpose      = "" #"EXTERNAL"
+#   },
+#   # istio_stg = {
+#   #   name         = "istio-stg" #"istio-default-ingress-coral-stg"
+#   #   address      = "34.89.106.198"
+#   #   address_type = "EXTERNAL"
+#   #   network_tier = "PREMIUM"
+#   #   purpose      = "" #"EXTERNAL"
+#   # },
+#   # nat_auto_1 = {
+#   #   name         = "nat-auto-ip-6086885-2-1720490595712813"
+#   #   address      = "34.147.134.205"
+#   #   address_type = "EXTERNAL"
+#   #   network_tier = "PREMIUM"
+#   #   purpose      = "NAT_AUTO"
+#   # },
+#   # nat_auto_2 = {
+#   #   name         = "nat-auto-ip-15970522-0-1676784907194161"
+#   #   address      = "35.234.135.79"
+#   #   address_type = "EXTERNAL"
+#   #   network_tier = "PREMIUM"
+#   #   purpose      = "NAT_AUTO"
+#   # }
+# }
 
 firewalls = {
   coral_prd = {
@@ -142,9 +142,9 @@ buckets = {
     #   origin          = ["https://coral-her.flaxandteal.co.uk"]
     #   response_header = ["Content-Type"]
     # }]
-    encryption = {
-      default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat-prd/cryptoKeys/data-store-key-uat-prd"
-    }
+    # encryption = {
+    #   default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat-prd/cryptoKeys/data-store-key-uat-prd"
+    # }
     logging = {
       log_bucket        = "log-store-eu-west-2"
       log_object_prefix = "sji.crl-data-store-uat-eu-west-2-prd"
@@ -164,9 +164,9 @@ buckets = {
     #   origin          = ["https://coral-uat.flaxandteal.co.uk"]
     #   response_header = ["*"]
     # }]
-    encryption = {
-      default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat/cryptoKeys/data-store-key-uat"
-    }
+    # encryption = {
+    #   default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat/cryptoKeys/data-store-key-uat"
+    # }
     logging = {
       log_bucket        = "log-store-eu-west-2"
       log_object_prefix = "sji.crl-data-store-uat-eu-west-2"
@@ -189,9 +189,9 @@ buckets = {
     public_access_prevention    = "inherited"
     uniform_bucket_level_access = true
     cors                        = []
-    encryption = {
-      default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat-prd/cryptoKeys/data-store-key-uat-prd"
-    }
+    # encryption = {
+    #   default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat-prd/cryptoKeys/data-store-key-uat-prd"
+    # }
   },
   state_store_uat = {
     name                        = "sjicrl-state-store-uat-eu-west-2"
@@ -201,9 +201,9 @@ buckets = {
     public_access_prevention    = "inherited"
     uniform_bucket_level_access = true
     cors                        = []
-    encryption = {
-      default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat/cryptoKeys/data-store-key-uat"
-    }
+    # encryption = {
+    #   default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat/cryptoKeys/data-store-key-uat"
+    # }
   },
   artifacts_us = {
     name                        = "sjiartifacts.coral-459111.appspot.com"
@@ -279,17 +279,17 @@ routers = {
   }
 }
 
-key_rings = {
-  data_store_uat = {
-    name = "data-store-keyring-uat"
-  },
-  data_store_uat_prd = {
-    name = "data-store-keyring-uat-prd"
-  },
-  terraform_state = {
-    name = "terraform-state-keyring"
-  }
-}
+# key_rings = {
+#   data_store_uat = {
+#     name = "data-store-keyring-uat"
+#   },
+#   data_store_uat_prd = {
+#     name = "data-store-keyring-uat-prd"
+#   },
+#   terraform_state = {
+#     name = "terraform-state-keyring"
+#   }
+# }
 
 clusters = {
   prd = {
