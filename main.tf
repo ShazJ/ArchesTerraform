@@ -263,6 +263,7 @@ module "compute_resource_policy" {
 # }
 
 module "container_cluster" {
+  depends_on    = [module.compute_network, module.service_account]
   for_each   = var.clusters
   source     = "./modules/container_cluster"
   project_id = var.project_id

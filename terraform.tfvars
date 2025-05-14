@@ -424,7 +424,6 @@ clusters = {
         logging_variant = "DEFAULT"
       }
     }
-    #node_version = "1.31.6"
     notification_config = {
       pubsub = {
         enabled = false
@@ -584,7 +583,6 @@ clusters = {
         logging_variant = "DEFAULT"
       }
     }
-    #node_version = "1.31.6"
     notification_config = {
       pubsub = {
         enabled = false
