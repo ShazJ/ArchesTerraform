@@ -297,7 +297,7 @@ clusters = {
     location     = "europe-west2-a"
     network      = "projects/coral-459111/global/networks/coral-network-prd"
     subnetwork   = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork-prd"
-    node_version = "1.31.6-gke.10"
+    node_version = "1.31.6"
     node_config = {
       disk_size_gb    = 50
       disk_type       = "pd-balanced"
@@ -424,7 +424,7 @@ clusters = {
         logging_variant = "DEFAULT"
       }
     }
-    node_version = "1.31.6-gke.10"
+    #node_version = "1.31.6"
     notification_config = {
       pubsub = {
         enabled = false
@@ -468,7 +468,7 @@ clusters = {
     location     = "europe-west2-a"
     network      = "projects/coral-459111/global/networks/coral-network"
     subnetwork   = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork"
-    node_version = "1.31.6-gke.10"
+    node_version = "1.31.6"
     node_config = {
       disk_size_gb    = 50
       disk_type       = "pd-standard"
@@ -584,7 +584,7 @@ clusters = {
         logging_variant = "DEFAULT"
       }
     }
-    node_version = "1.31.6-gke.10"
+    #node_version = "1.31.6"
     notification_config = {
       pubsub = {
         enabled = false
