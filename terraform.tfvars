@@ -181,48 +181,33 @@ buckets = {
     uniform_bucket_level_access = true
     cors                        = []
   },
-  prd_state_store_uat = {
-    name                        = "sjicrl-prd-state-store-uat-eu-west-2"
+  log_store = {
+    name                        = "sjicrl-log-store-eu-west-2"
     location                    = "EUROPE-WEST2"
     storage_class               = "STANDARD"
     force_destroy               = false
     public_access_prevention    = "inherited"
     uniform_bucket_level_access = true
     cors                        = []
-    # encryption = {
-    #   default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat-prd/cryptoKeys/data-store-key-uat-prd"
-    # }
   },
-  state_store_uat = {
-    name                        = "sjicrl-state-store-uat-eu-west-2"
-    location                    = "EUROPE-WEST2"
+  artifacts_us = {
+    name                        = "sjiartifacts-coral-459111-appspot-com" #artifacts.coral-370212.appspot.com
+    location                    = "US"
     storage_class               = "STANDARD"
     force_destroy               = false
     public_access_prevention    = "inherited"
-    uniform_bucket_level_access = true
+    uniform_bucket_level_access = false
     cors                        = []
-    # encryption = {
-    #   default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat/cryptoKeys/data-store-key-uat"
-    # }
   },
-  # artifacts_us = {
-  #   name                        = "sjiartifacts.coral-459111.appspot.com"
-  #   location                    = "US"
-  #   storage_class               = "STANDARD"
-  #   force_destroy               = false
-  #   public_access_prevention    = "inherited"
-  #   uniform_bucket_level_access = false
-  #   cors                        = []
-  # },
-  # artifacts_eu = {
-  #   name                        = "sjieu.artifacts.coral-459111.appspot.com"
-  #   location                    = "EU"
-  #   storage_class               = "STANDARD"
-  #   force_destroy               = false
-  #   public_access_prevention    = "inherited"
-  #   uniform_bucket_level_access = false
-  #   cors                        = []
-  # }
+  artifacts_eu = {
+    name                        = "sjieu-artifacts-coral-459111-appspot-com" #eu.artifacts.coral-370212.appspot.com
+    location                    = "EU"
+    storage_class               = "STANDARD"
+    force_destroy               = false
+    public_access_prevention    = "inherited"
+    uniform_bucket_level_access = false
+    cors                        = []
+  }
 }
 
 service_accounts = {
