@@ -23,20 +23,20 @@ repositories = {
 }
 
 addresses = {
-  # istio_prd = {
-  #   name         = "istio-prd" #"istio-default-ingress-coral-prd"
-  #   address      = "34.142.75.32"
-  #   address_type = "EXTERNAL"
-  #   network_tier = "PREMIUM"
-  #   purpose      = "" #"EXTERNAL"
-  # },
-  # istio_stg = {
-  #   name         = "istio-stg" #"istio-default-ingress-coral-stg"
-  #   address      = "34.89.106.198"
-  #   address_type = "EXTERNAL"
-  #   network_tier = "PREMIUM"
-  #   purpose      = "" #"EXTERNAL"
-  # },
+  istio_prd = {
+    name         = "istio-prd" #"istio-default-ingress-coral-prd"
+    address      = "34.142.75.32"
+    address_type = "EXTERNAL"
+    network_tier = "PREMIUM"
+    purpose      = "" #"EXTERNAL"
+  },
+  istio_stg = {
+    name         = "istio-stg" #"istio-default-ingress-coral-stg"
+    address      = "34.89.106.198"
+    address_type = "EXTERNAL"
+    network_tier = "PREMIUM"
+    purpose      = "" #"EXTERNAL"
+  },
   # nat_auto_1 = {
   #   name         = "nat-auto-ip-6086885-2-1720490595712813"
   #   address      = "34.147.134.205"
@@ -341,6 +341,10 @@ clusters = {
       network_policy_config = {
         disabled = true
       }
+      istio_config = {
+        disabled = true
+        auth     = "AUTH_MUTUAL_TLS"
+      }
     }
     cluster_autoscaling = {
       autoscaling_profile = "BALANCED"
@@ -504,6 +508,10 @@ clusters = {
       }
       network_policy_config = {
         disabled = true
+      }
+      istio_config = {
+        disabled = true
+        auth     = "AUTH_MUTUAL_TLS"
       }
     }
     cluster_autoscaling = {
