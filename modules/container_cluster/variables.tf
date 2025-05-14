@@ -168,10 +168,10 @@ variable "master_authorized_networks_config" {
   })
 }
 
-# variable "min_master_version" {
-#   description = "Min master node version for the GKE cluster"
-#   type        = string
-# }
+variable "min_master_version" {
+  description = "Min master node version for the GKE cluster"
+  type        = string
+}
 
 variable "monitoring_config" {
   description = "Monitoring configuration"

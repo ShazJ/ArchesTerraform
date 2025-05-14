@@ -364,8 +364,8 @@ module "container_cluster" {
       logging_variant = each.value.node_pool_defaults.node_config_defaults.logging_variant
     }
   }
-  node_version = each.value.node_version
-  #min_master_version = each.value.min_master_version
+  node_version       = each.value.node_version
+  min_master_version = each.value.min_master_version
   notification_config = {
     pubsub = {
       enabled = each.value.notification_config.pubsub.enabled
