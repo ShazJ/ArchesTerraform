@@ -219,7 +219,7 @@ variable "clusters" {
         logging_variant = string
       })
     })
-    node_version = string
+    #node_version = string
     notification_config = object({
       pubsub = object({
         enabled = bool
