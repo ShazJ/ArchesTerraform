@@ -113,16 +113,16 @@ resource "google_container_cluster" "cluster" {
     }
   }
 
-  monitoring_config {
-    dynamic "advanced_datapath_observability_config" {
-      for_each = var.monitoring_config.advanced_datapath_observability_config != null ? [var.monitoring_config.advanced_datapath_observability_config] : []
-      content {
-        enable_metrics = advanced_datapath_observability_config.value.enable_metrics
-        enable_relay   = advanced_datapath_observability_config.value.enable_relay
-      }
-    }
-    enable_components = var.monitoring_config.enable_components
-  }
+  # monitoring_config {
+  #   dynamic "advanced_datapath_observability_config" {
+  #     for_each = var.monitoring_config.advanced_datapath_observability_config != null ? [var.monitoring_config.advanced_datapath_observability_config] : []
+  #     content {
+  #       enable_metrics = advanced_datapath_observability_config.value.enable_metrics
+  #       enable_relay   = advanced_datapath_observability_config.value.enable_relay
+  #     }
+  #   }
+  #   enable_components = var.monitoring_config.enable_components
+  # }
 
   network_policy {
     enabled  = var.network_policy.enabled
