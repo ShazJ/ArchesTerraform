@@ -28,6 +28,7 @@ module "compute_address" {
 }
 
 module "compute_firewall" {
+  depends_on    = [module.compute_subnetwork, module.compute_subnetwork_prd]
   for_each      = var.firewalls
   source        = "./modules/compute_firewall"
   project_id    = var.project_id
@@ -39,7 +40,6 @@ module "compute_firewall" {
   target_tags   = each.value.target_tags
   allow         = each.value.allow
   description   = each.value.description
-  depends_on    = [module.compute_network]
 }
 
 # resource "google_compute_network" "network" {
@@ -364,8 +364,8 @@ module "container_cluster" {
       logging_variant = each.value.node_pool_defaults.node_config_defaults.logging_variant
     }
   }
-  #node_version       = each.value.node_version
-  min_master_version = each.value.min_master_version
+  node_version = each.value.node_version
+  #min_master_version = each.value.min_master_version
   notification_config = {
     pubsub = {
       enabled = each.value.notification_config.pubsub.enabled

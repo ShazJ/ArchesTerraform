@@ -201,7 +201,7 @@ variable "clusters" {
         display_name = string
       }))
     })
-    min_master_version = string
+    #min_master_version = string
     monitoring_config = object({
       advanced_datapath_observability_config = object({
         enable_metrics = bool
@@ -219,7 +219,7 @@ variable "clusters" {
         logging_variant = string
       })
     })
-    #node_version = string
+    node_version = string
     notification_config = object({
       pubsub = object({
         enabled = bool
