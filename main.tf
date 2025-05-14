@@ -175,7 +175,7 @@ module "compute_router" {
   name       = each.value.name
   network    = each.value.network
   region     = var.region
-  depends_on = [module.compute_network]
+  depends_on = [module.compute_network, module.compute_network_prd]
 }
 
 # # Cloud NAT
