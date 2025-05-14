@@ -201,6 +201,7 @@ variable "clusters" {
         display_name = string
       }))
     })
+    min_master_version = string
     monitoring_config = object({
       advanced_datapath_observability_config = object({
         enable_metrics = bool

@@ -293,11 +293,12 @@ routers = {
 
 clusters = {
   prd = {
-    name         = "k8s-coral-prd"
-    location     = "europe-west2-a"
-    network      = "projects/coral-459111/global/networks/coral-network-prd"
-    subnetwork   = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork-prd"
-    node_version = "1.31.6"
+    name       = "k8s-coral-prd"
+    location   = "europe-west2-a"
+    network    = "projects/coral-459111/global/networks/coral-network-prd"
+    subnetwork = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork-prd"
+    #node_version = "1.31.6"
+    min_master_version = "1.31.6"
     node_config = {
       disk_size_gb    = 50
       disk_type       = "pd-balanced"
@@ -463,11 +464,12 @@ clusters = {
     }
   },
   stg = {
-    name         = "k8s-coral-stg"
-    location     = "europe-west2-a"
-    network      = "projects/coral-459111/global/networks/coral-network"
-    subnetwork   = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork"
-    node_version = "1.31.6"
+    name       = "k8s-coral-stg"
+    location   = "europe-west2-a"
+    network    = "projects/coral-459111/global/networks/coral-network"
+    subnetwork = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork"
+    #node_version = "1.31.6"
+    min_master_version = "1.31.6"
     node_config = {
       disk_size_gb    = 50
       disk_type       = "pd-standard"
