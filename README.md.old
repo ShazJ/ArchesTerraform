@@ -130,3 +130,6 @@ terraform apply -var-file="dev.tfvars"
 
 ## State
 Terraform
+
+
+#todopatching strategy for cluster! sji
