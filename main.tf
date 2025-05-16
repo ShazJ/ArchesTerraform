@@ -238,17 +238,14 @@ module "compute_resource_policy" {
   }
 }
 
-module "kms_key_rings" {
-  for_each              = var.kms_key_rings
-  source                = "./modules/kms"
-  project_id            = var.project_id
-  name                  = each.value.name
-  location              = var.location
-  region                = var.region
-  infix_name            = each.value.infix_name
-  service_account_email = module.service_account[each.value.service_account_key].service_account_email
-  crypto_keys           = each.value.crypto_keys
-  depends_on            = [module.service_account]
+module "kms_key_ring" {
+  for_each    = var.kms_key_rings
+  source      = "./modules/kms"
+  project_id  = var.project_id
+  name        = each.value.name
+  location    = each.value.location
+  crypto_keys = each.value.crypto_keys
+  labels      = each.value.labels
 }
 
 # module "kms_crypto_key" {

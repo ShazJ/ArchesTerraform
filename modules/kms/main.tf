@@ -39,15 +39,9 @@ resource "google_kms_crypto_key" "crypto_key" {
   for_each        = var.crypto_keys
   key_ring        = google_kms_key_ring.key_ring.id
   name            = each.value.name
-  rotation_period = "100000s"
+  labels          = var.labels
   purpose         = "ENCRYPT_DECRYPT"
-  version_template {
-    algorithm        = "GOOGLE_SYMMETRIC_ENCRYPTION"
-    protection_level = "SOFTWARE"
-  }
-  # lifecycle {
-  #   prevent_destroy = false #true sji todo not in prod but should be?
-  # }
+  rotation_period = "7776000s" # 90 days
 }
 
 resource "google_kms_crypto_key_iam_binding" "crypto_key_binding" {
@@ -55,6 +49,6 @@ resource "google_kms_crypto_key_iam_binding" "crypto_key_binding" {
   crypto_key_id = google_kms_crypto_key.crypto_key[each.key].id
   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
   members = [
-    "serviceAccount:${var.service_account_email}",
+    "serviceAccount:${each.value.service_account_key}@${var.project_id}.iam.gserviceaccount.com"
   ]
 }

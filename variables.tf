@@ -94,9 +94,10 @@ variable "service_accounts" {
   }))
 }
 
-variable "service_account_email" {
-  description = "Email of the service account"
+variable "service_account_email" { #sji todo - maybe?
+  description = "Service account email for additional bindings (optional)"
   type        = string
+  default     = null
 }
 
 variable "routers" {
@@ -108,12 +109,14 @@ variable "routers" {
 }
 
 variable "kms_key_rings" {
-  description = "Map of KMS key rings and their configurations."
   type = map(object({
-    name                = string
-    infix_name          = string
-    crypto_keys         = map(any)
-    service_account_key = string
+    name     = string
+    location = string
+    crypto_keys = map(object({
+      name                = string
+      service_account_key = string
+    }))
+    labels = map(string)
   }))
 }
 

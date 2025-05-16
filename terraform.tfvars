@@ -298,14 +298,20 @@ routers = {
 
 kms_key_rings = {
   data_store_prd = {
-    name                = "data-store-keyring-uat-prd"
-    infix_name          = "infix1"
-    location            = "europe-west2"
-    project_id          = "coral-459111" #sji todo! this should be a var
-    service_account_key = "default"      #sji todo! must maytch
+    name       = "data-store-keyring-uat-prd"
+    infix_name = "infix1"
+    location   = "europe-west2"
+    project_id = "coral-459111" #sji todo! this should be a var
+    #service_account_key = "coral-flux-prd@coral-459111.iam.gserviceaccount.com"
     crypto_keys = {
-      "data-store-key-uat-prd" = { name = "data-store-key-uat-prd" }
-      "flux-key-uat-prd"       = { name = "flux-key-uat-prd" }
+      "data-store-key-uat-prd" = {
+        name                = "data-store-key-uat-prd"
+        service_account_key = "arches_uat_prd"
+      }
+      "flux-key-uat-prd" = {
+        name                = "flux-key-uat-prd"
+        service_account_key = "flux_prd"
+      }
     }
     labels = {
       env = "prd"
@@ -317,9 +323,12 @@ kms_key_rings = {
     infix_name          = "infix1"
     location            = "europe-west2"
     project_id          = "coral-459111" #sji todo! this should be a var
-    service_account_key = "default"      #sji todo! 
+    service_account_key = "coral-arches-uat@coral-459111.iam.gserviceaccount.com"
     crypto_keys = {
-      "key1" = { name = "data-store-key-uat" }
+      "data-store-key-uat-prd" = {
+        name                = "data-store-key-uat"
+        service_account_key = "arches_uat_prd"
+      }
     }
     labels = {
       env = "uat"
