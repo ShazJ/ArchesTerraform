@@ -36,7 +36,7 @@ variable "service_account_email" {
 
 variable "crypto_keys" {
   description = "Map of crypto keys to create."
-  type        = map(object({
+  type = map(object({
     name = string
   }))
 }

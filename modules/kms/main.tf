@@ -2,7 +2,7 @@
 #   name     = "${var.keyring_name}${var.infix_name}"
 #   location = var.region
 #   project = var.project_id
-  
+
 # }
 
 # resource "google_kms_crypto_key" "keys" {
@@ -36,10 +36,10 @@ resource "google_kms_key_ring" "key_ring" {
 }
 
 resource "google_kms_crypto_key" "crypto_key" {
-  for_each = var.crypto_keys
-  key_ring = google_kms_key_ring.key_ring.id
-  name     = each.value.name
-  rotation_period = "100000s"  
+  for_each        = var.crypto_keys
+  key_ring        = google_kms_key_ring.key_ring.id
+  name            = each.value.name
+  rotation_period = "100000s"
   purpose         = "ENCRYPT_DECRYPT"
   version_template {
     algorithm        = "GOOGLE_SYMMETRIC_ENCRYPTION"
@@ -54,7 +54,7 @@ resource "google_kms_crypto_key_iam_binding" "crypto_key_binding" {
   for_each      = var.crypto_keys
   crypto_key_id = google_kms_crypto_key.crypto_key[each.key].id
   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
-  members       = [
+  members = [
     "serviceAccount:${var.service_account_email}",
   ]
 }
