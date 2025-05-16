@@ -247,7 +247,6 @@ module "kms_key_rings" {
   region                = var.region
   infix_name            = each.value.infix_name
   service_account_email = module.service_account[each.value.service_account_key].service_account_email
-  keyring_name          = each.value.keyring_name
   crypto_keys           = each.value.crypto_keys
   depends_on            = [module.service_account]
 }

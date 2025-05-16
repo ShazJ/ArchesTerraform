@@ -112,7 +112,6 @@ variable "kms_key_rings" {
   type = map(object({
     name                = string
     infix_name          = string
-    keyring_name        = string
     crypto_keys         = map(any)
     service_account_key = string
   }))

@@ -24,11 +24,6 @@ variable "infix_name" {
   type        = string
 }
 
-variable "keyring_name" {
-  description = "The name of the KMS key ring resource."
-  type        = string
-}
-
 variable "service_account_email" {
   description = "The email of the service account to be used for KMS."
   type        = string
