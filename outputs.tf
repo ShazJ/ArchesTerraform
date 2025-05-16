@@ -18,11 +18,6 @@ output "bucket_names" {
   value       = { for k, v in module.storage_bucket : k => v.bucket_name }
 }
 
-output "service_account_emails" {
-  description = "Map of Service Account emails created"
-  value       = { for k, v in module.service_account : k => v.email }
-}
-
 output "network_names" {
   description = "Names of Compute Networks created"
   value = {
