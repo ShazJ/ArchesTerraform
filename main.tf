@@ -80,12 +80,12 @@ module "storage_bucket" {
 }
 
 module "service_account" {
-  for_each     = var.service_accounts
-  source       = "./modules/service_account"
-  project_id   = var.project_id
-  account_id   = each.value.account_id
-  display_name = each.value.display_name
-  description  = each.value.description
+  for_each              = var.service_accounts
+  source                = "./modules/service_account"
+  project_id            = var.project_id
+  account_id            = each.value.account_id
+  display_name          = each.value.display_name
+  description           = each.value.description
   service_account_email = var.service_account_email
 }
 

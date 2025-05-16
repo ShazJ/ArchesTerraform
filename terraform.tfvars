@@ -303,7 +303,7 @@ kms_key_rings = {
     infix_name          = "infix1"
     location            = "europe-west2"
     project_id          = "coral-459111" #sji todo! this should be a var
-    service_account_key = "default"          #sji todo! must maytch
+    service_account_key = "default"      #sji todo! must maytch
     crypto_keys = {
       "data-store-key-uat-prd" = { name = "data-store-key-uat-prd" }
       "flux-key-uat-prd"       = { name = "flux-key-uat-prd" }
@@ -319,7 +319,7 @@ kms_key_rings = {
     infix_name          = "infix1"
     location            = "europe-west2"
     project_id          = "coral-459111" #sji todo! this should be a var
-    service_account_key = "default"          #sji todo! 
+    service_account_key = "default"      #sji todo! 
     crypto_keys = {
       "key1" = { name = "data-store-key-uat" }
     }
