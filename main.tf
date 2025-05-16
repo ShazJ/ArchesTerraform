@@ -312,10 +312,10 @@ module "container_cluster" {
     network_policy_config = {
       disabled = each.value.addons_config.network_policy_config.disabled
     }
-    istio_config = {
-      disabled = each.value.addons_config.istio_config.disabled
-      auth     = each.value.addons_config.istio_config.auth
-    }
+    # istio_config = {
+    #   disabled = each.value.addons_config.istio_config.disabled
+    #   auth     = each.value.addons_config.istio_config.auth
+    # }
   }
   cluster_autoscaling = {
     autoscaling_profile = each.value.cluster_autoscaling.autoscaling_profile

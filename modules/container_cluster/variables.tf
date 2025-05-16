@@ -80,10 +80,10 @@ variable "addons_config" {
     network_policy_config = object({
       disabled = bool
     })
-    istio_config = object({
-      disabled = bool
-      auth     = string
-    })
+    # istio_config = object({
+    #   disabled = bool
+    #   auth     = string
+    # })
   })
 }
 

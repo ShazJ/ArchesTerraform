@@ -67,10 +67,10 @@ resource "google_container_cluster" "cluster" {
     network_policy_config {
       disabled = var.addons_config.network_policy_config.disabled
     }
-    istio_config {
-      disabled = var.addons_config.istio_config.disabled
-      auth     = var.addons_config.istio_config.auth
-    }
+    # istio_config {
+    #   disabled = var.addons_config.istio_config.disabled
+    #   auth     = var.addons_config.istio_config.auth
+    # }
   }
 
   cluster_autoscaling {

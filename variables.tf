@@ -163,10 +163,10 @@ variable "clusters" {
       network_policy_config = object({
         disabled = bool
       })
-      istio_config = object({
-        disabled = bool
-        auth     = string
-      })
+      # istio_config = object({
+      #   disabled = bool
+      #   auth     = string
+      # })
     })
     cluster_autoscaling = object({
       autoscaling_profile = string
