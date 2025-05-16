@@ -18,3 +18,8 @@ variable "description" {
   type        = string
   default     = null
 }
+
+variable "service_account_email" {
+  description = "Email of the service account"
+  type        = string
+}

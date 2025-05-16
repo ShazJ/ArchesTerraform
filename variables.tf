@@ -94,6 +94,11 @@ variable "service_accounts" {
   }))
 }
 
+variable "service_account_email" {
+  description = "Email of the service account"
+  type        = string
+}
+
 variable "routers" {
   description = "Map of compute routers"
   type = map(object({
@@ -102,12 +107,16 @@ variable "routers" {
   }))
 }
 
-# variable "key_rings" {
-#   description = "Map of KMS key rings"
-#   type = map(object({
-#     name = string
-#   }))
-# }
+variable "kms_key_rings" {
+  description = "Map of KMS key rings and their configurations."
+  type = map(object({
+    name                = string
+    infix_name          = string
+    keyring_name        = string
+    crypto_keys         = map(any)
+    service_account_key = string
+  }))
+}
 
 variable "clusters" {
   description = "Map of GKE cluster configurations"

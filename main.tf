@@ -86,6 +86,7 @@ module "service_account" {
   account_id   = each.value.account_id
   display_name = each.value.display_name
   description  = each.value.description
+  service_account_email = var.service_account_email
 }
 
 module "compute_network_prd" {
@@ -237,29 +238,35 @@ module "compute_resource_policy" {
   }
 }
 
-#kms sji todo
-# module "kms_key_ring" {
-#   for_each   = var.key_rings
-#   source     = "./modules/kms_key_ring"
+module "kms_key_rings" {
+  for_each              = var.kms_key_rings
+  source                = "./modules/kms"
+  project_id            = var.project_id
+  name                  = each.value.name
+  location              = var.location
+  region                = var.region
+  infix_name            = each.value.infix_name
+  service_account_email = module.service_account[each.value.service_account_key].service_account_email
+  keyring_name          = each.value.keyring_name
+  crypto_keys           = each.value.crypto_keys
+  depends_on            = [module.service_account]
+}
+
+# module "kms_crypto_key" {
+#   for_each   = var.crypto_keys
+#   source     = "./modules/kms"
 #   project_id = var.project_id
 #   name       = each.value.name
-#   location   = var.location
+#   key_ring   = module.kms_key_ring[each.key].key_ring_id
+#   rotation_period = each.value.rotation_period
 # }
-
-# resource "google_kms_crypto_key_iam_binding" "data_store_uat" {
-#   crypto_key_id = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat/cryptoKeys/data-store-key-uat"
-#   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
-#   members = [
-#     "serviceAccount:${data.google_project.project.number}@gs-project-accounts.iam.gserviceaccount.com"
-#   ]
-# }
-
-# resource "google_kms_crypto_key_iam_binding" "data_store_uat_prd" {
-#   crypto_key_id = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat-prd/cryptoKeys/data-store-key-uat-prd"
-#   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
-#   members = [
-#     "serviceAccount:${data.google_project.project.number}@gs-project-accounts.iam.gserviceaccount.com"
-#   ]
+# module "kms_key_ring_iam" {
+#   for_each   = var.kms_key_ring_iam_bindings
+#   source     = "./modules/kms"
+#   project_id = var.project_id
+#   key_ring   = module.kms_key_ring[each.key].key_ring_id
+#   role       = each.value.role
+#   members    = each.value.members
 # }
 
 module "container_cluster" {

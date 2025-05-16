@@ -296,17 +296,40 @@ routers = {
   }
 }
 
-# key_rings = {
-#   data_store_uat = {
-#     name = "data-store-keyring-uat"
-#   },
-#   data_store_uat_prd = {
-#     name = "data-store-keyring-uat-prd"
-#   },
-#   terraform_state = {
-#     name = "terraform-state-keyring"
-#   }
-# }
+kms_key_rings = {
+  data_store_prd = {
+    name = "data-store-keyring-uat-prd"
+    # keyring_name       = "my-keyring"
+    infix_name          = "infix1"
+    location            = "europe-west2"
+    project_id          = "coral-459111" #sji todo! this should be a var
+    service_account_key = "default"          #sji todo! must maytch
+    crypto_keys = {
+      "data-store-key-uat-prd" = { name = "data-store-key-uat-prd" }
+      "flux-key-uat-prd"       = { name = "flux-key-uat-prd" }
+    }
+    labels = {
+      env = "prd"
+      app = "data-store"
+    }
+  },
+  data_store_uat = {
+    name = "data-store-keyring-uat"
+    # keyring_name       = "my-keyring"
+    infix_name          = "infix1"
+    location            = "europe-west2"
+    project_id          = "coral-459111" #sji todo! this should be a var
+    service_account_key = "default"          #sji todo! 
+    crypto_keys = {
+      "key1" = { name = "data-store-key-uat" }
+    }
+    labels = {
+      env = "uat"
+      app = "data-store"
+    }
+  }
+}
+
 clusters = {
   prd = {
     name               = "k8s-coral-prd"
