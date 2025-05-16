@@ -40,7 +40,7 @@ variable "crypto_keys" {
     name = string
   }))
 }
-# variable "iam_bindings" {
+# variable "iam_bindings" { 
 #   description = "List of IAM bindings for KMS crypto keys"
 #   type = list(object({
 #     crypto_key_id = string

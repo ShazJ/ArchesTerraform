@@ -27,7 +27,7 @@
 #   crypto_key_id = each.value.crypto_key_id
 #   role          = each.value.role
 #   members       = each.value.members
-# }
+# } 
 
 resource "google_kms_key_ring" "key_ring" {
   project  = var.project_id
