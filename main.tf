@@ -79,14 +79,11 @@ module "storage_bucket" {
   logging = each.value.logging
 }
 
-module "service_account" {
-  for_each              = var.service_accounts
+module "service_accounts" {
   source                = "./modules/service_account"
   project_id            = var.project_id
-  account_id            = each.value.account_id
-  display_name          = each.value.display_name
-  description           = each.value.description
-  service_account_email = var.service_account_email
+  service_accounts      = var.service_accounts
+  service_account_roles = var.service_account_roles
 }
 
 module "compute_network_prd" {
@@ -240,7 +237,7 @@ module "compute_resource_policy" {
 }
 
 module "kms_key_ring" {
-  depends_on  = [module.service_account]
+  depends_on  = [module.service_accounts]
   for_each    = var.kms_key_rings
   source      = "./modules/kms"
   project_id  = var.project_id
@@ -268,7 +265,7 @@ module "kms_key_ring" {
 # }
 
 module "container_cluster" {
-  depends_on = [module.compute_subnetwork, module.compute_subnetwork_prd, module.service_account]
+  depends_on = [module.compute_subnetwork, module.compute_subnetwork_prd, module.service_accounts]
   for_each   = var.clusters
   source     = "./modules/container_cluster"
   project_id = var.project_id

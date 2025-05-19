@@ -43,6 +43,7 @@ ROLES=(
   "roles/editor" # sji todo - custom role here - this is too broad
   "roles/cloudkms.admin"
   "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+  "roles/container.clusterAdmin"
 )
 
 # Authenticate with GCP (assumes CI provides credentials or user is authenticated)

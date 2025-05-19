@@ -290,6 +290,51 @@ service_accounts = {
   }
 }
 
+service_account_roles = {
+  "arches_k8s_prd" = [
+    "container.clusterAdmin",
+    "compute.viewer",
+    "logging.logWriter",
+    "monitoring.metricWriter"
+  ]
+  "arches_k8s_stg" = [
+    "container.clusterAdmin",
+    "compute.viewer",
+    "logging.logWriter",
+    "monitoring.metricWriter"
+  ]
+  "arches_uat_prd" = [
+    "storage.objectAdmin"
+  ]
+  "arches_uat" = [
+    "storage.objectAdmin"
+  ]
+  "ci_prd" = [
+    "compute.admin",
+    "storage.admin",
+    "iam.serviceAccountUser",
+    "container.admin"
+  ]
+  "ci" = [
+    "compute.admin",
+    "storage.admin",
+    "iam.serviceAccountUser",
+    "container.admin"
+  ]
+  "flux_prd" = [
+    "container.developer"
+  ]
+  "gl_ci_prd" = [
+    "bigquery.dataEditor",
+    "storage.objectAdmin"
+  ]
+  # "coral-arches-uat-prd" = [ #sji todo
+  #   "roles/storage.objectAdmin"
+  # ]
+  # "coral-arches-uat" = [
+  #   "roles/storage.objectAdmin"
+  # ]
+}
 routers = {
   prd = {
     name    = "coral-network-router-prd"

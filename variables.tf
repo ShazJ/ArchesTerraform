@@ -94,6 +94,12 @@ variable "service_accounts" {
   }))
 }
 
+variable "service_account_roles" {
+  type        = map(list(string))
+  description = "IAM roles to assign to service accounts, mapping service account keys to lists of role names."
+  default     = {}
+}
+
 variable "service_account_email" { #sji todo - maybe?
   description = "Service account email for additional bindings (optional)"
   type        = string

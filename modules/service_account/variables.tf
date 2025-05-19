@@ -1,25 +1,22 @@
 variable "project_id" {
-  description = "The ID of the GCP project"
   type        = string
+  description = "The GCP Project ID."
 }
 
-variable "account_id" {
-  description = "The account ID of the Service Account"
-  type        = string
+variable "service_accounts" {
+  type = map(object({
+    account_id   = string
+    display_name = string
+    description  = string
+  }))
+  description = "Service accounts to create."
 }
 
-variable "display_name" {
-  description = "The display name of the Service Account"
-  type        = string
-}
-
-variable "description" {
-  description = "Description of the Service Account"
-  type        = string
-  default     = null
-}
-
-variable "service_account_email" {
-  description = "Email of the service account"
-  type        = string
+variable "service_account_roles" {
+  type        = map(list(string))
+  description = "IAM roles to assign to service accounts, mapping service account keys to lists of role names."
+  validation {
+    condition     = alltrue([for k in keys(var.service_account_roles) : contains(keys(var.service_accounts), k)])
+    error_message = "All service_account_roles keys must match service_accounts keys."
+  }
 }
