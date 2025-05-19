@@ -414,7 +414,7 @@ clusters = {
       type = "ENABLED"
     }
     database_encryption = {
-      state = "DECRYPTED"
+      state    = "DECRYPTED"
       key_name = ""
     }
     default_max_pods_per_node = 8
@@ -584,7 +584,7 @@ clusters = {
       type = "ENABLED"
     }
     database_encryption = {
-      state = "DECRYPTED"
+      state    = "DECRYPTED"
       key_name = ""
     }
     default_max_pods_per_node = 8

@@ -186,7 +186,7 @@ variable "clusters" {
       type = string
     })
     database_encryption = object({
-      state = string
+      state    = string
       key_name = string
     })
     default_max_pods_per_node = number
