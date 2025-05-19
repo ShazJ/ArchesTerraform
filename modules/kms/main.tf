@@ -36,40 +36,30 @@
 # This is a workaround to avoid the error of trying to create a key ring
 # that already exists.
 
-# Check if the key ring already exists
-data "google_kms_key_ring" "existing" {
-  project  = var.project_id
-  name     = var.name
-  location = var.location
-}
-
-# Create the key ring only if it doesn't exist
 resource "google_kms_key_ring" "key_ring" {
-  count    = try(data.google_kms_key_ring.existing.id, "") == "" ? 1 : 0
   project  = var.project_id
   name     = var.name
   location = var.location
-}
-
-# Reference the key ring ID (existing or new)
-locals {
-  key_ring_id = try(data.google_kms_key_ring.existing.id, google_kms_key_ring.key_ring[0].id)
 }
 
 resource "google_kms_crypto_key" "crypto_key" {
   for_each        = var.crypto_keys
-  key_ring        = local.key_ring_id #google_kms_key_ring.key_ring.id
   name            = each.value.name
-  labels          = var.labels
+  key_ring        = google_kms_key_ring.key_ring.id
   purpose         = "ENCRYPT_DECRYPT"
-  rotation_period = "7776000s" # 90 days
+  rotation_period = "100000s"
+
+  lifecycle {
+    prevent_destroy = false
+  }
 }
 
-resource "google_kms_crypto_key_iam_binding" "crypto_key_binding" {
-  for_each      = var.crypto_keys
+resource "google_kms_crypto_key_iam_member" "crypto_key_iam" {
+  for_each = {
+    for key, value in var.crypto_keys : key => value
+    if value.service_account_key != ""
+  }
   crypto_key_id = google_kms_crypto_key.crypto_key[each.key].id
   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
-  members = [
-    "serviceAccount:${each.value.service_account_key}@${var.project_id}.iam.gserviceaccount.com"
-  ]
+  member        = "serviceAccount:${var.service_accounts[each.value.service_account_key].account_id}@${var.project_id}.iam.gserviceaccount.com"
 }

@@ -237,14 +237,14 @@ module "compute_resource_policy" {
 }
 
 module "kms_key_ring" {
-  depends_on  = [module.service_accounts]
-  for_each    = var.kms_key_rings
-  source      = "./modules/kms"
-  project_id  = var.project_id
-  name        = each.value.name
-  location    = each.value.location
-  crypto_keys = each.value.crypto_keys
-  labels      = each.value.labels
+  for_each         = var.kms_key_rings
+  source           = "./modules/kms"
+  project_id       = var.project_id
+  name             = each.value.name
+  location         = each.value.location
+  crypto_keys      = each.value.crypto_keys
+  labels           = each.value.labels
+  service_accounts = var.service_accounts
 }
 
 # module "kms_crypto_key" {

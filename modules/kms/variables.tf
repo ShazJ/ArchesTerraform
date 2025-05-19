@@ -15,10 +15,19 @@ variable "crypto_keys" {
     name                = string
     service_account_key = string
   }))
-  default = {}
+  description = "Map of crypto keys to create, with associated service account keys."
 }
 
 variable "labels" {
-  type    = map(string)
-  default = {}
+  type        = map(string)
+  description = "Labels to apply to the KMS key ring."
+}
+
+variable "service_accounts" {
+  type = map(object({
+    account_id   = string
+    display_name = string
+    description  = string
+  }))
+  description = "Service accounts for IAM bindings."
 }
