@@ -28,6 +28,13 @@
 #   role          = each.value.role
 #   members       = each.value.members
 # } 
+# NOTE! GCP does not allow the deletion of a key ring AT ALL
+# and the key ring name must be unique within the project and location.
+# So, if you want to delete a key ring, you must delete the project.
+# Hence, we have added checking to see if the key ring already exists
+# and if it does, we will not create a new one.
+# This is a workaround to avoid the error of trying to create a key ring
+# that already exists.
 
 # Check if the key ring already exists
 data "google_kms_key_ring" "existing" {

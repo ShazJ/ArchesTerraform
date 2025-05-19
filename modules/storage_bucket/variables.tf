@@ -44,13 +44,13 @@ variable "cors" {
   default = []
 }
 
-variable "encryption" {
-  description = "Encryption configuration for the bucket"
-  type = object({
-    default_kms_key_name = string
-  })
-  default = null
-}
+# variable "encryption" {
+#   description = "Encryption configuration for the bucket"
+#   type = object({
+#     default_kms_key_name = string
+#   })
+#   default = null
+# }
 
 variable "logging" {
   description = "Logging configuration for the bucket"

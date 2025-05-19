@@ -81,9 +81,9 @@ resource "google_container_cluster" "cluster" {
     type = var.cluster_telemetry.type
   }
 
-  database_encryption {
-    state = var.database_encryption.state
-  }
+  # database_encryption {
+  #   state = var.database_encryption.state
+  # }
 
   default_snat_status {
     disabled = var.default_snat_status.disabled

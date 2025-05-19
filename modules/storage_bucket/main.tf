@@ -18,12 +18,12 @@ resource "google_storage_bucket" "bucket" {
     }
   }
 
-  dynamic "encryption" {
-    for_each = var.encryption != null && try(var.encryption.default_kms_key_name, null) != null ? [var.encryption] : []
-    content {
-      default_kms_key_name = encryption.value.default_kms_key_name
-    }
-  }
+  # dynamic "encryption" {
+  #   for_each = var.encryption != null && try(var.encryption.default_kms_key_name, null) != null ? [var.encryption] : []
+  #   content {
+  #     default_kms_key_name = encryption.value.default_kms_key_name
+  #   }
+  # }
 
   dynamic "logging" {
     for_each = var.logging != null && try(var.logging.log_bucket, null) != null ? [var.logging] : []

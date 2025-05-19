@@ -413,9 +413,9 @@ clusters = {
     cluster_telemetry = {
       type = "ENABLED"
     }
-    database_encryption = {
-      state = "DECRYPTED"
-    }
+    # database_encryption = {
+    #   state = "DECRYPTED"
+    # }
     default_max_pods_per_node = 8
     default_snat_status = {
       disabled = false
