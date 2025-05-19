@@ -102,9 +102,9 @@ variable "cluster_telemetry" {
 }
 
 variable "database_encryption" {
-  description = "Database encryption configuration"
   type = object({
-    state = string
+    state    = string
+    key_name = string
   })
 }
 

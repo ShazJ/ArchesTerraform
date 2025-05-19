@@ -82,7 +82,8 @@ resource "google_container_cluster" "cluster" {
   }
 
   database_encryption {
-    state = var.database_encryption.state
+    state    = var.database_encryption.state
+    key_name = var.database_encryption.key_name
   }
 
   default_snat_status {
