@@ -298,7 +298,7 @@ routers = {
 
 kms_key_rings = {
   data_store_prd = {
-    name       = "data-store-keyring-uat-prd2"
+    name       = "data-store-keyring-uat-prd"
     infix_name = "infix1"
     location   = "europe-west2"
     project_id = "coral-459111" #sji todo! this should be a var
