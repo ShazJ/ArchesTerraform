@@ -139,7 +139,7 @@ module "compute_subnetwork_prd" {
 }
 
 module "compute_subnetwork" {
-  depends_on = [ module.compute_network, module.compute_network_prd]
+  depends_on                 = [module.compute_network, module.compute_network_prd]
   source                     = "./modules/compute_subnetwork"
   project_id                 = var.project_id
   name                       = "coral-subnetwork"
