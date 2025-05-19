@@ -36,7 +36,20 @@
 # This is a workaround to avoid the error of trying to create a key ring
 # that already exists.
 
+# Check if the key ring already exists
+data "google_kms_key_ring" "existing" {
+  project  = var.project_id
+  name     = var.name
+  location = var.location
+}
+
+# Local variable to determine the key ring ID
+locals {
+  key_ring_id = length(data.google_kms_key_ring.existing.id) > 0 ? data.google_kms_key_ring.existing.id : google_kms_key_ring.key_ring[0].id
+}
+
 resource "google_kms_key_ring" "key_ring" {
+  count    = length(data.google_kms_key_ring.existing.id) > 0 ? 0 : 1
   project  = var.project_id
   name     = var.name
   location = var.location
@@ -45,7 +58,7 @@ resource "google_kms_key_ring" "key_ring" {
 resource "google_kms_crypto_key" "crypto_key" {
   for_each        = var.crypto_keys
   name            = each.value.name
-  key_ring        = google_kms_key_ring.key_ring.id
+  key_ring        = local.key_ring_id #google_kms_key_ring.key_ring.id
   purpose         = "ENCRYPT_DECRYPT"
   rotation_period = "100000s"
 
