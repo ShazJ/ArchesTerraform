@@ -356,7 +356,7 @@ kms_key_rings = {
     crypto_keys = {
       "data-store-key-uat-prd" = {
         name                = "data-store-key-uat-prd"
-        service_account_key = "coral-arches-uat-prd"
+        service_account_key = "arches_uat_prd"
       }
       "flux-key-uat-prd" = {
         name                = "flux-key-uat-prd"
@@ -373,11 +373,11 @@ kms_key_rings = {
     infix_name          = "infix1"
     location            = "europe-west2"
     project_id          = "coral-459111" #sji todo! this should be a var
-    service_account_key = "coral-arches-uat@coral-459111.iam.gserviceaccount.com"
+    #service_account_key = "coral-arches-uat"
     crypto_keys = {
       "data-store-key-uat" = {
         name                = "data-store-key-uat"
-        service_account_key = "coral-arches-uat"
+        service_account_key = "arches_uat"
       }
     }
     labels = {
@@ -412,7 +412,7 @@ clusters = {
         "https://www.googleapis.com/auth/servicecontrol",
         "https://www.googleapis.com/auth/trace.append"
       ]
-      service_account = "default"
+      service_account = "coral-arches-k8s-coral-prd@coral-459111.iam.gserviceaccount.com"
       shielded_instance_config = {
         enable_integrity_monitoring = true
       }
