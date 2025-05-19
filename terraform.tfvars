@@ -190,6 +190,7 @@ buckets = {
     public_access_prevention    = "enforced"
     uniform_bucket_level_access = true
     cors                        = []
+    encryption                  = null
     # cors = [{
     #   max_age_seconds = 3600
     #   method          = ["GET", "HEAD", "PUT", "POST", "DELETE"]
@@ -211,6 +212,7 @@ buckets = {
     force_destroy               = false
     public_access_prevention    = "inherited"
     uniform_bucket_level_access = true
+    encryption                  = null
     cors                        = []
   },
   log_store = {
@@ -220,6 +222,7 @@ buckets = {
     force_destroy               = false
     public_access_prevention    = "inherited"
     uniform_bucket_level_access = true
+    encryption                  = null
     cors                        = []
   },
   artifacts_us = {
@@ -229,6 +232,7 @@ buckets = {
     force_destroy               = false
     public_access_prevention    = "inherited"
     uniform_bucket_level_access = false
+    encryption                  = null
     cors                        = []
   },
   artifacts_eu = {
@@ -238,6 +242,7 @@ buckets = {
     force_destroy               = false
     public_access_prevention    = "inherited"
     uniform_bucket_level_access = false
+    encryption                  = null
     cors                        = []
   }
 }
