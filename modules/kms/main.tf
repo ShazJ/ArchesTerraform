@@ -29,29 +29,24 @@
 #   members       = each.value.members
 # } 
 
-# Variable to control whether to create or reuse
-variable "create_key_ring" {
-  type    = bool
-  default = true # Set to false if you expect the KeyRing to exist
-}
-
-resource "google_kms_key_ring" "key_ring" {
-  count    = var.create_key_ring ? 1 : 0
+# Check if the key ring already exists
+data "google_kms_key_ring" "existing" {
   project  = var.project_id
   name     = var.name
   location = var.location
 }
 
-data "google_kms_key_ring" "existing_key_ring" {
-  count    = var.create_key_ring ? 0 : 1
-  project  = "***"
-  location = "europe-west2"
-  name     = "data-store-keyring-uat-prd"
+# Create the key ring only if it doesn't exist
+resource "google_kms_key_ring" "key_ring" {
+  count    = try(data.google_kms_key_ring.existing.id, "") == "" ? 1 : 0
+  project  = var.project_id
+  name     = var.name
+  location = var.location
 }
 
-# Reference the KeyRing ID (from either resource or data source)
+# Reference the key ring ID (existing or new)
 locals {
-  key_ring_id = var.create_key_ring ? google_kms_key_ring.key_ring[0].id : data.google_kms_key_ring.existing_key_ring[0].id
+  key_ring_id = try(data.google_kms_key_ring.existing.id, google_kms_key_ring.key_ring[0].id)
 }
 
 resource "google_kms_crypto_key" "crypto_key" {
