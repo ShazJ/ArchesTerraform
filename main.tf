@@ -139,6 +139,7 @@ module "compute_subnetwork_prd" {
 }
 
 module "compute_subnetwork" {
+  depends_on = [ module.compute_network, module.compute_network_prd]
   source                     = "./modules/compute_subnetwork"
   project_id                 = var.project_id
   name                       = "coral-subnetwork"
@@ -266,7 +267,7 @@ module "kms_key_ring" {
 # }
 
 module "container_cluster" {
-  depends_on = [module.compute_network, module.service_account]
+  depends_on = [module.compute_subnetwork, module.compute_subnetwork_prd, module.service_account]
   for_each   = var.clusters
   source     = "./modules/container_cluster"
   project_id = var.project_id
