@@ -37,21 +37,31 @@
 # that already exists.
 
 # Check if the key ring already exists
+data "external" "key_ring_check" {
+  program = ["${path.module}/key_ring_check.sh"]
+
+  query = {
+    project  = var.project_id
+    location = var.location
+    name     = var.name
+  }
+}
+
 data "google_kms_key_ring" "existing" {
-  project  = var.project_id
+  count    = data.external.key_ring_check.result.exists ? 1 : 0
   name     = var.name
+  project  = var.project_id
   location = var.location
 }
 
-# Local variable to determine the key ring ID
 locals {
-  key_ring_id = length(data.google_kms_key_ring.existing.id) > 0 ? data.google_kms_key_ring.existing.id : google_kms_key_ring.key_ring[0].id
+  key_ring_id = data.external.key_ring_check.result.exists ? data.google_kms_key_ring.existing[0].id : google_kms_key_ring.key_ring[0].id
 }
 
 resource "google_kms_key_ring" "key_ring" {
-  count    = length(data.google_kms_key_ring.existing.id) > 0 ? 0 : 1
-  project  = var.project_id
+  count    = data.external.key_ring_check.result.exists ? 0 : 1
   name     = var.name
+  project  = var.project_id
   location = var.location
 }
 
