@@ -75,10 +75,9 @@ variable "buckets" {
       origin          = list(string)
       response_header = list(string)
     })))
-    encryption = any
-    # encryption = optional(object({
-    #   default_kms_key_name = string
-    # }))
+    encryption = optional(object({
+      default_kms_key_name = string
+    }))
     logging = optional(object({
       log_bucket        = string
       log_object_prefix = string
