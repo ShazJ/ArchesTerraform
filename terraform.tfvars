@@ -369,10 +369,10 @@ kms_key_rings = {
     }
   },
   data_store_uat = {
-    name                = "data-store-keyring-uat"
-    infix_name          = "infix1"
-    location            = "europe-west2"
-    project_id          = "coral-459111" #sji todo! this should be a var
+    name       = "data-store-keyring-uat"
+    infix_name = "infix1"
+    location   = "europe-west2"
+    project_id = "coral-459111" #sji todo! this should be a var
     #service_account_key = "coral-arches-uat"
     crypto_keys = {
       "data-store-key-uat" = {
