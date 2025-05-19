@@ -360,7 +360,7 @@ kms_key_rings = {
       }
       "flux-key-uat-prd" = {
         name                = "flux-key-uat-prd"
-        service_account_key = "coral-flux-prd"
+        service_account_key = "flux_prd"
       }
     }
     labels = {
