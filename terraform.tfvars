@@ -415,6 +415,7 @@ clusters = {
     }
     database_encryption = {
       state = "DECRYPTED"
+      key_name = ""
     }
     default_max_pods_per_node = 8
     default_snat_status = {
@@ -584,6 +585,7 @@ clusters = {
     }
     database_encryption = {
       state = "DECRYPTED"
+      key_name = ""
     }
     default_max_pods_per_node = 8
     default_snat_status = {

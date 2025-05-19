@@ -329,8 +329,8 @@ module "container_cluster" {
     type = each.value.cluster_telemetry.type
   }
   database_encryption = {
-    key_name = each.value.database_encryption.key_name
     state    = each.value.database_encryption.state
+    key_name = each.value.database_encryption.key_name
   }
   default_max_pods_per_node = each.value.default_max_pods_per_node
   default_snat_status = {

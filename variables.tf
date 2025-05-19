@@ -187,6 +187,7 @@ variable "clusters" {
     })
     database_encryption = object({
       state = string
+      key_name = string
     })
     default_max_pods_per_node = number
     default_snat_status = object({
