@@ -100,11 +100,11 @@ variable "service_account_roles" {
   default     = {}
 }
 
-variable "service_account_email" { #sji todo - maybe?
-  description = "Service account email for additional bindings (optional)"
-  type        = string
-  default     = null
-}
+# variable "service_account_email" { #sji todo - maybe?
+#   description = "Service account email for additional bindings (optional)"
+#   type        = string
+#   default     = null
+# }
 
 variable "routers" {
   description = "Map of compute routers"
