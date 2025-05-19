@@ -1,8 +1,8 @@
-# ./modules/kms/outputs.tf
-output "key_ring_id" {
-  description = "The ID of the created KMS key ring."
-  value       = google_kms_key_ring.key_ring.id
-}
+# # ./modules/kms/outputs.tf
+# output "key_ring_id" {
+#   description = "The ID of the created KMS key ring."
+#   value       = google_kms_key_ring.key_ring.id
+# }
 
 output "crypto_key_ids" {
   description = "The IDs of the created KMS crypto keys."

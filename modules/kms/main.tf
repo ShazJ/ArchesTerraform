@@ -35,6 +35,13 @@ variable "create_key_ring" {
   default = true # Set to false if you expect the KeyRing to exist
 }
 
+resource "google_kms_key_ring" "key_ring" {
+  count    = var.create_key_ring ? 1 : 0
+  project  = var.project_id
+  name     = var.name
+  location = var.location
+}
+
 data "google_kms_key_ring" "existing_key_ring" {
   count    = var.create_key_ring ? 0 : 1
   project  = "***"
@@ -45,13 +52,6 @@ data "google_kms_key_ring" "existing_key_ring" {
 # Reference the KeyRing ID (from either resource or data source)
 locals {
   key_ring_id = var.create_key_ring ? google_kms_key_ring.key_ring[0].id : data.google_kms_key_ring.existing_key_ring[0].id
-}
-
-resource "google_kms_key_ring" "key_ring" {
-  count    = var.create_key_ring ? 1 : 0
-  project  = var.project_id
-  name     = var.name
-  location = var.location
 }
 
 resource "google_kms_crypto_key" "crypto_key" {
