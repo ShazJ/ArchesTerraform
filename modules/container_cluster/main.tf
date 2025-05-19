@@ -12,7 +12,7 @@ resource "google_container_cluster" "cluster" {
   networking_mode           = var.networking_mode
   min_master_version        = var.min_master_version
   node_version              = var.node_version
-  deletion_protection           = false
+  deletion_protection       = false #sji - change!!!! true
 
   node_config {
     disk_size_gb    = var.node_config.disk_size_gb
