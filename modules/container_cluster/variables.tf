@@ -101,12 +101,12 @@ variable "cluster_telemetry" {
   })
 }
 
-# variable "database_encryption" {
-#   description = "Database encryption configuration"
-#   type = object({
-#     state = string
-#   })
-# }
+variable "database_encryption" {
+  description = "Database encryption configuration"
+  type = object({
+    state = string
+  })
+}
 
 variable "default_max_pods_per_node" {
   description = "Default maximum pods per node"
