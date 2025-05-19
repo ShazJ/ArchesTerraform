@@ -38,7 +38,7 @@
 
 # Check if the key ring already exists
 data "external" "key_ring_check" {
-  program = ["${path.module}/modules/kms/scripts/check_key_ring.sh"]
+  program = ["${path.module}/scripts/check_key_ring.sh"]
 
   query = {
     project  = var.project_id
