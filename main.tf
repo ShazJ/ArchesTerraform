@@ -240,6 +240,7 @@ module "compute_resource_policy" {
 }
 
 module "kms_key_ring" {
+  depends_on = [ module.service_account ]
   for_each    = var.kms_key_rings
   source      = "./modules/kms"
   project_id  = var.project_id
