@@ -156,5 +156,34 @@ runs:
                     print(f"⚠️ Crypto key '{crypto_key_name}' not found in GCP: {crypto_check.stderr}")
                     continue
 
+                # Handle IAM roles for Key Ring
+                iam_roles = config.get("iam_roles", [])
+                for iam_role in iam_roles:
+                    role = iam_role.get("role")
+                    member = iam_role.get("member")
+
+                    tf_iam_resource = f"google_project_iam_member.{map_key}_{role.replace('/', '_')}_{member.replace(':', '_').replace('@', '_')}"
+                    gcp_iam_resource = f"projects/{PROJECT_ID}/members/{member}"
+
+                    print(f"🔍 Importing IAM role '{role}' for key ring '{key_ring_name}' to member '{member}'")
+                    subprocess.run(["terraform", "import", tf_iam_resource, gcp_iam_resource], check=True)
+
+                # Handle IAM roles for Crypto Keys
+                crypto_keys = config.get("crypto_keys", {})
+                for crypto_key_key, crypto_key_conf in crypto_keys.items():
+                    crypto_key_name = crypto_key_conf.get("name")
+                    crypto_iam_roles = crypto_key_conf.get("iam_roles", [])
+                    
+                    for iam_role in crypto_iam_roles:
+                        role = iam_role.get("role")
+                        member = iam_role.get("member")
+
+                        tf_crypto_iam_resource = f"google_project_iam_member.{map_key}_{crypto_key_key}_{role.replace('/', '_')}_{member.replace(':', '_').replace('@', '_')}"
+                        gcp_crypto_iam_resource = f"projects/{PROJECT_ID}/locations/{LOCATION}/keyRings/{key_ring_name}/cryptoKeys/{crypto_key_name}/members/{member}"
+
+                        print(f"🔍 Importing IAM role '{role}' for crypto key '{crypto_key_name}' to member '{member}'")
+                        subprocess.run(["terraform", "import", tf_crypto_iam_resource, gcp_crypto_iam_resource], check=True)
+
+
         print("✅ All key rings and crypto keys processed successfully.")
         EOF
