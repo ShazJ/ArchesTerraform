@@ -319,11 +319,11 @@ kms_key_rings = {
     crypto_keys = {
       "data-store-key-uat-prd" = {
         name                = "data-store-key-uat-prd"
-        service_account_key = "arches_uat_prd"
+        service_account_key = "coral-arches-uat-prd"
       }
       "flux-key-uat-prd" = {
         name                = "flux-key-uat-prd"
-        service_account_key = "flux_prd"
+        service_account_key = "coral-flux-prd"
       }
     }
     labels = {
