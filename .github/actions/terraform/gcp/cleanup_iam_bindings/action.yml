@@ -28,116 +28,58 @@ runs:
         project_id: ${{ inputs.project_id }}
 
     # Identify stale bindings 
-    - name: Identify and remove stale IAM bindings
+    - name: Identify deleted service accounts
+      id: identify
       shell: bash
       run: |
         echo "🔍 Identifying deleted service accounts in IAM bindings..."
-
-        # Get active service accounts in the project
-        all_service_accounts=$(gcloud iam service-accounts list \
-          --project=${{ inputs.project_id }} \
-          --format="value(email)")
-
-        echo "✅ Active service accounts fetched."
-
         # Fetch IAM policy
-        iam_policy=$(gcloud projects get-iam-policy ${{ inputs.project_id }} --format="yaml")
+        IAM_POLICY=$(gcloud projects get-iam-policy ${{ inputs.project_id }} --format=json)
         echo "✅ IAM policy fetched."
 
-        # Debug output
-        echo "IAM Policy:"
-        echo "$iam_policy"
+        # Extract deleted service accounts
+        STALE_ACCOUNTS=$(echo "$IAM_POLICY" | jq -r '.bindings[] | select(.members[] | contains("deleted:serviceAccount")) | .members[] | select(startswith("deleted:serviceAccount")) | sub("deleted:serviceAccount:"; "") | sub("\\?.*"; "")' | sort -u)
+        echo "🚨 Identified stale (deleted) service accounts: $STALE_ACCOUNTS"
+        echo "stale_accounts<<EOF" >> $GITHUB_OUTPUT
+        echo "$STALE_ACCOUNTS" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
 
-        # Initialize an empty array for stale bindings
-        stale_bindings=()
-
-        # Extract deleted service accounts from IAM policy
-        while read -r line; do
-          if [[ "$line" == *"deleted:serviceAccount:"* ]]; then
-            # Extract email ignoring uid
-            email=$(echo "$line" | grep -oP '(?<=deleted:serviceAccount:)[^?]+')
-            # Avoid duplicates
-            if [[ ! " ${stale_bindings[*]} " =~ " $email " ]]; then
-              stale_bindings+=("$email")
-            fi
-          fi
-        done <<< "$(echo "$iam_policy" | grep 'deleted:serviceAccount:')"
-
-        # Check and log stale bindings
-        if [ ${#stale_bindings[@]} -eq 0 ]; then
-          echo "✅ No deleted service accounts found in IAM policy."
-          echo "stale_bindings=" >> $GITHUB_ENV
-          exit 0
-        fi
-
-        echo "🚨 Identified stale (deleted) service accounts: ${stale_bindings[*]}"
-        echo "stale_bindings=${stale_bindings[*]}" >> $GITHUB_ENV
-
-        # If dry run is enabled, skip actual deletion
-        if [[ "${{ inputs.dry_run }}" == "true" ]]; then
-          echo "💡 Dry run enabled. The following bindings would be removed:"
-          for sa in "${stale_bindings[@]}"; do
-            echo "- $sa"
-          done
+    # Remove stale IAM bindings
+    - name: Remove stale IAM bindings
+      shell: bash
+      run: |
+        STALE_ACCOUNTS="${{ steps.identify.outputs.stale_accounts }}"
+        if [ -z "$STALE_ACCOUNTS" ]; then
+          echo "No stale service accounts found."
           exit 0
         fi
 
         echo "🧹 Removing IAM bindings for deleted service accounts..."
-
-        for sa in "${stale_bindings[@]}"; do
-          echo "🔎 Processing $sa"
+        for account in $STALE_ACCOUNTS; do
+          echo "🔎 Processing $account"
+          # Get roles associated with the deleted service account
+          ROLES=$(gcloud projects get-iam-policy ${{ inputs.project_id }} --format=json | \
+            jq -r --arg acct "$account" '.bindings[] | select(.members[] | contains("deleted:serviceAccount:\($acct)")) | .role')
           
-          # Find roles associated with this service account
-          roles=$(echo "$iam_policy" | grep -B 5 "serviceAccount:$sa" | grep "role:" | awk '{print $2}' | sort -u)
-
-          if [[ -z "$roles" ]]; then
-            echo "⚠️ No roles found for $sa. Skipping..."
+          if [ -z "$ROLES" ]; then
+            echo "No roles found for $account"
             continue
           fi
 
-          for role in $roles; do
-            echo "❌ Attempting to remove role $role for $sa"
-            
-            # Try to remove the role, only if it exists
-            remove_result=$(gcloud projects remove-iam-policy-binding ${{ inputs.project_id }} \
-              --member="serviceAccount:$sa" \
-              --role="$role" --quiet 2>&1)
-
-            # Check if the role was removed successfully
-            if [[ "$remove_result" == *"Policy binding with the specified principal, role, and condition not found!"* ]]; then
-              echo "⚠️ No such binding found for $sa and role $role. Skipping removal."
+          for role in $ROLES; do
+            echo "Processing role $role for $account"
+            if [[ "${{ inputs.dry_run }}" == "true" ]]; then
+              echo "Dry run enabled. Would remove binding: $account for role $role"
             else
-              echo "✅ Successfully removed $role for $sa"
+              echo "Removing binding for $account with role $role"
+              gcloud projects remove-iam-policy-binding ${{ inputs.project_id }} \
+                --member="serviceAccount:$account" \
+                --role="$role" || echo "Failed to remove $role for $account (may not exist)"
             fi
           done
-
-          echo "✅ Cleaned up: $sa"
         done
 
-
-
-    - name: Remove stale IAM bindings
-      shell: bash
-      run: |
-        if [[ "${{ inputs.dry_run }}" == "true" ]]; then
-          echo "Dry run enabled. Skipping removal of bindings."
-          echo "The following bindings would have been removed: ${stale_bindings[@]}"
-        else
-          for binding in "${stale_bindings[@]}"; do
-            echo "Removing binding for deleted service account: $binding"
-            roles=$(gcloud projects get-iam-policy ${{ inputs.project_id }} --format="yaml" \
-              | grep -A 2 "members:" \
-              | grep -B 2 "serviceAccount:$binding" \
-              | grep "role:" \
-              | sed 's/role: //')
-            for role in $roles; do
-              gcloud projects remove-iam-policy-binding ${{ inputs.project_id }} \
-                --member=serviceAccount:$binding \
-                --role=$role
-            done
-          done
-        fi
-
+    # Verify IAM bindings
     - name: Verify IAM bindings
       shell: bash
       run: |
