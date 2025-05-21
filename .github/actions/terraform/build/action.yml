@@ -76,7 +76,7 @@ runs:
         service_account: ${{ inputs.service_account }}
         project_id: ${{ inputs.project_id }}
         location: europe-west2
-        keyring_names: data_store_prd,data_store_uat
+        keyring_names: data-store-keyring-uat,data-store-keyring-uat-prd
 
     - name: Terraform Validate
       run: terraform validate
