@@ -48,11 +48,6 @@ runs:
             if ! gcloud iam service-accounts describe "$SA_EMAIL" --project="$PROJECT_ID" > /dev/null 2>&1; then
               echo "❌ Service account '$SA_EMAIL' does not exist. Removing $resource..."
 
-              echo "💾 Backing up $resource to removed_bindings.txt"
-              echo "# --- $resource ---" >> removed_bindings.txt
-              terraform state show "$resource" >> removed_bindings.txt
-              echo "" >> removed_bindings.txt
-
               terraform state rm "$resource"
               echo "✅ Removed $resource"
             else
