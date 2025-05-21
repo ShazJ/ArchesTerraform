@@ -37,7 +37,6 @@ runs:
     - name: Import existing key rings from terraform.tfvars
       shell: bash
       run: |
-        export TF_LOG=DEBUG
         echo "🐍 Installing python-hcl2..."
         pip install python-hcl2 --quiet
 
@@ -65,14 +64,13 @@ runs:
             tf_resource = f'module.kms_key_ring["{map_key}"].google_kms_key_ring.key_ring'
             gcp_resource = f'projects/{PROJECT_ID}/locations/{LOCATION}/keyRings/{key_ring_name}'
 
-            print(f"🔍 Checking if key ring '{key_ring_name}' is in Terraform state...")
-            check_state_command = f'terraform state list "{tf_resource}"'
+            print(f"🔍 Checking Terraform state for key ring '{key_ring_name}'...")
+            check_state_command = f'terraform state show "{tf_resource}"'
             result = subprocess.run(check_state_command, shell=True, capture_output=True, text=True)
             
-            if result.returncode == 0 and tf_resource in result.stdout:
+            if result.returncode == 0:
                 print(f"✅ Key ring '{key_ring_name}' already in state. Skipping import.")
             else:
-                # Check if the key ring exists in GCP
                 print(f"🔍 Checking if key ring '{key_ring_name}' exists in GCP...")
                 result = subprocess.run(
                     [
@@ -89,31 +87,37 @@ runs:
                 if result.returncode == 0:
                     print(f"✅ Key ring found. Importing as: {tf_resource}")
                     try:
-                        subprocess.run(["terraform", "import", tf_resource, gcp_resource], check=True, capture_output=True, text=True)
+                        import_result = subprocess.run(
+                            ["terraform", "import", tf_resource, gcp_resource],
+                            check=True,
+                            capture_output=True,
+                            text=True
+                        )
                         print(f"✅ Successfully imported key ring '{key_ring_name}'")
+                        print(f"Debug: Import stdout: {import_result.stdout}")
                     except subprocess.CalledProcessError as e:
                         print(f"❌ Failed to import key ring '{key_ring_name}': {e.stderr}")
+                        print(f"⚠️ Manual import command: terraform import '{tf_resource}' '{gcp_resource}'")
                         continue
                 else:
-                    print(f"⚠️ Key ring '{key_ring_name}' not found in GCP. Skipping.")
+                    print(f"⚠️ Key ring '{key_ring_name}' not found in GCP: {result.stderr}")
                     continue
 
-            # Handle crypto keys
+            # Handle crypto keys (unchanged from previous version for brevity)
             crypto_keys = config.get("crypto_keys", {})
             for crypto_key_key, crypto_key_conf in crypto_keys.items():
                 crypto_key_name = crypto_key_conf.get("name")
                 tf_crypto_resource = f'module.kms_key_ring["{map_key}"].google_kms_crypto_key.crypto_key["{crypto_key_key}"]'
                 gcp_crypto_resource = f'projects/{PROJECT_ID}/locations/{LOCATION}/keyRings/{key_ring_name}/cryptoKeys/{crypto_key_name}'
 
-                print(f"🔍 Checking if crypto key '{crypto_key_name}' is in Terraform state...")
-                check_crypto_state_command = f'terraform state list "{tf_crypto_resource}"'
+                print(f"🔍 Debug: Checking state for crypto key resource: {tf_crypto_resource}")
+                check_crypto_state_command = f'terraform state show "{tf_crypto_resource}"'
                 crypto_result = subprocess.run(check_crypto_state_command, shell=True, capture_output=True, text=True)
                 
-                if crypto_result.returncode == 0 and tf_crypto_resource in crypto_result.stdout.strip():
+                if crypto_result.returncode == 0:
                     print(f"✅ Crypto key '{crypto_key_name}' already in state. Skipping import.")
                     continue
 
-                # Check if the crypto key exists in GCP
                 print(f"🔍 Checking if crypto key '{crypto_key_name}' exists in GCP...")
                 crypto_check = subprocess.run(
                     [
@@ -140,10 +144,11 @@ runs:
                         print(f"✅ Successfully imported crypto key '{crypto_key_name}'")
                     except subprocess.CalledProcessError as e:
                         print(f"❌ Failed to import crypto key '{crypto_key_name}': {e.stderr}")
-                        continue
-                else:
-                    print(f"⚠️ Crypto key '{crypto_key_name}' not found in GCP. Skipping.")
+                        print(f"⚠️ Manual import command: terraform import '{tf_crypto_resource}' '{gcp_crypto_resource}'")
                     continue
+            else:
+                print(f"⚠️ Crypto key '{crypto_key_name}' not found in GCP: {crypto_check.stderr}")
+                continue
 
-        print("✅ All key rings and crypto keys processed successfully.")
-        EOF
+    print("✅ All key rings and crypto keys processed successfully.")
+    EOF
