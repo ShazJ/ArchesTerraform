@@ -1,0 +1,63 @@
+name: Cleanup IAM Bindings
+description: "This action cleans up stale IAM bindings for deleted service accounts in GCP. It checks the IAM bindings in terraform.tfvars and removes any bindings for service accounts that no longer exist."
+
+inputs:
+  project_id:
+    description: "Project ID"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+
+    - name: CHECK 
+      run: echo "✅✅ now here..."
+      shell: bash
+
+    # Authenticate to GCP
+    - name: Authenticate with GCP
+      id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: ${{ inputs.service_account }}
+        export_environment_variables: true
+        
+    - name: Set up Google Cloud
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        project_id: ${{ inputs.project_id }}
+
+    - name: Clean up stale IAM bindings from Terraform state
+      shell: bash
+      env:
+        PROJECT_ID: ${{ inputs.project_id }}
+      run: |
+        echo "📦 Initializing Terraform..."
+        terraform init -input=false
+
+        echo "📦 Checking Terraform state for IAM member bindings..."
+
+        terraform state list | grep '^google_project_iam_member' | while read -r resource; do
+          echo "🔍 Inspecting resource: $resource"
+
+          MEMBER=$(terraform state show "$resource" | grep '^ *member *= *' | awk -F\" '{print $2}')
+          ROLE=$(terraform state show "$resource" | grep '^ *role *= *' | awk -F\" '{print $2}')
+
+          if [[ "$MEMBER" == serviceAccount:* ]]; then
+            SA_EMAIL="${MEMBER#serviceAccount:}"
+
+            echo "🔍 Checking if service account '$SA_EMAIL' exists..."
+            if ! gcloud iam service-accounts describe "$SA_EMAIL" --project="$PROJECT_ID" > /dev/null 2>&1; then
+              echo "❌ Service account '$SA_EMAIL' does not exist. Removing $resource..."
+
+              terraform state rm "$resource"
+              echo "✅ Removed $resource"
+            else
+              echo "✅ $SA_EMAIL exists. Keeping IAM binding."
+            fi
+          else
+            echo "⚠️ Skipping non-service-account member: $MEMBER"
+          fi
+        done
+
+        echo "✅ IAM state cleanup complete."

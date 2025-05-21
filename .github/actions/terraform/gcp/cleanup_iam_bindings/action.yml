@@ -11,7 +11,7 @@ runs:
   steps:
 
     - name: CHECK 
-      run: echo "✅✅ now here..."
+      run: echo "✅✅✅✅✅✅ now here..."
       shell: bash
 
     # Authenticate to GCP
@@ -27,37 +27,34 @@ runs:
       with:
         project_id: ${{ inputs.project_id }}
 
-    - name: Clean up stale IAM bindings from Terraform state
+    # Identify stale bindings (Customize this step to match your stale logic)
+    - name: Identify stale bindings
       shell: bash
-      env:
-        PROJECT_ID: ${{ inputs.project_id }}
       run: |
-        echo "📦 Initializing Terraform..."
-        terraform init -input=false
+        echo "Identifying stale IAM bindings..."
+        stale_bindings=$(cat bindings.json | jq '[.[] | select(.last_activity < "2023-01-01")]')
+        echo "Identified stale bindings: $stale_bindings"
+        echo "::set-output name=stale_bindings::$stale_bindings"
 
-        echo "📦 Checking Terraform state for IAM member bindings..."
+    # Remove stale IAM bindings (with dry run option)
+    - name: Remove stale IAM bindings
+      shell: bash
+      run: |
+        if [[ "${{ inputs.dry_run }}" == "true" ]]; then
+          echo "Dry run enabled. Skipping removal of bindings."
+          echo "The following bindings would have been removed: ${{ steps.identify.outputs.stale_bindings }}"
+        else
+          for binding in ${{ steps.identify.outputs.stale_bindings }}; do
+            echo "Removing binding: $binding"
+            gcloud projects remove-iam-policy-binding ${{ inputs.project_id }} \
+              --member=$binding.member \
+              --role=$binding.role
+          done
+        fi
 
-        terraform state list | grep '^google_project_iam_member' | while read -r resource; do
-          echo "🔍 Inspecting resource: $resource"
-
-          MEMBER=$(terraform state show "$resource" | grep '^ *member *= *' | awk -F\" '{print $2}')
-          ROLE=$(terraform state show "$resource" | grep '^ *role *= *' | awk -F\" '{print $2}')
-
-          if [[ "$MEMBER" == serviceAccount:* ]]; then
-            SA_EMAIL="${MEMBER#serviceAccount:}"
-
-            echo "🔍 Checking if service account '$SA_EMAIL' exists..."
-            if ! gcloud iam service-accounts describe "$SA_EMAIL" --project="$PROJECT_ID" > /dev/null 2>&1; then
-              echo "❌ Service account '$SA_EMAIL' does not exist. Removing $resource..."
-
-              terraform state rm "$resource"
-              echo "✅ Removed $resource"
-            else
-              echo "✅ $SA_EMAIL exists. Keeping IAM binding."
-            fi
-          else
-            echo "⚠️ Skipping non-service-account member: $MEMBER"
-          fi
-        done
-
-        echo "✅ IAM state cleanup complete."
+    # Verify IAM bindings after cleanup
+    - name: Verify IAM bindings
+      shell: bash
+      run: |
+        echo "Verifying IAM bindings after cleanup..."
+        gcloud iam policies list --project=${{ inputs.project_id }} --format=json
