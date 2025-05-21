@@ -40,15 +40,21 @@ runs:
         # Get the IAM policy bindings
         iam_policy=$(gcloud projects get-iam-policy ${{ inputs.project_id }} --format="yaml")
         echo "IAM policy fetched."
-
+        
+        # Print IAM policy for debugging
+        echo "IAM Policy:"
+        echo "$iam_policy"
+        
         # Initialize an empty array for stale bindings
         stale_bindings=()
 
         # Loop through the IAM policy bindings and identify any stale ones
         while read -r binding; do
           service_account=$(echo "$binding" | grep -oP '(?<=serviceAccount:).+')
+          echo "Checking service account: $service_account"
           if ! echo "$all_service_accounts" | grep -q "$service_account"; then
             stale_bindings+=("$service_account")
+            echo "Stale binding found: $service_account"
           fi
         done <<< "$(echo "$iam_policy" | grep -A 2 "members:" | grep "serviceAccount:" | grep -B 2 "role:" | sed 's/members://g')"
         
