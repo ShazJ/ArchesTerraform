@@ -59,8 +59,6 @@ runs:
           echo "Credential file not found!"
           exit 1
         fi
-      env:
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ inputs.credentials_file_path }}
 
     - name: List Key Rings
       shell: bash
