@@ -47,7 +47,7 @@ runs:
         LOCATION="${{ inputs.location }}"
         PROJECT_ID="${{ inputs.project_id }}"
         IFS=',' read -ra MAP_KEYS <<< "${{ inputs.keyring_names }}"
-        TFVARS_JSON="./terraform.tfvars.json"
+        TFVARS_JSON="./terraform.tfvars"
 
         if [ ! -f "$TFVARS_JSON" ]; then
           echo "❌ terraform.tfvars.json not found at $TFVARS_JSON"
