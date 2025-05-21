@@ -12,6 +12,9 @@ inputs:
   keyring_names:
     description: "Comma-separated list of key ring names to check and import"
     required: true
+  credentials_file_path:
+    description: 'Path to GCP credentials file'
+    required: false
 
 runs:
   using: "composite"
@@ -23,6 +26,8 @@ runs:
         gcloud kms keyrings describe data-store-keyring-uat \
           --location=europe-west2 \
           --project=${{ inputs.project_id }}
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ inputs.credentials_file_path }}
 
     - name: Import existing key rings
       shell: bash
@@ -44,3 +49,5 @@ runs:
             echo "Key ring $KEYRING_NAME_TRIMMED does not exist. Skipping import."
           fi
         done
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ inputs.credentials_file_path }}

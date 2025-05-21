@@ -2,6 +2,9 @@ name: Continuous Integration - Validate Terraform
 description: Runs terraform init, validate and plan
 
 inputs:
+  credentials_file_path:
+    description: 'Path to GCP credentials file'
+    required: false
   project_id:
     description: GCP Project ID
     required: true
@@ -49,10 +52,13 @@ runs:
     #genericise this - maybe allow injection of actions?
     - name: Import existing KMS key rings
       uses: ./.github/actions/terraform/gcp/import-kms-keyrings
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ inputs.credentials_file_path }}
       with:
         project_id: ${{ inputs.project_id }}
         location: europe-west2
         keyring_names: data-store-keyring-uat,data-store-keyring-uat-prd
+        credentials_file_path: ${{ inputs.credentials_file_path }}
 
     - name: Terraform Validate
       run: terraform validate
