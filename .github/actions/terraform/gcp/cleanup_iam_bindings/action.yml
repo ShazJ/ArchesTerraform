@@ -37,14 +37,15 @@ runs:
         IAM_POLICY=$(gcloud projects get-iam-policy ${{ inputs.project_id }} --format="yaml")
         echo "✅ IAM policy fetched."
 
-        # Extract full deleted service account members (including UIDs)
-        STALE_ACCOUNTS=$(echo "$IAM_POLICY" | grep -E "deleted:serviceAccount:.*\?uid=" | sort -u)
+        # Extract full deleted service account members (including UIDs) and clean up YAML formatting
+        STALE_ACCOUNTS=$(echo "$IAM_POLICY" | grep -E "deleted:serviceAccount:.*\?uid=" | sed 's/.*- //;s/^[[:space:]]*//' | sort -u)
         if [ -z "$STALE_ACCOUNTS" ]; then
           echo "No stale service accounts found."
           echo "stale_accounts=" >> $GITHUB_OUTPUT
           exit 0
         fi
-        echo "🚨 Identified stale (deleted) service accounts: $STALE_ACCOUNTS"
+        echo "🚨 Identified stale (deleted) service accounts:"
+        echo "$STALE_ACCOUNTS"
         echo "stale_accounts<<EOF" >> $GITHUB_OUTPUT
         echo "$STALE_ACCOUNTS" >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT
