@@ -65,10 +65,11 @@ runs:
             gcp_resource = f'projects/{PROJECT_ID}/locations/{LOCATION}/keyRings/{key_ring_name}'
 
             print(f"🔍 Checking Terraform state for key ring '{key_ring_name}' (resource: {tf_resource})...")
-            check_state_command = f'terraform state list | grep -F "{tf_resource}"'
+            check_state_command = f'terraform state list'
             result = subprocess.run(check_state_command, shell=True, capture_output=True, text=True)
-            
-            if result.returncode == 0 and tf_resource in result.stdout:
+            print(f"Debug: terraform state list output:\n{result.stdout}")
+
+            if result.returncode == 0 and tf_resource in result.stdout.splitlines():
                 print(f"✅ Key ring '{key_ring_name}' already in state. Proceeding to crypto keys.")
             else:
                 print(f"🔍 Key ring '{key_ring_name}' not in state. Checking if it exists in GCP...")
@@ -98,7 +99,10 @@ runs:
                     except subprocess.CalledProcessError as e:
                         print(f"❌ Failed to import key ring '{key_ring_name}': {e.stderr}")
                         print(f"⚠️ Manual import command: terraform import '{tf_resource}' '{gcp_resource}'")
-                        continue
+                        if "Resource already managed by Terraform" in e.stderr:
+                            print(f"✅ Key ring '{key_ring_name}' is already managed. Proceeding to crypto keys.")
+                        else:
+                            continue
                 else:
                     print(f"⚠️ Key ring '{key_ring_name}' not found in GCP: {result.stderr}")
                     continue
@@ -111,10 +115,11 @@ runs:
                 gcp_crypto_resource = f'projects/{PROJECT_ID}/locations/{LOCATION}/keyRings/{key_ring_name}/cryptoKeys/{crypto_key_name}'
 
                 print(f"🔍 Checking Terraform state for crypto key '{crypto_key_name}' (resource: {tf_crypto_resource})...")
-                check_crypto_state_command = f'terraform state list | grep -F "{tf_crypto_resource}"'
+                check_crypto_state_command = f'terraform state list'
                 crypto_result = subprocess.run(check_crypto_state_command, shell=True, capture_output=True, text=True)
-                
-                if crypto_result.returncode == 0 and tf_crypto_resource in crypto_result.stdout:
+                print(f"Debug: terraform state list output for crypto key:\n{crypto_result.stdout}")
+
+                if crypto_result.returncode == 0 and tf_crypto_resource in crypto_result.stdout.splitlines():
                     print(f"✅ Crypto key '{crypto_key_name}' already in state. Skipping import.")
                     continue
 
