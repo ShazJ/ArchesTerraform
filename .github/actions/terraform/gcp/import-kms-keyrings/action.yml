@@ -58,8 +58,8 @@ runs:
             --location="$LOCATION" \
             --project="$PROJECT_ID" > /dev/null 2>&1; then
 
-            echo "✅ Importing key ring as module.kms.google_kms_key_ring.this[\"$MAP_KEY_NAME\"]"
-            terraform import "module.kms.google_kms_key_ring.this[\"$MAP_KEY_NAME\"]" \
+            echo "✅ Importing key ring as module.kms_key_ring.google_kms_key_ring.this[\"$MAP_KEY_NAME\"]"
+            terraform import "module.kms_key_ring.google_kms_key_ring.this[\"$MAP_KEY_NAME\"]" \
               "projects/$PROJECT_ID/locations/$LOCATION/keyRings/$KEYRING_NAME_TRIMMED"
           else
             echo "⚠️ Key ring $KEYRING_NAME_TRIMMED not found. Skipping."
