@@ -77,6 +77,7 @@ jobs:
         with:
           terraform_version: 1.5.0
           project_id: ${{ secrets.GCP_PROJECT_ID }}
+          credentials_file_path: ${{ steps.auth.outputs.credentials_file_path }}
           # working-directory: ./environments/${{ steps.set-env.outputs.environment }}
           # env:
           #   GOOGLE_CREDENTIALS: ${{ secrets.TF_SA }}
