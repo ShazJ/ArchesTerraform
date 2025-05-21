@@ -39,11 +39,11 @@ runs:
       run: |
         gcloud kms keyrings list --location=${{ inputs.location }} --project=${{ inputs.project_id }}
 
-    - name: Import existing key rings from terraform.tfvars (no jq)
+    - name: Import existing key rings from terraform.tfvars
       shell: bash
       run: |
         echo "🐍 Installing python-hcl2..."
-        pip install hcl2 --quiet
+        pip install python-hcl2 --quiet
 
         echo "📦 Running import logic..."
         python <<EOF
