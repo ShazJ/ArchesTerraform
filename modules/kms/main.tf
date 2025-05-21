@@ -60,3 +60,5 @@ resource "google_kms_crypto_key_iam_member" "crypto_key_iam" {
   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
   member        = "serviceAccount:${var.service_accounts[each.value.service_account_key].account_id}@${var.project_id}.iam.gserviceaccount.com"
 }
+
+if ! terraform state show 'module.kms_key_ring["data_store_prd"].google_kms_key_ring.key_ring' > /dev/null 2>&1; then
