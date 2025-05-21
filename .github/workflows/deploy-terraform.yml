@@ -63,8 +63,10 @@ jobs:
 
       - name: Test gcloud command
         run: |
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS"
           gcloud kms keyrings describe data-store-keyring-uat --location europe-west2
-       
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}       
         #should we allow injection? 
 
       - name: Terraform Quality Check
@@ -78,9 +80,7 @@ jobs:
           terraform_version: 1.5.0
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           credentials_file_path: ${{ steps.auth.outputs.credentials_file_path }}
-          # working-directory: ./environments/${{ steps.set-env.outputs.environment }}
-          # env:
-          #   GOOGLE_CREDENTIALS: ${{ secrets.TF_SA }}
+
 
 #sji run only on main merge
   # render-terraform-docs:      

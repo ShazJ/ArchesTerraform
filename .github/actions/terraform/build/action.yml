@@ -52,8 +52,6 @@ runs:
     #genericise this - maybe allow injection of actions?
     - name: Import existing KMS key rings
       uses: ./.github/actions/terraform/gcp/import-kms-keyrings
-      env:
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ inputs.credentials_file_path }}
       with:
         project_id: ${{ inputs.project_id }}
         location: europe-west2

@@ -14,18 +14,29 @@ inputs:
     required: true
   credentials_file_path:
     description: 'Path to GCP credentials file'
-    required: false
+    required: true
 
 runs:
   using: "composite"
   steps:
 
-    - name: Debug check for key ring directly
+    - name: Debug Credential File
       shell: bash
       run: |
-        gcloud kms keyrings describe data-store-keyring-uat \
-          --location=europe-west2 \
-          --project=${{ inputs.project_id }}
+        echo "GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS"
+        if [ -f "${{ inputs.credentials_file_path }}" ]; then
+          echo "Credential file exists"
+        else
+          echo "Credential file not found!"
+          exit 1
+        fi
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ inputs.credentials_file_path }}
+
+    - name: List Key Rings
+      shell: bash
+      run: |
+        gcloud kms keyrings list --location=${{ inputs.location }} --project=${{ inputs.project_id }}
       env:
         GOOGLE_APPLICATION_CREDENTIALS: ${{ inputs.credentials_file_path }}
 
