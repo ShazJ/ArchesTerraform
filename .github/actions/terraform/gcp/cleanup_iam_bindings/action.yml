@@ -32,8 +32,10 @@ runs:
       env:
         PROJECT_ID: ${{ inputs.project_id }}
       run: |
+        echo "📦 Initializing Terraform..."
+        terraform init -input=false
+
         echo "📦 Checking Terraform state for IAM member bindings..."
-        echo "📁 Backups will be saved to removed_bindings.txt"
 
         terraform state list | grep '^google_project_iam_member' | while read -r resource; do
           echo "🔍 Inspecting resource: $resource"
