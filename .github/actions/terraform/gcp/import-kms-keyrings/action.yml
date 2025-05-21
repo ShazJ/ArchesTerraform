@@ -39,49 +39,47 @@ runs:
       run: |
         gcloud kms keyrings list --location=${{ inputs.location }} --project=${{ inputs.project_id }}
 
+    - name: Convert terraform.tfvars to JSON
+      shell: bash
+      run: |
+        pip install hcl2
+        python -c '
+        import hcl2, json
+        with open("terraform.tfvars", "r") as f:
+            obj = hcl2.load(f)
+        print(json.dumps(obj))' > .terraform.tfvars.json
+        
     - name: Import existing key rings
       shell: bash
       run: |
-        set -euo pipefail
-
         LOCATION="${{ inputs.location }}"
         PROJECT_ID="${{ inputs.project_id }}"
-        IFS=',' read -ra MAP_KEYS <<< "${{ inputs.keyring_names }}"
-        TFVARS_JSON="./terraform.tfvars"
+        IFS=',' read -ra KEYRINGS <<< "${{ inputs.keyring_names }}"
 
-        if [ ! -f "$TFVARS_JSON" ]; then
-          echo "❌ terraform.tfvars.json not found at $TFVARS_JSON"
-          exit 1
-        fi
+        echo "📦 Starting key ring import process for: ${KEYRINGS[*]}"
+        
+        for KEYRING_NAME in "${KEYRINGS[@]}"; do
+          KEYRING_NAME_TRIMMED="$(echo "$KEYRING_NAME" | xargs)"  # Trim spaces
 
-        echo "📦 Starting key ring import for keys: ${MAP_KEYS[*]}"
+          # Derive the Terraform map key (e.g. data-store-keyring-uat → data_store_keyring_uat)
+          MAP_KEY_NAME="$(echo "$KEYRING_NAME_TRIMMED" | tr '-' '_' | tr '[:upper:]' '[:lower:]')"
 
-        for MAP_KEY in "${MAP_KEYS[@]}"; do
-          MAP_KEY_TRIMMED="$(echo "$MAP_KEY" | xargs)"
+          echo "🔍 Checking if key ring '$KEYRING_NAME_TRIMMED' exists in GCP..."
 
-          echo "🔍 Resolving key ring name for map key: $MAP_KEY_TRIMMED"
-          KEYRING_NAME=$(jq -r ".kms_key_rings[\"$MAP_KEY_TRIMMED\"].name" "$TFVARS_JSON")
-
-          if [ "$KEYRING_NAME" == "null" ]; then
-            echo "❌ Could not find key ring name for map key '$MAP_KEY_TRIMMED' in tfvars. Skipping."
-            continue
-          fi
-
-          echo "🔍 Checking existence of key ring: $KEYRING_NAME in $LOCATION"
-
-          if gcloud kms keyrings describe "$KEYRING_NAME" \
+          if gcloud kms keyrings describe "$KEYRING_NAME_TRIMMED" \
               --location="$LOCATION" \
               --project="$PROJECT_ID" > /dev/null 2>&1; then
 
-            echo "✅ Key ring found. Importing as: module.kms_key_ring[\"$MAP_KEY_TRIMMED\"].google_kms_key_ring.key_ring"
+            echo "✅ Key ring found. Importing as: module.kms_key_ring[\"$MAP_KEY_NAME\"].google_kms_key_ring.key_ring"
+
             terraform import \
-              "module.kms_key_ring[\"$MAP_KEY_TRIMMED\"].google_kms_key_ring.key_ring" \
-              "projects/$PROJECT_ID/locations/$LOCATION/keyRings/$KEYRING_NAME"
+              "module.kms_key_ring[\"$MAP_KEY_NAME\"].google_kms_key_ring.key_ring" \
+              "projects/$PROJECT_ID/locations/$LOCATION/keyRings/$KEYRING_NAME_TRIMMED"
+
           else
-            echo "⚠️ Key ring '$KEYRING_NAME' not found in GCP. Skipping import for map key: $MAP_KEY_TRIMMED"
+            echo "⚠️ Key ring '$KEYRING_NAME_TRIMMED' not found. Skipping."
           fi
         done
-
 
 
 
