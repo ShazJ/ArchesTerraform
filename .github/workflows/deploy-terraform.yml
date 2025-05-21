@@ -38,13 +38,32 @@ jobs:
         uses: actions/checkout@v4
 
       # Authenticate to GCP
+      # sji - we should probs use workload identity federation here really
       - name: Authenticate with GCP
+        id: auth
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: '${{ secrets.TF_SA }}' # Key from script
+          credentials_json: '${{ secrets.TF_SA }}' 
 
-      - name: Set up gcloud CLI
+      - name: Debug Auth Output
+        run: |
+          echo "Access token exists: ${{ steps.auth.outputs.access_token != '' }}"
+          echo "Credentials file path: ${{ steps.auth.outputs.credentials_file_path }}"
+          if [ -f "${{ steps.auth.outputs.credentials_file_path }}" ]; then
+            echo "Credential file exists"
+          else
+            echo "Credential file not found!"
+            exit 1
+          fi
+          
+      - name: Set up Google Cloud
         uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Test gcloud command
+        run: |
+          gcloud kms keyrings describe data-store-keyring-uat --location europe-west2
        
         #should we allow injection? 
 
