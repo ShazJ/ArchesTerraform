@@ -17,6 +17,10 @@ runs:
   using: "composite"
   steps:
 
+    - name: CHECK 
+      run: echo "✅✅ now here..."
+      shell: bash
+
     # Authenticate to GCP
     - name: Authenticate with GCP
       id: auth
