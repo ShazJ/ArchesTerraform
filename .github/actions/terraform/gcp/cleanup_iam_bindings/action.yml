@@ -27,6 +27,7 @@ runs:
       with:
         project_id: ${{ inputs.project_id }}
 
+
     # Identify stale bindings
     - name: Identify deleted service accounts
       id: identify
