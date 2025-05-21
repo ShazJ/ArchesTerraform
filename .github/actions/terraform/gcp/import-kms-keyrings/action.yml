@@ -16,6 +16,14 @@ inputs:
 runs:
   using: "composite"
   steps:
+
+    - name: Debug check for key ring directly
+      shell: bash
+      run: |
+        gcloud kms keyrings describe data-store-keyring-uat \
+          --location=europe-west2 \
+          --project=${{ inputs.project_id }}
+
     - name: Import existing key rings
       shell: bash
       run: |
