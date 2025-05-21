@@ -270,7 +270,7 @@ service_accounts = {
     account_id   = "coral-arches-uat"
     display_name = "Coral UAT Arches Service Account"
     description  = "Service account for Coral UAT Arches"
-    roles        = ["storage.objectAdmin","cloudkms.cryptoKeyEncrypterDecrypter"]
+    roles        = ["storage.objectAdmin", "cloudkms.cryptoKeyEncrypterDecrypter"]
   }
   "ci_prd" = {
     account_id   = "coral-ci-prd"
@@ -288,7 +288,7 @@ service_accounts = {
     account_id   = "coral-flux-prd"
     display_name = "Coral Production Flux Service Account"
     description  = "Service account for Flux in production"
-    roles        = ["container.developer","cloudkms.cryptoKeyEncrypterDecrypter"]
+    roles        = ["container.developer", "cloudkms.cryptoKeyEncrypterDecrypter"]
   }
   "gl_ci_prd" = {
     account_id   = "coral-gl-ci-prd"
