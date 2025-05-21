@@ -31,73 +31,43 @@ runs:
       with:
         project_id: ${{ inputs.project_id }}
 
-    - name: Clean up stale IAM bindings for deleted service accounts
+    - name: Clean up stale IAM bindings from Terraform state
       shell: bash
       run: |
-        echo "🐍 Installing python-hcl2..."
-        pip install python-hcl2 --quiet
+        PROJECT_ID="${{ inputs.project_id }}"
 
-        echo "📦 Running cleanup logic for stale IAM bindings..."
-        python <<EOF
-        import hcl2
-        import subprocess
-        from pathlib import Path
+        echo "📦 Checking Terraform state for IAM member bindings..."
+        echo "📁 Backups will be saved to removed_bindings.txt"
 
-        LOCATION = "${{ inputs.location }}"
-        PROJECT_ID = "${{ inputs.project_id }}"
+        > removed_bindings.txt
 
-        # Load terraform.tfvars
-        try:
-            with open("terraform.tfvars", "r") as f:
-                tfvars = hcl2.load(f)
-        except Exception as e:
-            print(f"❌ Failed to load terraform.tfvars: {e}")
-            exit(1)
+        terraform state list | grep '^google_project_iam_member' | while read -r resource; do
+          echo "🔍 Inspecting resource: $resource"
 
-        iam_bindings = tfvars.get("iam_bindings", {})
+          MEMBER=$(terraform state show "$resource" | grep '^ *member *= *' | awk -F\" '{print $2}')
+          ROLE=$(terraform state show "$resource" | grep '^ *role *= *' | awk -F\" '{print $2}')
 
-        # Iterate over IAM bindings in terraform.tfvars
-        for map_key, config in iam_bindings.items():
-            role = config.get("role")
-            member = config.get("member")
+          if [[ "$MEMBER" == serviceAccount:* ]]; then
+            SA_EMAIL="${MEMBER#serviceAccount:}"
 
-            # Check if the member is a service account and formatted as "serviceAccount:xxxx@xxxx.iam.gserviceaccount.com"
-            if "serviceAccount:" in member:
-                service_account_email = member.split(":")[1]
+            echo "🔍 Checking if service account '$SA_EMAIL' exists..."
+            if ! gcloud iam service-accounts describe "$SA_EMAIL" --project="$PROJECT_ID" > /dev/null 2>&1; then
+              echo "❌ Service account '$SA_EMAIL' does not exist. Removing $resource..."
 
-                # Check if the service account exists in GCP
-                print(f"🔍 Checking if service account '{service_account_email}' exists in GCP...")
-                result = subprocess.run(
-                    [
-                        "gcloud", "iam", "service-accounts", "describe",
-                        service_account_email,
-                        f"--project={PROJECT_ID}"
-                    ],
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    text=True
-                )
+              echo "💾 Backing up $resource to removed_bindings.txt"
+              echo "# --- $resource ---" >> removed_bindings.txt
+              terraform state show "$resource" >> removed_bindings.txt
+              echo "" >> removed_bindings.txt
 
-                if result.returncode != 0:
-                    # Service account doesn't exist, so remove the stale IAM binding
-                    print(f"❌ Service account '{service_account_email}' does not exist. Removing stale IAM binding for role '{role}'...")
+              terraform state rm "$resource"
+              echo "✅ Removed $resource"
+            else
+              echo "✅ $SA_EMAIL exists. Keeping IAM binding."
+            fi
+          else
+            echo "⚠️ Skipping non-service-account member: $MEMBER"
+          fi
+        done
 
-                    # Prepare Terraform resource for removal
-                    tf_iam_resource = f"google_project_iam_member.{map_key}_{role.replace('/', '_')}_{service_account_email.replace(':', '_').replace('@', '_')}"
-                    
-                    # Remove IAM binding from Terraform state
-                    subprocess.run(f"terraform state rm {tf_iam_resource}", shell=True)
+        echo "✅ IAM state cleanup complete."
 
-                    # Optional: Delete the IAM binding in GCP (if needed)
-                    # subprocess.run(f"gcloud projects remove-iam-policy-binding {PROJECT_ID} --member='serviceAccount:{service_account_email}' --role='{role}'", shell=True)
-                    
-                    print(f"✅ Stale IAM binding for service account '{service_account_email}' removed.")
-                else:
-                    print(f"✅ Service account '{service_account_email}' exists in GCP. Keeping IAM binding for role '{role}'.")
-
-            else:
-                print(f"⚠️ Skipping non-service account member '{member}'.")
-
-        print("✅ All stale IAM bindings cleaned up successfully.")
-        EOF
-    

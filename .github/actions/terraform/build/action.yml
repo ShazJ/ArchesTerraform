@@ -70,12 +70,12 @@ runs:
     #     GOOGLE_APPLICATION_CREDENTIALS: $GOOGLE_APPLICATION_CREDENTIALS
 
     #genericise this - maybe allow injection of actions?
-    - name: Clean up stale IAM bindings for deleted service accounts
-      uses: ./.github/actions/terraform/gcp/cleanup_iam_bindings
-      with:
-        service_account: ${{ inputs.service_account }}
-        project_id: ${{ inputs.project_id }}
-        location: europe-west2
+    # - name: Clean up stale IAM bindings for deleted service accounts
+    #   uses: ./.github/actions/terraform/gcp/cleanup_iam_bindings
+    #   with:
+    #     service_account: ${{ inputs.service_account }}
+    #     project_id: ${{ inputs.project_id }}
+    #     location: europe-west2
 
     - name: Import existing KMS key rings
       uses: ./.github/actions/terraform/gcp/import-kms-keyrings
