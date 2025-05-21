@@ -31,59 +31,49 @@ runs:
       with:
         project_id: ${{ inputs.project_id }}
 
-    # Identify stale bindings (Customize this step to match your stale logic)
+    # Identify stale bindings 
+    - name: Identify stale bindings
+      shell: bash
+      run: |
+        echo "Identifying stale IAM bindings..."
+        all_service_accounts=$(gcloud iam service-accounts list --project=${{ inputs.project_id }} --format="value(email)")
+        iam_policy=$(gcloud projects get-iam-policy ${{ inputs.project_id }} --format="yaml")
+        
+        stale_bindings=()
+        while read -r binding; do
+          service_account=$(echo "$binding" | grep -oP '(?<=serviceAccount:).+')
+          if ! echo "$all_service_accounts" | grep -q "$service_account"; then
+            stale_bindings+=("$service_account")
+          fi
+        done <<< "$(echo "$iam_policy" | grep -A 2 "members:" | grep "serviceAccount:" | grep -B 2 "role:" | sed 's/members://g')"
+        
+        echo "Identified stale bindings: ${stale_bindings[@]}"
+        echo "stale_bindings=${stale_bindings[@]}" >> $GITHUB_ENV
+
     - name: Remove stale IAM bindings
       shell: bash
       run: |
         if [[ "${{ inputs.dry_run }}" == "true" ]]; then
           echo "Dry run enabled. Skipping removal of bindings."
-          echo "The following bindings would have been removed: ${{ env.stale_bindings }}"
+          echo "The following bindings would have been removed: ${stale_bindings[@]}"
         else
-          for binding in ${{ env.stale_bindings }}; do
+          for binding in "${stale_bindings[@]}"; do
             echo "Removing binding for deleted service account: $binding"
-            
-            # Fetch all roles assigned to the service account
             roles=$(gcloud projects get-iam-policy ${{ inputs.project_id }} --format="yaml" \
               | grep -A 2 "members:" \
               | grep -B 2 "serviceAccount:$binding" \
               | grep "role:" \
               | sed 's/role: //')
-            echo "Roles assigned to $binding: $roles"
             for role in $roles; do
-              echo "Removing role $role for service account $binding"
               gcloud projects remove-iam-policy-binding ${{ inputs.project_id }} \
                 --member=serviceAccount:$binding \
                 --role=$role
-              echo "✅DELETED✅"
             done
           done
         fi
-        
-        # Output the list of stale bindings
-        echo "Identified stale bindings: ${stale_bindings[@]}"
-        echo "stale_bindings=${stale_bindings[@]}" >> $GITHUB_ENV
 
-    # Remove stale IAM bindings (with dry run option)
-    - name: Remove stale IAM bindings
-      shell: bash
-      run: |
-        if [[ "${{ inputs.dry_run }}" == "true" ]]; then
-          echo "✅ DRY..."
-          echo "Dry run enabled. Skipping removal of bindings."
-          echo "The following bindings would have been removed: ${{ env.stale_bindings }}"
-        else
-          for binding in ${{ env.stale_bindings }}; do
-            echo "✅ nDELTED..."
-            echo "Removing binding for deleted service account: $binding"
-            gcloud projects remove-iam-policy-binding ${{ inputs.project_id }} \
-              --member=serviceAccount:$binding
-          done
-        fi
-
-    # Verify IAM bindings after cleanup
     - name: Verify IAM bindings
       shell: bash
       run: |
         echo "Verifying IAM bindings after cleanup..."
         gcloud projects get-iam-policy ${{ inputs.project_id }} --format=json
-    
