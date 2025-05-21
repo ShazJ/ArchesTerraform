@@ -63,7 +63,7 @@ runs:
             echo "✅ Key ring found. Importing as: module.kms.google_kms_key_ring.key_ring[\"$MAP_KEY_NAME\"]"
 
             terraform import \
-              "module.kms.google_kms_key_ring.key_ring[\"$MAP_KEY_NAME\"]" \
+              "module.kms_key_ring.google_kms_key_ring.key_ring[\"$MAP_KEY_NAME\"]" \
               "projects/$PROJECT_ID/locations/$LOCATION/keyRings/$KEYRING_NAME_TRIMMED"
 
           else
