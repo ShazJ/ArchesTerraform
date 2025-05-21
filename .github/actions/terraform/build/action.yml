@@ -48,7 +48,7 @@ runs:
 
     #genericise this - maybe allow injection of actions?
     - name: Import existing KMS key rings
-      uses: ./.github/actions/import-kms-keyrings
+      uses: ./.github/actions/terraform/gcp/import-kms-keyrings
       with:
         project_id: ${{ inputs.project_id }}
         location: global
