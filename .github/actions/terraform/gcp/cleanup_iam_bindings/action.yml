@@ -5,6 +5,10 @@ inputs:
   project_id:
     description: "Project ID"
     required: true
+  dry_run:
+    description: "Enable dry run mode to simulate the cleanup without making changes"
+    required: false
+    default: "true"
 
 runs:
   using: "composite"

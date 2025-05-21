@@ -75,6 +75,7 @@ runs:
       with:
         service_account: ${{ inputs.service_account }}
         project_id: ${{ inputs.project_id }}
+        dry_run: false
 
     - name: Import existing KMS key rings
       uses: ./.github/actions/terraform/gcp/import-kms-keyrings
