@@ -6,12 +6,9 @@ inputs:
     description: "Project ID"
     required: true
   location:
-    description: "KMS location (e.g. global)"
+    description: "KMS location (e.g. europe-west2)"
     required: false
-    default: "global"
-  keyring_names:
-    description: "Comma-separated list of key ring names to check and import"
-    required: true
+    default: "europe-west2"
 
 runs:
   using: "composite"

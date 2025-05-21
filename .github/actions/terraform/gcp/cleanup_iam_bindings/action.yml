@@ -1,0 +1,103 @@
+name: Cleanup IAM Bindings
+description: "This action cleans up stale IAM bindings for deleted service accounts in GCP. It checks the IAM bindings in terraform.tfvars and removes any bindings for service accounts that no longer exist."
+
+inputs:
+  project_id:
+    description: "Project ID"
+    required: true
+  location:
+    description: "KMS location (e.g. europe-west2)"
+    required: false
+    default: "europe-west2"
+
+runs:
+  using: "composite"
+  steps:
+
+    - name: CHECK 
+      run: echo "✅✅ now here..."
+      shell: bash
+
+    # Authenticate to GCP
+    - name: Authenticate with GCP
+      id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: ${{ inputs.service_account }}
+        export_environment_variables: true
+        
+    - name: Set up Google Cloud
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        project_id: ${{ inputs.project_id }}
+
+    - name: Clean up stale IAM bindings for deleted service accounts
+      shell: bash
+      run: |
+        echo "🐍 Installing python-hcl2..."
+        pip install python-hcl2 --quiet
+
+        echo "📦 Running cleanup logic for stale IAM bindings..."
+        python <<EOF
+        import hcl2
+        import subprocess
+        from pathlib import Path
+
+        LOCATION = "${{ inputs.location }}"
+        PROJECT_ID = "${{ inputs.project_id }}"
+
+        # Load terraform.tfvars
+        try:
+            with open("terraform.tfvars", "r") as f:
+                tfvars = hcl2.load(f)
+        except Exception as e:
+            print(f"❌ Failed to load terraform.tfvars: {e}")
+            exit(1)
+
+        iam_bindings = tfvars.get("iam_bindings", {})
+
+        # Iterate over IAM bindings in terraform.tfvars
+        for map_key, config in iam_bindings.items():
+            role = config.get("role")
+            member = config.get("member")
+
+            # Check if the member is a service account and formatted as "serviceAccount:xxxx@xxxx.iam.gserviceaccount.com"
+            if "serviceAccount:" in member:
+                service_account_email = member.split(":")[1]
+
+                # Check if the service account exists in GCP
+                print(f"🔍 Checking if service account '{service_account_email}' exists in GCP...")
+                result = subprocess.run(
+                    [
+                        "gcloud", "iam", "service-accounts", "describe",
+                        service_account_email,
+                        f"--project={PROJECT_ID}"
+                    ],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    text=True
+                )
+
+                if result.returncode != 0:
+                    # Service account doesn't exist, so remove the stale IAM binding
+                    print(f"❌ Service account '{service_account_email}' does not exist. Removing stale IAM binding for role '{role}'...")
+
+                    # Prepare Terraform resource for removal
+                    tf_iam_resource = f"google_project_iam_member.{map_key}_{role.replace('/', '_')}_{service_account_email.replace(':', '_').replace('@', '_')}"
+                    
+                    # Remove IAM binding from Terraform state
+                    subprocess.run(f"terraform state rm {tf_iam_resource}", shell=True)
+
+                    # Optional: Delete the IAM binding in GCP (if needed)
+                    # subprocess.run(f"gcloud projects remove-iam-policy-binding {PROJECT_ID} --member='serviceAccount:{service_account_email}' --role='{role}'", shell=True)
+                    
+                    print(f"✅ Stale IAM binding for service account '{service_account_email}' removed.")
+                else:
+                    print(f"✅ Service account '{service_account_email}' exists in GCP. Keeping IAM binding for role '{role}'.")
+
+            else:
+                print(f"⚠️ Skipping non-service account member '{member}'.")
+
+        print("✅ All stale IAM bindings cleaned up successfully.")
+        EOF
+    
