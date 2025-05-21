@@ -46,7 +46,6 @@ runs:
         import subprocess
         from pathlib import Path
 
-
         LOCATION = "${{ inputs.location }}"
         PROJECT_ID = "${{ inputs.project_id }}"
 
@@ -63,13 +62,13 @@ runs:
 
             print(f"🔍 Checking if key ring '{key_ring_name}' resource is already in state...")
 
-            # Check if resource is already in state
+            # Check if the resource is in the state
             check_state_command = f"terraform state list | grep 'module.kms_key_ring[\"{map_key}\"]' | grep 'google_kms_key_ring.key_ring' > /dev/null"
             result = subprocess.run(check_state_command, shell=True)
 
             if result.returncode == 0:
                 print(f"✅ Key ring '{key_ring_name}' already in state. Skipping import.")
-                continue
+                continue  # Skip importing if the key ring is already in the state
 
             # Check if the key ring exists in GCP
             print(f"🔍 Checking if key ring '{key_ring_name}' exists in GCP...")
@@ -86,14 +85,6 @@ runs:
 
             if result.returncode == 0:
                 print(f"✅ Key ring found. Importing as: {tf_resource}")
-                # Check if the resource exists in state, and remove if necessary
-                check_state_command = f"terraform state list | grep '{tf_resource}'"
-                result = subprocess.run(check_state_command, shell=True)
-
-                if result.returncode == 0:
-                    print(f"🔴 Resource already in state. Removing it from the state first.")
-                    subprocess.run(f"terraform state rm {tf_resource}", shell=True)
-
                 subprocess.run(["terraform", "import", tf_resource, gcp_resource], check=True)
             else:
                 print(f"⚠️ Key ring '{key_ring_name}' not found. Skipping.")
@@ -108,5 +99,6 @@ runs:
 
                 print(f"🔍 Importing crypto key '{crypto_key_name}' for key ring '{key_ring_name}'")
                 subprocess.run(["terraform", "import", tf_crypto_resource, gcp_crypto_resource], check=True)
+
         print("✅ All key rings and crypto keys imported successfully.")
         EOF
