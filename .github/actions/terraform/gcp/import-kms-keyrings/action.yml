@@ -60,13 +60,13 @@ runs:
             tf_resource = f'module.kms_key_ring["{map_key}"].google_kms_key_ring.key_ring'
             gcp_resource = f'projects/{PROJECT_ID}/locations/{LOCATION}/keyRings/{key_ring_name}'
 
-            print(f"🔍 Checking if key ring '{key_ring_name}' resource is already in state...")
-
+            print(f"🔍 Checking if key ring '{key_ring_name}' is already in Terraform state...")
+            
             # Check if the resource is in the state
-            check_state_command = f"terraform state list | grep 'module.kms_key_ring[\"{map_key}\"]' | grep 'google_kms_key_ring.key_ring' > /dev/null"
-            result = subprocess.run(check_state_command, shell=True)
-
-            if result.returncode == 0:
+            check_state_command = f'terraform state list "{tf_resource}"'
+            result = subprocess.run(check_state_command, shell=True, capture_output=True, text=True)
+            
+            if result.returncode == 0 and tf_resource in result.stdout:
                 print(f"✅ Key ring '{key_ring_name}' already in state. Skipping import.")
                 continue  # Skip importing if the key ring is already in the state
 
@@ -80,25 +80,43 @@ runs:
                     f"--project={PROJECT_ID}"
                 ],
                 stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE
+                stderr=subprocess.PIPE,
+                text=True
             )
 
             if result.returncode == 0:
                 print(f"✅ Key ring found. Importing as: {tf_resource}")
-                subprocess.run(["terraform", "import", tf_resource, gcp_resource], check=True)
+                try:
+                    subprocess.run(["terraform", "import", tf_resource, gcp_resource], check=True, capture_output=True, text=True)
+                    print(f"✅ Successfully imported key ring '{key_ring_name}'")
+                except subprocess.CalledProcessError as e:
+                    print(f"❌ Failed to import key ring '{key_ring_name}': {e.stderr}")
+                    continue
             else:
-                print(f"⚠️ Key ring '{key_ring_name}' not found. Skipping.")
+                print(f"⚠️ Key ring '{key_ring_name}' not found in GCP. Skipping.")
+                continue
 
             # Handle crypto keys
             crypto_keys = config.get("crypto_keys", {})
             for crypto_key_key, crypto_key_conf in crypto_keys.items():
                 crypto_key_name = crypto_key_conf.get("name")
-
                 tf_crypto_resource = f'module.kms_key_ring["{map_key}"].google_kms_crypto_key.crypto_key["{crypto_key_key}"]'
                 gcp_crypto_resource = f"projects/{PROJECT_ID}/locations/{LOCATION}/keyRings/{key_ring_name}/cryptoKeys/{crypto_key_name}"
 
-                print(f"🔍 Importing crypto key '{crypto_key_name}' for key ring '{key_ring_name}'")
-                subprocess.run(["terraform", "import", tf_crypto_resource, gcp_crypto_resource], check=True)
+                print(f"🔍 Checking if crypto key '{crypto_key_name}' is already in Terraform state...")
+                check_crypto_state_command = f'terraform state list "{tf_crypto_resource}"'
+                crypto_result = subprocess.run(check_crypto_state_command, shell=True, capture_output=True, text=True)
+                
+                if crypto_result.returncode == 0 and tf_crypto_resource in crypto_result.stdout:
+                    print(f"✅ Crypto key '{crypto_key_name}' already in state. Skipping import.")
+                    continue  # Skip importing if the crypto key is already in the state
 
-        print("✅ All key rings and crypto keys imported successfully.")
+                print(f"🔍 Importing crypto key '{crypto_key_name}' for key ring '{key_ring_name}'")
+                try:
+                    subprocess.run(["terraform", "import", tf_crypto_resource, gcp_crypto_resource], check=True, capture_output=True, text=True)
+                    print(f"✅ Successfully imported crypto key '{crypto_key_name}'")
+                except subprocess.CalledProcessError as e:
+                    print(f"❌ Failed to import crypto key '{crypto_key_name}': {e.stderr}")
+
+        print("✅ All key rings and crypto keys processed successfully.")
         EOF
