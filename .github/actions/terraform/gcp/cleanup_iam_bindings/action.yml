@@ -33,24 +33,22 @@ runs:
       shell: bash
       run: |
         echo "🔍 Identifying deleted service accounts in IAM bindings..."
-        IAM_POLICY=$(gcloud projects get-iam-policy "${{ inputs.project_id }}" --format="yaml")
+        # Fetch IAM policy in YAML format for easier grep parsing
+        IAM_POLICY=$(gcloud projects get-iam-policy ${{ inputs.project_id }} --format="yaml")
         echo "✅ IAM policy fetched."
 
-        # Extract deleted service account emails
-        STALE_ACCOUNTS=$(echo "$IAM_POLICY" | grep 'deleted:serviceAccount:' | sed -E 's/^.*deleted:serviceAccount:([^?]+)\?uid=.*$/\1/' | sort -u)
-
-        if [[ -z "$STALE_ACCOUNTS" ]]; then
-          echo "✅ No deleted service accounts found."
+        # Extract full deleted service account members (including UIDs)
+        STALE_ACCOUNTS=$(echo "$IAM_POLICY" | grep -E "deleted:serviceAccount:.*\?uid=" | sort -u)
+        if [ -z "$STALE_ACCOUNTS" ]; then
+          echo "No stale service accounts found."
           echo "stale_accounts=" >> $GITHUB_OUTPUT
           exit 0
         fi
-
-        echo "🚨 Identified stale service accounts:"
-        echo "$STALE_ACCOUNTS"
+        echo "🚨 Identified stale (deleted) service accounts: $STALE_ACCOUNTS"
         echo "stale_accounts<<EOF" >> $GITHUB_OUTPUT
         echo "$STALE_ACCOUNTS" >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT
-        
+
     # Remove stale IAM bindings
     - name: Remove stale IAM bindings
       shell: bash
