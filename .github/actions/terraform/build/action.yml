@@ -8,7 +8,7 @@ inputs:
   terraform_version:
     description: Terraform version to use
     required: false
-    default: "1.11.3" #sji todo
+    default: "1.5.0" #sji todo
 
 runs:
   using: "composite"
@@ -46,14 +46,12 @@ runs:
       shell: bash
       #working-directory: ./environments/${{ steps.set-env.outputs.environment }}
 
-    - name: Debug Credential File
+    - name: Confirm Credential File
       shell: bash
       run: |
         echo "Credential file: $GOOGLE_APPLICATION_CREDENTIALS"
-        if [ -f "$GOOGLE_APPLICATION_CREDENTIALS" ]; then
-          echo "Credential file exists"
-        else
-          echo "Credential file not found!"
+        if [ ! -f "$GOOGLE_APPLICATION_CREDENTIALS" ]; then
+          echo "❌ Credentials file does not exist."
           exit 1
         fi
 
