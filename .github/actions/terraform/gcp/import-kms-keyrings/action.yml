@@ -66,12 +66,12 @@ runs:
             gcp_resource = f'projects/{PROJECT_ID}/locations/{LOCATION}/keyRings/{key_ring_name}'
 
             print(f"🔍 Checking if key ring '{key_ring_name}' resource is already in state...")
-            terraform state list | grep "module.kms_key_ring[\"$MAP_KEY_NAME\"].google_kms_key_ring.key_ring" > /dev/null
+            check_state_command = f"terraform state list | grep 'module.kms_key_ring[\"{map_key}\"]' | grep 'google_kms_key_ring.key_ring' > /dev/null"
+            result = subprocess.run(check_state_command, shell=True)
 
-            if [ $? -eq 0 ]; then
-                echo "✅ Key ring '{key_ring_name}' already in state. Skipping import."
+            if result.returncode == 0:
+                print(f"✅ Key ring '{key_ring_name}' already in state. Skipping import.")
                 continue
-            fi
 
             print(f"🔍 Checking if key ring '{key_ring_name}' exists...")
             result = subprocess.run(
