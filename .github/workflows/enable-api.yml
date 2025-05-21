@@ -47,3 +47,11 @@ jobs:
           gcloud services enable compute.googleapis.com
           gcloud services enable kubernetesengine.googleapis.com
           gcloud services enable keymanagement.googleapis.com
+
+    #sji todo - this is ridiculous - hasn't been enabled before issue!!
+    # billing enabled? or does user not have permissions??
+    
+ #   resource "google_project_service" "service_usage" {
+ # project = "912122748943"
+ # service = "serviceusage.googleapis.com"
+#}

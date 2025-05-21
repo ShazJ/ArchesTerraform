@@ -51,7 +51,7 @@ runs:
       uses: ./.github/actions/terraform/gcp/import-kms-keyrings
       with:
         project_id: ${{ inputs.project_id }}
-        location: global
+        location: europe-west2
         keyring_names: data-store-keyring-uat,data-store-keyring-uat-prd
 
     - name: Terraform Validate
