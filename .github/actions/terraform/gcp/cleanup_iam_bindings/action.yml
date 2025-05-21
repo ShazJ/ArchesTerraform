@@ -50,13 +50,17 @@ runs:
 
         # Loop through the IAM policy bindings and identify any stale ones
         while read -r binding; do
-          service_account=$(echo "$binding" | grep -oP '(?<=serviceAccount:).+')
+          # Extract the service account email, ignoring 'deleted:' prefix
+          service_account=$(echo "$binding" | grep -oP '(?<=serviceAccount:)[^?]+' || echo "$binding" | grep -oP '(?<=deleted:serviceAccount:)[^?]+')
+          
           echo "Checking service account: $service_account"
+          
+          # If the service account is not in the active list, it's considered stale
           if ! echo "$all_service_accounts" | grep -q "$service_account"; then
             stale_bindings+=("$service_account")
             echo "Stale binding found: $service_account"
           fi
-        done <<< "$(echo "$iam_policy" | grep -A 2 "members:" | grep "serviceAccount:" | grep -B 2 "role:" | sed 's/members://g')"
+        done <<< "$(echo "$iam_policy" | grep -A 2 "members:" | grep "serviceAccount:" | sed 's/members://g')"
         
         # Check if we found any stale bindings and log them
         if [ ${#stale_bindings[@]} -eq 0 ]; then
@@ -65,7 +69,6 @@ runs:
           echo "Identified stale bindings: ${stale_bindings[@]}"
           echo "stale_bindings=${stale_bindings[@]}" >> $GITHUB_ENV
         fi
-
 
     - name: Remove stale IAM bindings
       shell: bash
