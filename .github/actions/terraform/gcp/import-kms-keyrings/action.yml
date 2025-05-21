@@ -150,5 +150,5 @@ runs:
                 print(f"⚠️ Crypto key '{crypto_key_name}' not found in GCP: {crypto_check.stderr}")
                 continue
 
-    print("✅ All key rings and crypto keys processed successfully.")
-    EOF
+        print("✅ All key rings and crypto keys processed successfully.")
+        EOF
