@@ -21,23 +21,25 @@ runs:
       run: echo "✅✅ now here..."
       shell: bash
 
-    # Authenticate to GCP
-    - name: Authenticate with GCP
-      id: auth
-      uses: google-github-actions/auth@v2
-      with:
-        credentials_json: ${{ inputs.service_account }}' 
-        export_environment_variables: true
+    # # Authenticate to GCP
+    # - name: Authenticate with GCP
+    #   id: auth
+    #   uses: google-github-actions/auth@v2
+    #   with:
+    #     credentials_json: ${{ inputs.service_account }}' 
+    #     export_environment_variables: true
         
-    - name: Set up Google Cloud
-      uses: google-github-actions/setup-gcloud@v2
-      with:
-        project_id: ${{ inputs.project_id }}
+    # - name: Set up Google Cloud
+    #   uses: google-github-actions/setup-gcloud@v2
+    #   with:
+    #     project_id: ${{ inputs.project_id }}
 
     - name: List Key Rings
       shell: bash
       run: |
         gcloud kms keyrings list --location=${{ inputs.location }} --project=${{ inputs.project_id }}
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: GOOGLE_APPLICATION_CREDENTIALS
 
     - name: Import existing key rings
       shell: bash
