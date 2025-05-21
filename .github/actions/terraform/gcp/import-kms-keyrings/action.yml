@@ -84,5 +84,18 @@ runs:
                 print(f"⚠️ Key ring '{key_ring_name}' not found. Skipping.")
         EOF
 
+        crypto_keys = config.get("crypto_keys", {})
 
+        for crypto_key_key, crypto_key_conf in crypto_keys.items():
+        crypto_key_name = crypto_key_conf.get("name")
+
+        tf_resource = (
+            f'module.kms_key_ring["{map_key}"].google_kms_crypto_key.crypto_key["{crypto_key_key}"]'
+        )
+        gcp_resource = (
+            f"projects/{PROJECT_ID}/locations/{LOCATION}/keyRings/{key_ring_name}/cryptoKeys/{crypto_key_name}"
+        )
+
+        print(f"🔍 Importing crypto key '{crypto_key_name}' for key ring '{key_ring_name}'")
+        subprocess.run(["terraform", "import", tf_resource, gcp_resource], check=True)
 
