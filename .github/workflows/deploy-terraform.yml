@@ -51,17 +51,6 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Test GCloud auth sji tidy
-        run: |
-          echo "Checking credentials file at: $GOOGLE_APPLICATION_CREDENTIALS"
-          if [ ! -f "$GOOGLE_APPLICATION_CREDENTIALS" ]; then
-            echo "❌ Credentials file missing!"
-            exit 1
-          fi
-          gcloud kms keyrings describe data-store-keyring-uat \
-            --location europe-west2 \
-            --project $PROJECT_ID
-
       - name: Terraform Quality Check
         uses: ./.github/actions/terraform/quality
 
