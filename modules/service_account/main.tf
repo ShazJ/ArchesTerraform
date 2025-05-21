@@ -6,19 +6,13 @@ resource "google_service_account" "service_account" {
   description  = each.value.description
 }
 
-resource "google_project_iam_member" "service_account_roles" {
-  for_each = {
-    for entry in flatten([
-      for sa_key, sa in var.service_accounts : [
-        for role in sa.roles : {
-          sa_key = sa_key
-          role   = role
-        }
-      ]
-    ]) : "${entry.sa_key}.${entry.role}" => entry
-    if length(var.service_accounts[entry.sa_key].roles) > 0
-  }
-  project = var.project_id
-  role    = "roles/${each.value.role}"
-  member  = "serviceAccount:${google_service_account.service_account[each.value.sa_key].email}"
+resource "google_project_iam_binding" "service_account_roles" {
+  for_each = toset(flatten([for sa in var.service_accounts : sa.roles]))
+  project  = var.project_id
+  role     = "roles/${each.value}"
+  members  = [
+    for sa_key, sa in var.service_accounts :
+    "serviceAccount:${google_service_account.service_account[sa_key].email}"
+    if contains(sa.roles, each.value)
+  ]
 }
