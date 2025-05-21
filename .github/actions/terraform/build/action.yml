@@ -49,6 +49,26 @@ runs:
       shell: bash
       #working-directory: ./environments/${{ steps.set-env.outputs.environment }}
 
+    - name: Debug Credential File
+      shell: bash
+      run: |
+        echo "GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS"
+        if [ -f "${{ inputs.credentials_file_path }}" ]; then
+          echo "Credential file exists"
+        else
+          echo "Credential file not found!"
+          exit 1
+        fi
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ inputs.credentials_file_path }}
+
+    - name: List Key Rings
+      shell: bash
+      run: |
+        gcloud kms keyrings list --location=${{ inputs.location }} --project=${{ inputs.project_id }}
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ inputs.credentials_file_path }}
+
     #genericise this - maybe allow injection of actions?
     - name: Import existing KMS key rings
       uses: ./.github/actions/terraform/gcp/import-kms-keyrings
