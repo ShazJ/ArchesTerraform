@@ -39,40 +39,50 @@ runs:
       run: |
         gcloud kms keyrings list --location=${{ inputs.location }} --project=${{ inputs.project_id }}
 
-    - name: Import existing key rings from terraform.tfvars
+    - name: Import existing key rings from terraform.tfvars (no jq)
       shell: bash
       run: |
-        echo "🐍 Installing Python HCL2 parser..."
+        echo "🐍 Installing python-hcl2..."
         pip install hcl2 --quiet
 
-        echo "🔄 Converting terraform.tfvars to JSON..."
-        python -c '
-        import hcl2, json
+        echo "📦 Running import logic..."
+        python <<EOF
+        import hcl2
+        import subprocess
+        from pathlib import Path
+
+        LOCATION = "${{ inputs.location }}"
+        PROJECT_ID = "${{ inputs.project_id }}"
+
+        # Load terraform.tfvars
         with open("terraform.tfvars", "r") as f:
-            obj = hcl2.load(f)
-        print(json.dumps(obj))' > .terraform.tfvars.json
+            tfvars = hcl2.load(f)
 
-        LOCATION="${{ inputs.location }}"
-        PROJECT_ID="${{ inputs.project_id }}"
+        kms_key_rings = tfvars.get("kms_key_rings", {})
 
-        echo "📦 Extracting key ring definitions..."
-        KEYRINGS=$(jq -r '.kms_key_rings | keys[]' .terraform.tfvars.json)
+        for map_key, config in kms_key_rings.items():
+            key_ring_name = config.get("name")
+            tf_resource = f'module.kms_key_ring["{map_key}"].google_kms_key_ring.key_ring'
+            gcp_resource = f'projects/{PROJECT_ID}/locations/{LOCATION}/keyRings/{key_ring_name}'
 
-        for MAP_KEY in $KEYRINGS; do
-          # Lookup the actual key ring name from the tfvars
-          KEY_RING_NAME=$(jq -r --arg k "$MAP_KEY" '.kms_key_rings[$k].name' .terraform.tfvars.json)
+            print(f"🔍 Checking if key ring '{key_ring_name}' exists...")
+            result = subprocess.run(
+                [
+                    "gcloud", "kms", "keyrings", "describe",
+                    key_ring_name,
+                    f"--location={LOCATION}",
+                    f"--project={PROJECT_ID}"
+                ],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL
+            )
 
-          echo "🔍 Checking if key ring '$KEY_RING_NAME' exists in GCP..."
-          if gcloud kms keyrings describe "$KEY_RING_NAME" \
-                --location="$LOCATION" \
-                --project="$PROJECT_ID" > /dev/null 2>&1; then
+            if result.returncode == 0:
+                print(f"✅ Key ring found. Importing as: {tf_resource}")
+                subprocess.run(["terraform", "import", tf_resource, gcp_resource], check=True)
+            else:
+                print(f"⚠️ Key ring '{key_ring_name}' not found. Skipping.")
+        EOF
 
-            echo "✅ Key ring found. Importing as: module.kms_key_ring[\"$MAP_KEY\"].google_kms_key_ring.key_ring"
-            terraform import \
-              "module.kms_key_ring[\"$MAP_KEY\"].google_kms_key_ring.key_ring" \
-              "projects/$PROJECT_ID/locations/$LOCATION/keyRings/$KEY_RING_NAME"
-          else
-            echo "⚠️ Key ring '$KEY_RING_NAME' not found. Skipping."
-          fi
-        done
+
 
