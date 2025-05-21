@@ -52,9 +52,15 @@ jobs:
         uses: ./.github/actions/terraform/quality
 
           # or here?
-          
+
       - name: Terraform Build
         uses: ./.github/actions/terraform/build
+        with:
+          terraform_version: 1.5.0
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          # working-directory: ./environments/${{ steps.set-env.outputs.environment }}
+          # env:
+          #   GOOGLE_CREDENTIALS: ${{ secrets.TF_SA }}
 
 #sji run only on main merge
   # render-terraform-docs:      

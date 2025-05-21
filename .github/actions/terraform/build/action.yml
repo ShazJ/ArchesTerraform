@@ -2,6 +2,9 @@ name: Continuous Integration - Validate Terraform
 description: Runs terraform init, validate and plan
 
 inputs:
+  project_id:
+    description: GCP Project ID
+    required: true
   terraform_version:
     description: Terraform version to use
     required: false
@@ -47,7 +50,7 @@ runs:
     - name: Import existing KMS key rings
       uses: ./.github/actions/import-kms-keyrings
       with:
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        project_id: ${{ inputs.project_id }}
         location: global
         keyring_names: data-store-keyring-uat,data-store-keyring-uat-prd
 
