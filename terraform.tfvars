@@ -254,6 +254,12 @@ service_accounts = {
     description  = "Service account for GKE cluster in production"
     roles        = ["container.clusterAdmin", "compute.viewer", "logging.logWriter", "monitoring.metricWriter"]
   }
+  "arches_k8s_stg" = {
+    account_id   = "coral-arches-k8s-coral-stg"
+    display_name = "Coral Production GKE Service Account"
+    description  = "Service account for GKE cluster in production"
+    roles        = ["container.clusterAdmin", "compute.viewer", "logging.logWriter", "monitoring.metricWriter"]
+  }
   "arches_uat_prd" = {
     account_id   = "coral-arches-uat-prd"
     display_name = "Coral Production Arches Service Account"
