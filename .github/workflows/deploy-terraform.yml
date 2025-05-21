@@ -30,6 +30,7 @@ jobs:
 
     env:
       PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      GOOGLE_CREDENTIALS: ${{ secrets.TF_SA }}
 
     steps:
 
