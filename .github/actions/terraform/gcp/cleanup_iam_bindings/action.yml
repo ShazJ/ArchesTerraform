@@ -76,6 +76,9 @@ runs:
               --member=serviceAccount:$binding
           done
         fi
+    - name: CHECK 
+      run: echo "✅✅✅✅✅✅ now here..."
+      shell: bash
 
     # Verify IAM bindings after cleanup
     - name: Verify IAM bindings
@@ -83,3 +86,7 @@ runs:
       run: |
         echo "Verifying IAM bindings after cleanup..."
         gcloud projects get-iam-policy ${{ inputs.project_id }} --format=json
+    
+    - name: CHECK 
+      run: echo "✅✅✅✅✅✅ now here..."
+      shell: bash
