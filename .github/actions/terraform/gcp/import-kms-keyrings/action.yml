@@ -48,15 +48,21 @@ runs:
 
         for KEYRING_NAME in "${KEYRINGS[@]}"; do
           KEYRING_NAME_TRIMMED=$(echo "$KEYRING_NAME" | xargs)
-          TF_RESOURCE_NAME="${KEYRING_NAME_TRIMMED//-/_}"
+          
+          # Use Terraform map key name from tfvars — must match the key, not the keyring name
+          # You might need to pass this map key separately if it doesn't match the actual keyring name
+          MAP_KEY_NAME=$(echo "$KEYRING_NAME_TRIMMED" | tr '-' '_' | tr '[:upper:]' '[:lower:]')
 
-          echo "Checking for key ring: $KEYRING_NAME_TRIMMED"
-          if gcloud kms keyrings describe "$KEYRING_NAME_TRIMMED" --location="$LOCATION" --project="$PROJECT_ID" > /dev/null 2>&1; then
-            echo "Key ring $KEYRING_NAME_TRIMMED exists. Importing..."
-            terraform import "google_kms_key_ring.${TF_RESOURCE_NAME}" \
+          echo "🔍 Checking for key ring: $KEYRING_NAME_TRIMMED"
+          if gcloud kms keyrings describe "$KEYRING_NAME_TRIMMED" \
+            --location="$LOCATION" \
+            --project="$PROJECT_ID" > /dev/null 2>&1; then
+
+            echo "✅ Importing key ring as module.kms.google_kms_key_ring.this[\"$MAP_KEY_NAME\"]"
+            terraform import "module.kms.google_kms_key_ring.this[\"$MAP_KEY_NAME\"]" \
               "projects/$PROJECT_ID/locations/$LOCATION/keyRings/$KEYRING_NAME_TRIMMED"
           else
-            echo "Key ring $KEYRING_NAME_TRIMMED does not exist. Skipping import."
+            echo "⚠️ Key ring $KEYRING_NAME_TRIMMED not found. Skipping."
           fi
         done
 
