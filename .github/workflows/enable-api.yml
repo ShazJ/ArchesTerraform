@@ -16,9 +16,9 @@ permissions:
 
 jobs:
 # iif: == 'success' sji! }}
-  disable-apis:
-    name: Disable APIs
-    # This job disables the APIs that were enabled during the setup process
+  enable-apis:
+    name: Enable APIs
+    # This job enables the required APIs
     runs-on: ubuntu-latest
     
     # Specify environment for prod branch
@@ -40,6 +40,7 @@ jobs:
          
       - name: Enable IAM API
         run: |
+          gcloud services enable pubsub.googleapis.com
           gcloud services enable iam.googleapis.com
           gcloud services enable cloudresourcemanager.googleapis.com
           gcloud services enable artifactregistry.googleapis.com
