@@ -32,30 +32,31 @@ runs:
         project_id: ${{ inputs.project_id }}
 
     # Identify stale bindings (Customize this step to match your stale logic)
-    # Identify stale bindings (Customize this step to match your stale logic)
-    - name: Identify stale bindings
+    - name: Remove stale IAM bindings
       shell: bash
       run: |
-        echo "Identifying stale IAM bindings..."
-        stale_bindings=()
-        
-        # Fetch IAM policy for the project
-        iam_policy=$(gcloud projects get-iam-policy ${{ inputs.project_id }} --format=json)
-        
-        # Loop through each binding and check if the service account still exists
-        for binding in $(echo "$iam_policy" | jq -r '.bindings[].members[]?'); do
-          if [[ "$binding" == *@gcp-sa* || "$binding" == *@*.iam.gserviceaccount.com ]]; then
-            service_account_email=$binding
+        if [[ "${{ inputs.dry_run }}" == "true" ]]; then
+          echo "Dry run enabled. Skipping removal of bindings."
+          echo "The following bindings would have been removed: ${{ env.stale_bindings }}"
+        else
+          for binding in ${{ env.stale_bindings }}; do
+            echo "Removing binding for deleted service account: $binding"
             
-            # Check if the service account exists by using gcloud IAM service accounts list
-            account_check=$(gcloud iam service-accounts list --filter="email=$service_account_email" --format="value(email)")
+            # Fetch all roles assigned to the service account
+            roles=$(gcloud projects get-iam-policy ${{ inputs.project_id }} --format="yaml" \
+              | grep -A 2 "members:" \
+              | grep -B 2 "serviceAccount:$binding" \
+              | grep "role:" \
+              | sed 's/role: //')
 
-            if [ -z "$account_check" ]; then
-              echo "Service account $service_account_email no longer exists, marking binding as stale."
-              stale_bindings+=("$service_account_email")
-            fi
-          fi
-        done
+            for role in $roles; do
+              echo "Removing role $role for service account $binding"
+              gcloud projects remove-iam-policy-binding ${{ inputs.project_id }} \
+                --member=serviceAccount:$binding \
+                --role=$role
+            done
+          done
+        fi
         
         # Output the list of stale bindings
         echo "Identified stale bindings: ${stale_bindings[@]}"
