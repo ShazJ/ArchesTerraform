@@ -31,39 +31,31 @@ runs:
       shell: bash
       run: |
         PROJECT_ID="${{ inputs.project_id }}"
-
+        
         echo "📦 Checking Terraform state for IAM member bindings..."
-        echo "📁 Backups will be saved to removed_bindings.txt"
-
-        > removed_bindings.txt
 
         terraform state list | grep '^google_project_iam_member' | while read -r resource; do
           echo "🔍 Inspecting resource: $resource"
 
+          # Extract the member and role from the resource
           MEMBER=$(terraform state show "$resource" | grep '^ *member *= *' | awk -F\" '{print $2}')
           ROLE=$(terraform state show "$resource" | grep '^ *role *= *' | awk -F\" '{print $2}')
 
+          # Only process service accounts
           if [[ "$MEMBER" == serviceAccount:* ]]; then
             SA_EMAIL="${MEMBER#serviceAccount:}"
 
-            echo "🔍 Checking if service account '$SA_EMAIL' exists..."
+            echo "🔍 Checking existence of service account: $SA_EMAIL"
             if ! gcloud iam service-accounts describe "$SA_EMAIL" --project="$PROJECT_ID" > /dev/null 2>&1; then
-              echo "❌ Service account '$SA_EMAIL' does not exist. Removing $resource..."
-
-              echo "💾 Backing up $resource to removed_bindings.txt"
-              echo "# --- $resource ---" >> removed_bindings.txt
-              terraform state show "$resource" >> removed_bindings.txt
-              echo "" >> removed_bindings.txt
-
+              echo "❌ Service account '$SA_EMAIL' does not exist. Removing resource '$resource' from state..."
               terraform state rm "$resource"
               echo "✅ Removed $resource"
             else
-              echo "✅ $SA_EMAIL exists. Keeping IAM binding."
+              echo "✅ Service account '$SA_EMAIL' exists. Keeping IAM binding."
             fi
           else
-            echo "⚠️ Skipping non-service-account member: $MEMBER"
+            echo "⚠️ Skipping non-service account member: $MEMBER"
           fi
         done
 
         echo "✅ IAM state cleanup complete."
-
