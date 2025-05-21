@@ -49,6 +49,10 @@ runs:
       shell: bash
       #working-directory: ./environments/${{ steps.set-env.outputs.environment }}
 
+    - name: CHECK 
+      run: echo "✅ Got here..."
+      shell: bash
+      #working-directory: ./environments/${{ steps.set-env.outputs.environment }}
     # - name: Confirm Credential File
     #   shell: bash
     #   run: |
