@@ -14,10 +14,6 @@ runs:
   using: "composite"
   steps:
 
-    - name: CHECK 
-      run: echo "✅✅✅✅✅✅ now here..."
-      shell: bash
-
     # Authenticate to GCP
     - name: Authenticate with GCP
       id: auth
@@ -36,10 +32,19 @@ runs:
       shell: bash
       run: |
         echo "Identifying stale IAM bindings..."
-        all_service_accounts=$(gcloud iam service-accounts list --project=${{ inputs.project_id }} --format="value(email)")
-        iam_policy=$(gcloud projects get-iam-policy ${{ inputs.project_id }} --format="yaml")
         
+        # Get the list of all service accounts in the project
+        all_service_accounts=$(gcloud iam service-accounts list --project=${{ inputs.project_id }} --format="value(email)")
+        echo "All service accounts: $all_service_accounts"
+        
+        # Get the IAM policy bindings
+        iam_policy=$(gcloud projects get-iam-policy ${{ inputs.project_id }} --format="yaml")
+        echo "IAM policy fetched."
+
+        # Initialize an empty array for stale bindings
         stale_bindings=()
+
+        # Loop through the IAM policy bindings and identify any stale ones
         while read -r binding; do
           service_account=$(echo "$binding" | grep -oP '(?<=serviceAccount:).+')
           if ! echo "$all_service_accounts" | grep -q "$service_account"; then
@@ -47,8 +52,14 @@ runs:
           fi
         done <<< "$(echo "$iam_policy" | grep -A 2 "members:" | grep "serviceAccount:" | grep -B 2 "role:" | sed 's/members://g')"
         
-        echo "Identified stale bindings: ${stale_bindings[@]}"
-        echo "stale_bindings=${stale_bindings[@]}" >> $GITHUB_ENV
+        # Check if we found any stale bindings and log them
+        if [ ${#stale_bindings[@]} -eq 0 ]; then
+          echo "No stale bindings found."
+        else
+          echo "Identified stale bindings: ${stale_bindings[@]}"
+          echo "stale_bindings=${stale_bindings[@]}" >> $GITHUB_ENV
+        fi
+
 
     - name: Remove stale IAM bindings
       shell: bash
