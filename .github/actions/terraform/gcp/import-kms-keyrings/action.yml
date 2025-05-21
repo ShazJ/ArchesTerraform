@@ -37,6 +37,7 @@ runs:
     - name: Import existing key rings from terraform.tfvars
       shell: bash
       run: |
+        export TF_LOG=DEBUG
         echo "🐍 Installing python-hcl2..."
         pip install python-hcl2 --quiet
 
