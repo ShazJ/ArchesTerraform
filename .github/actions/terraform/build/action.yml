@@ -2,6 +2,9 @@ name: Continuous Integration - Validate Terraform
 description: Runs terraform init, validate and plan
 
 inputs:
+  service_account:
+    description: Service account to use
+    required: true
   project_id:
     description: GCP Project ID
     required: true
@@ -46,26 +49,27 @@ runs:
       shell: bash
       #working-directory: ./environments/${{ steps.set-env.outputs.environment }}
 
-    - name: Confirm Credential File
-      shell: bash
-      run: |
-        echo "Credential file: $GOOGLE_APPLICATION_CREDENTIALS"
-        if [ ! -f "$GOOGLE_APPLICATION_CREDENTIALS" ]; then
-          echo "❌ Credentials file does not exist."
-          exit 1
-        fi
+    # - name: Confirm Credential File
+    #   shell: bash
+    #   run: |
+    #     echo "Credential file: $GOOGLE_APPLICATION_CREDENTIALS"
+    #     if [ ! -f "$GOOGLE_APPLICATION_CREDENTIALS" ]; then
+    #       echo "❌ Credentials file does not exist."
+    #       exit 1
+    #     fi
 
-    - name: List Key Rings
-      shell: bash
-      run: |
-        gcloud kms keyrings list --location=${{ inputs.location }} --project=${{ inputs.project_id }}
-      env:
-        GOOGLE_APPLICATION_CREDENTIALS: $GOOGLE_APPLICATION_CREDENTIALS
+    # - name: List Key Rings
+    #   shell: bash
+    #   run: |
+    #     gcloud kms keyrings list --location=${{ inputs.location }} --project=${{ inputs.project_id }}
+    #   env:
+    #     GOOGLE_APPLICATION_CREDENTIALS: $GOOGLE_APPLICATION_CREDENTIALS
 
     #genericise this - maybe allow injection of actions?
     - name: Import existing KMS key rings
       uses: ./.github/actions/terraform/gcp/import-kms-keyrings
       with:
+        service_account: ${{ inputs.service_account }}
         project_id: ${{ inputs.project_id }}
         location: europe-west2
         keyring_names: data-store-keyring-uat,data-store-keyring-uat-prd

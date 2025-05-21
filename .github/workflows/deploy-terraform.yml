@@ -38,28 +38,28 @@ jobs:
 
       # Authenticate to GCP
       # sji - we should probs use workload identity federation here really
-      - name: Authenticate with GCP
-        id: auth
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: '${{ secrets.TF_SA }}' 
-          export_environment_variables: true
+      # - name: Authenticate with GCP
+      #   id: auth
+      #   uses: google-github-actions/auth@v2
+      #   with:
+      #     credentials_json: '${{ secrets.TF_SA }}' 
+      #     export_environment_variables: true
           
-      - name: Set up Google Cloud
-        uses: google-github-actions/setup-gcloud@v2
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
+      # - name: Set up Google Cloud
+      #   uses: google-github-actions/setup-gcloud@v2
+      #   with:
+      #     project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Test GCloud auth sji tidy
-        run: |
-          echo "Checking credentials file at: $GOOGLE_APPLICATION_CREDENTIALS"
-          if [ ! -f "$GOOGLE_APPLICATION_CREDENTIALS" ]; then
-            echo "❌ Credentials file missing!"
-            exit 1
-          fi
-          gcloud kms keyrings describe data-store-keyring-uat \
-            --location europe-west2 \
-            --project $PROJECT_ID
+      # - name: Test GCloud auth sji tidy
+      #   run: |
+      #     echo "Checking credentials file at: $GOOGLE_APPLICATION_CREDENTIALS"
+      #     if [ ! -f "$GOOGLE_APPLICATION_CREDENTIALS" ]; then
+      #       echo "❌ Credentials file missing!"
+      #       exit 1
+      #     fi
+      #     gcloud kms keyrings describe data-store-keyring-uat \
+      #       --location europe-west2 \
+      #       --project $PROJECT_ID
 
       - name: Terraform Quality Check
         uses: ./.github/actions/terraform/quality
@@ -71,6 +71,7 @@ jobs:
         with:
           terraform_version: 1.5.0
           project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account: ${{ secrets.TF_SA }}
           
 
 
