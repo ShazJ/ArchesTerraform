@@ -27,18 +27,23 @@ runs:
       with:
         project_id: ${{ inputs.project_id }}
 
-    # Identify stale bindings 
+    # Identify stale bindings
     - name: Identify deleted service accounts
       id: identify
       shell: bash
       run: |
         echo "🔍 Identifying deleted service accounts in IAM bindings..."
-        # Fetch IAM policy
-        IAM_POLICY=$(gcloud projects get-iam-policy ${{ inputs.project_id }} --format=json)
+        # Fetch IAM policy in YAML format for easier grep parsing
+        IAM_POLICY=$(gcloud projects get-iam-policy ${{ inputs.project_id }} --format="yaml")
         echo "✅ IAM policy fetched."
 
-        # Extract deleted service accounts
-        STALE_ACCOUNTS=$(echo "$IAM_POLICY" | jq -r '.bindings[] | select(.members[] | contains("deleted:serviceAccount")) | .members[] | select(startswith("deleted:serviceAccount")) | sub("deleted:serviceAccount:"; "") | sub("\\?.*"; "")' | sort -u)
+        # Extract full deleted service account members (including UIDs)
+        STALE_ACCOUNTS=$(echo "$IAM_POLICY" | grep -E "deleted:serviceAccount:.*\?uid=" | sort -u)
+        if [ -z "$STALE_ACCOUNTS" ]; then
+          echo "No stale service accounts found."
+          echo "stale_accounts=" >> $GITHUB_OUTPUT
+          exit 0
+        fi
         echo "🚨 Identified stale (deleted) service accounts: $STALE_ACCOUNTS"
         echo "stale_accounts<<EOF" >> $GITHUB_OUTPUT
         echo "$STALE_ACCOUNTS" >> $GITHUB_OUTPUT
@@ -50,16 +55,17 @@ runs:
       run: |
         STALE_ACCOUNTS="${{ steps.identify.outputs.stale_accounts }}"
         if [ -z "$STALE_ACCOUNTS" ]; then
-          echo "No stale service accounts found."
+          echo "No stale service accounts to process."
           exit 0
         fi
 
         echo "🧹 Removing IAM bindings for deleted service accounts..."
-        for account in $STALE_ACCOUNTS; do
+        # Process each deleted service account (with UID)
+        echo "$STALE_ACCOUNTS" | while read -r account; do
           echo "🔎 Processing $account"
-          # Get roles associated with the deleted service account
-          ROLES=$(gcloud projects get-iam-policy ${{ inputs.project_id }} --format=json | \
-            jq -r --arg acct "$account" '.bindings[] | select(.members[] | contains("deleted:serviceAccount:\($acct)")) | .role')
+          # Get roles for this specific deleted service account
+          ROLES=$(gcloud projects get-iam-policy ${{ inputs.project_id }} --format="yaml" | \
+            grep -B 2 "$account" | grep "role:" | sed 's/.*role: //' | sort -u)
           
           if [ -z "$ROLES" ]; then
             echo "No roles found for $account"
@@ -73,7 +79,7 @@ runs:
             else
               echo "Removing binding for $account with role $role"
               gcloud projects remove-iam-policy-binding ${{ inputs.project_id }} \
-                --member="serviceAccount:$account" \
+                --member="$account" \
                 --role="$role" || echo "Failed to remove $role for $account (may not exist)"
             fi
           done
