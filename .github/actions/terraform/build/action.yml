@@ -2,9 +2,6 @@ name: Continuous Integration - Validate Terraform
 description: Runs terraform init, validate and plan
 
 inputs:
-  credentials_file_path:
-    description: 'Path to GCP credentials file'
-    required: false
   project_id:
     description: GCP Project ID
     required: true
@@ -52,8 +49,8 @@ runs:
     - name: Debug Credential File
       shell: bash
       run: |
-        echo "GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS"
-        if [ -f "${{ inputs.credentials_file_path }}" ]; then
+        echo "Credential file: $GOOGLE_APPLICATION_CREDENTIALS"
+        if [ -f "$GOOGLE_APPLICATION_CREDENTIALS" ]; then
           echo "Credential file exists"
         else
           echo "Credential file not found!"
@@ -65,7 +62,7 @@ runs:
       run: |
         gcloud kms keyrings list --location=${{ inputs.location }} --project=${{ inputs.project_id }}
       env:
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ inputs.credentials_file_path }}
+        GOOGLE_APPLICATION_CREDENTIALS: $GOOGLE_APPLICATION_CREDENTIALS
 
     #genericise this - maybe allow injection of actions?
     - name: Import existing KMS key rings
@@ -74,7 +71,6 @@ runs:
         project_id: ${{ inputs.project_id }}
         location: europe-west2
         keyring_names: data-store-keyring-uat,data-store-keyring-uat-prd
-        credentials_file_path: ${{ inputs.credentials_file_path }}
 
     - name: Terraform Validate
       run: terraform validate

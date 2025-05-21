@@ -47,9 +47,8 @@ jobs:
 
       - name: Debug Auth Output
         run: |
-          echo "Access token exists: ${{ steps.auth.outputs.access_token != '' }}"
-          echo "Credentials file path: ${{ steps.auth.outputs.credentials_file_path }}"
-          if [ -f "${{ steps.auth.outputs.credentials_file_path }}" ]; then
+          echo "Credential file: $GOOGLE_APPLICATION_CREDENTIALS"
+          if [ -f "$GOOGLE_APPLICATION_CREDENTIALS" ]; then
             echo "Credential file exists"
           else
             echo "Credential file not found!"
@@ -66,7 +65,7 @@ jobs:
           echo "GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS"
           gcloud kms keyrings describe data-store-keyring-uat --location europe-west2
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}       
+          GOOGLE_APPLICATION_CREDENTIALS: $GOOGLE_APPLICATION_CREDENTIALS      
         #should we allow injection? 
 
       - name: Terraform Quality Check
@@ -79,7 +78,7 @@ jobs:
         with:
           terraform_version: 1.5.0
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-          credentials_file_path: ${{ steps.auth.outputs.credentials_file_path }}
+          
 
 
 #sji run only on main merge

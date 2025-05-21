@@ -12,9 +12,6 @@ inputs:
   keyring_names:
     description: "Comma-separated list of key ring names to check and import"
     required: true
-  credentials_file_path:
-    description: 'Path to GCP credentials file'
-    required: true
 
 runs:
   using: "composite"
@@ -23,22 +20,22 @@ runs:
     - name: Debug Credential File
       shell: bash
       run: |
-        echo "GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS"
-        if [ -f "${{ inputs.credentials_file_path }}" ]; then
+        echo "Credential file: $GOOGLE_APPLICATION_CREDENTIALS"
+        if [ -f "$GOOGLE_APPLICATION_CREDENTIALS" ]; then
           echo "Credential file exists"
         else
           echo "Credential file not found!"
           exit 1
         fi
       env:
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ inputs.credentials_file_path }}
+        GOOGLE_APPLICATION_CREDENTIALS: $GOOGLE_APPLICATION_CREDENTIALS
 
     - name: List Key Rings
       shell: bash
       run: |
         gcloud kms keyrings list --location=${{ inputs.location }} --project=${{ inputs.project_id }}
       env:
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ inputs.credentials_file_path }}
+        GOOGLE_APPLICATION_CREDENTIALS: $GOOGLE_APPLICATION_CREDENTIALS
 
     - name: Import existing key rings
       shell: bash
@@ -61,4 +58,4 @@ runs:
           fi
         done
       env:
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ inputs.credentials_file_path }}
+        GOOGLE_APPLICATION_CREDENTIALS: $GOOGLE_APPLICATION_CREDENTIALS
