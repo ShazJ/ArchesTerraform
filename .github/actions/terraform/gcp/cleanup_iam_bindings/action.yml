@@ -96,14 +96,24 @@ runs:
           fi
 
           for role in $roles; do
-            echo "❌ Removing role $role for $sa"
-            gcloud projects remove-iam-policy-binding ${{ inputs.project_id }} \
+            echo "❌ Attempting to remove role $role for $sa"
+            
+            # Try to remove the role, only if it exists
+            remove_result=$(gcloud projects remove-iam-policy-binding ${{ inputs.project_id }} \
               --member="serviceAccount:$sa" \
-              --role="$role" || echo "⚠️ Failed to remove $role from $sa"
+              --role="$role" --quiet 2>&1)
+
+            # Check if the role was removed successfully
+            if [[ "$remove_result" == *"Policy binding with the specified principal, role, and condition not found!"* ]]; then
+              echo "⚠️ No such binding found for $sa and role $role. Skipping removal."
+            else
+              echo "✅ Successfully removed $role for $sa"
+            fi
           done
 
           echo "✅ Cleaned up: $sa"
         done
+
 
 
     - name: Remove stale IAM bindings
