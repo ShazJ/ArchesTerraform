@@ -108,3 +108,5 @@ runs:
 
                 print(f"🔍 Importing crypto key '{crypto_key_name}' for key ring '{key_ring_name}'")
                 subprocess.run(["terraform", "import", tf_crypto_resource, gcp_crypto_resource], check=True)
+        print("✅ All key rings and crypto keys imported successfully.")
+        EOF
