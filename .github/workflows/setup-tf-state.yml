@@ -33,6 +33,8 @@ jobs:
           gcloud services enable artifactregistry.googleapis.com
           gcloud services enable compute.googleapis.com
           gcloud services enable keymanagement.googleapis.com
+          gcloud services enable container.googleapis.com 
+          gcloud services enable compute.googleapis.com
           sleep 60  # Wait 60 seconds for propagation
 
       # Run sa creation script

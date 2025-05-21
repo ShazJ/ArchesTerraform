@@ -44,6 +44,7 @@ ROLES=(
   "roles/cloudkms.admin"
   "roles/cloudkms.cryptoKeyEncrypterDecrypter"
   "roles/container.clusterAdmin"
+  "roles/container.admin"
 )
 
 # Authenticate with GCP (assumes CI provides credentials or user is authenticated)
