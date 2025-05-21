@@ -1,0 +1,38 @@
+name: "Import GCP KMS Key Rings"
+description: "Checks for existing GCP KMS key rings and imports them into Terraform if found."
+
+inputs:
+  project_id:
+    description: "Project ID"
+    required: true
+  location:
+    description: "KMS location (e.g. global)"
+    required: false
+    default: "global"
+  keyring_names:
+    description: "Comma-separated list of key ring names to check and import"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Import existing key rings
+      shell: bash
+      run: |
+        LOCATION="${{ inputs.location }}"
+        PROJECT_ID="${{ inputs.project_id }}"
+        IFS=',' read -ra KEYRINGS <<< "${{ inputs.keyring_names }}"
+
+        for KEYRING_NAME in "${KEYRINGS[@]}"; do
+          KEYRING_NAME_TRIMMED=$(echo "$KEYRING_NAME" | xargs)
+          TF_RESOURCE_NAME="${KEYRING_NAME_TRIMMED//-/_}"
+
+          echo "Checking for key ring: $KEYRING_NAME_TRIMMED"
+          if gcloud kms keyrings describe "$KEYRING_NAME_TRIMMED" --location="$LOCATION" --project="$PROJECT_ID" > /dev/null 2>&1; then
+            echo "Key ring $KEYRING_NAME_TRIMMED exists. Importing..."
+            terraform import "google_kms_key_ring.${TF_RESOURCE_NAME}" \
+              "projects/$PROJECT_ID/locations/$LOCATION/keyRings/$KEYRING_NAME_TRIMMED"
+          else
+            echo "Key ring $KEYRING_NAME_TRIMMED does not exist. Skipping import."
+          fi
+        done

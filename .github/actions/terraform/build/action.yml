@@ -43,6 +43,14 @@ runs:
       shell: bash
       #working-directory: ./environments/${{ steps.set-env.outputs.environment }}
 
+    #genericise this - maybe allow injection of actions?
+    - name: Import existing KMS key rings
+      uses: ./.github/actions/import-kms-keyrings
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        location: global
+        keyring_names: data-store-keyring-uat,data-store-keyring-uat-prd
+
     - name: Terraform Validate
       run: terraform validate
       shell: bash

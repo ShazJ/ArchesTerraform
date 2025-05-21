@@ -41,18 +41,18 @@ jobs:
       - name: Authenticate with GCP
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: '${{ secrets.TF_SA }}'  # Key from script
+          credentials_json: '${{ secrets.TF_SA }}' # Key from script
 
       - name: Set up gcloud CLI
         uses: google-github-actions/setup-gcloud@v2
        
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
-        shell: bash
+        #should we allow injection? 
 
       - name: Terraform Quality Check
         uses: ./.github/actions/terraform/quality
 
+          # or here?
+          
       - name: Terraform Build
         uses: ./.github/actions/terraform/build
 
