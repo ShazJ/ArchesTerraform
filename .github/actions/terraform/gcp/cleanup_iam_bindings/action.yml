@@ -34,11 +34,27 @@ runs:
     # Identify stale bindings (Customize this step to match your stale logic)
     - name: Identify stale bindings
       shell: bash
+      id: identify
       run: |
         echo "Identifying stale IAM bindings..."
-        stale_bindings=$(cat bindings.json | jq '[.[] | select(.last_activity < "2023-01-01")]')
-        echo "Identified stale bindings: $stale_bindings"
-        echo "::set-output name=stale_bindings::$stale_bindings"
+        stale_bindings=()
+        
+        # Loop through each binding and check if the service account still exists
+        for binding in $(cat bindings.json | grep -oP '"member": "\K[^"]*' | grep '@gcp-sa\|@.*iam.gserviceaccount.com'); do
+          service_account_email=$binding
+          
+          # Check if the service account exists by using gcloud IAM service accounts list
+          account_check=$(gcloud iam service-accounts list --filter="email=$service_account_email" --format="value(email)")
+
+          if [ -z "$account_check" ]; then
+            echo "Service account $service_account_email no longer exists, marking binding as stale."
+            stale_bindings+=($service_account_email)
+          fi
+        done
+        
+        # Output the list of stale bindings
+        echo "Identified stale bindings: ${stale_bindings[@]}"
+        echo "::set-output name=stale_bindings::${stale_bindings[@]}"
 
     # Remove stale IAM bindings (with dry run option)
     - name: Remove stale IAM bindings
@@ -49,10 +65,9 @@ runs:
           echo "The following bindings would have been removed: ${{ steps.identify.outputs.stale_bindings }}"
         else
           for binding in ${{ steps.identify.outputs.stale_bindings }}; do
-            echo "Removing binding: $binding"
+            echo "Removing binding for deleted service account: $binding"
             gcloud projects remove-iam-policy-binding ${{ inputs.project_id }} \
-              --member=$binding.member \
-              --role=$binding.role
+              --member=serviceAccount:$binding \
           done
         fi
 
@@ -61,4 +76,4 @@ runs:
       shell: bash
       run: |
         echo "Verifying IAM bindings after cleanup..."
-        gcloud iam policies list --project=${{ inputs.project_id }} --format=json
+        gcloud projects get-iam-policy ${{ inputs.project_id }} --format=json
