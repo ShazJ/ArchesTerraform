@@ -71,6 +71,7 @@ runs:
           echo "The following bindings would have been removed: ${{ env.stale_bindings }}"
         else
           for binding in ${{ env.stale_bindings }}; do
+            echo "✅✅✅✅✅✅ nDELTED..."
             echo "Removing binding for deleted service account: $binding"
             gcloud projects remove-iam-policy-binding ${{ inputs.project_id }} \
               --member=serviceAccount:$binding
