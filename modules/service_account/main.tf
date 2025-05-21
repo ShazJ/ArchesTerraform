@@ -7,16 +7,14 @@ resource "google_service_account" "service_account" {
 }
 
 resource "google_project_iam_member" "service_account_roles" {
-  for_each = { for role_assignment in flatten([
-    for sa_key, roles in var.service_account_roles : [
-      for role in roles : {
-        sa_key = sa_key
-        role   = role
-      }
-    ]
-  ]) : "${role_assignment.sa_key}.${role_assignment.role}" => role_assignment }
-
+  for_each = {
+    for sa_key, sa in var.service_accounts : "${sa_key}.${sa_key}" => {
+      sa_key = sa_key
+      role   = sa.roles
+    }
+    if length(sa.roles) > 0
+  }
   project = var.project_id
-  role    = "roles/${each.value.role}"
-  member  = "serviceAccount:${var.service_accounts[each.value.sa_key].account_id}@${var.project_id}.iam.gserviceaccount.com"
+  role    = each.value.role
+  member  = "serviceAccount:${google_service_account.service_account[each.value.sa_key].email}"
 }

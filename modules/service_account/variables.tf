@@ -4,19 +4,12 @@ variable "project_id" {
 }
 
 variable "service_accounts" {
+  description = "Map of service account configurations"
   type = map(object({
     account_id   = string
     display_name = string
     description  = string
+    roles        = optional(list(string), [])
   }))
-  description = "Service accounts to create."
-}
-
-variable "service_account_roles" {
-  type        = map(list(string))
-  description = "IAM roles to assign to service accounts, mapping service account keys to lists of role names."
-  validation {
-    condition     = alltrue([for k in keys(var.service_account_roles) : contains(keys(var.service_accounts), k)])
-    error_message = "All service_account_roles keys must match service_accounts keys."
-  }
+  default = {}
 }

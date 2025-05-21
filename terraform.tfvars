@@ -248,93 +248,50 @@ buckets = {
 }
 
 service_accounts = {
-  arches_k8s_prd = {
+  "arches_k8s_prd" = {
     account_id   = "coral-arches-k8s-coral-prd"
-    display_name = "coral-arches-k8s coral-prd"
-    description  = "Its IAM role(s) will specify the access-levels that the GKE node(s) may have"
-  },
-  arches_k8s_stg = {
-    account_id   = "coral-arches-k8s-coral-stg"
-    display_name = "coral-arches-k8s coral-stg"
-    description  = "Its IAM role(s) will specify the access-levels that the GKE node(s) may have"
-  },
-  arches_uat_prd = {
+    display_name = "Coral Production GKE Service Account"
+    description  = "Service account for GKE cluster in production"
+    roles        = ["container.clusterAdmin", "compute.viewer", "logging.logWriter", "monitoring.metricWriter"]
+  }
+  "arches_uat_prd" = {
     account_id   = "coral-arches-uat-prd"
     display_name = "Coral Production Arches Service Account"
     description  = "Service account for Coral production Arches"
-  },
-  arches_uat = {
+    roles        = ["storage.objectAdmin"]
+  }
+  "arches_uat" = {
     account_id   = "coral-arches-uat"
-    display_name = "Coral Production Arches Service Account"
+    display_name = "Coral UAT Arches Service Account"
     description  = "Service account for Coral UAT Arches"
-  },
-  ci_prd = {
+    roles        = ["storage.objectAdmin"]
+  }
+  "ci_prd" = {
     account_id   = "coral-ci-prd"
-    display_name = "Coral Production Arches Service Account"
+    display_name = "Coral Production CI Service Account"
     description  = "Service account for CI in production"
-  },
-  ci = {
+    roles        = ["compute.admin", "storage.admin", "iam.serviceAccountUser", "container.admin"]
+  }
+  "ci" = {
     account_id   = "coral-ci"
-    display_name = "Coral Production Arches Service Account"
+    display_name = "Coral CI Service Account"
     description  = "Service account for CI"
-  },
-  flux_prd = {
+    roles        = ["compute.admin", "storage.admin", "iam.serviceAccountUser", "container.admin"]
+  }
+  "flux_prd" = {
     account_id   = "coral-flux-prd"
     display_name = "Coral Production Flux Service Account"
     description  = "Service account for Flux in production"
-  },
-  gl_ci_prd = {
+    roles        = ["container.developer"]
+  }
+  "gl_ci_prd" = {
     account_id   = "coral-gl-ci-prd"
     display_name = "Coral Production Data Operations Service Account"
     description  = "Service account for data operations in production"
+    roles        = ["bigquery.dataEditor", "storage.objectAdmin"]
   }
 }
 
-service_account_roles = {
-  "arches_k8s_prd" = [
-    "container.clusterAdmin",
-    "compute.viewer",
-    "logging.logWriter",
-    "monitoring.metricWriter"
-  ]
-  "arches_k8s_stg" = [
-    "container.clusterAdmin",
-    "compute.viewer",
-    "logging.logWriter",
-    "monitoring.metricWriter"
-  ]
-  "arches_uat_prd" = [
-    "storage.objectAdmin"
-  ]
-  "arches_uat" = [
-    "storage.objectAdmin"
-  ]
-  "ci_prd" = [
-    "compute.admin",
-    "storage.admin",
-    "iam.serviceAccountUser",
-    "container.admin"
-  ]
-  "ci" = [
-    "compute.admin",
-    "storage.admin",
-    "iam.serviceAccountUser",
-    "container.admin"
-  ]
-  "flux_prd" = [
-    "container.developer"
-  ]
-  "gl_ci_prd" = [
-    "bigquery.dataEditor",
-    "storage.objectAdmin"
-  ]
-  # "coral-arches-uat-prd" = [ #sji todo
-  #   "roles/storage.objectAdmin"
-  # ]
-  # "coral-arches-uat" = [
-  #   "roles/storage.objectAdmin"
-  # ]
-}
 routers = {
   prd = {
     name    = "coral-network-router-prd"

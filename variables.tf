@@ -86,18 +86,14 @@ variable "buckets" {
 }
 
 variable "service_accounts" {
-  description = "Map of service accounts"
+  description = "Map of service account configurations"
   type = map(object({
     account_id   = string
     display_name = string
     description  = string
+    roles        = optional(list(string), [])
   }))
-}
-
-variable "service_account_roles" {
-  type        = map(list(string))
-  description = "IAM roles to assign to service accounts, mapping service account keys to lists of role names."
-  default     = {}
+  default = {}
 }
 
 # variable "service_account_email" { #sji todo - maybe?

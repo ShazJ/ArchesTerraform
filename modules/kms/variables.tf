@@ -24,10 +24,12 @@ variable "labels" {
 }
 
 variable "service_accounts" {
+  description = "Map of service account configurations"
   type = map(object({
     account_id   = string
     display_name = string
     description  = string
+    roles        = optional(list(string), [])
   }))
-  description = "Service accounts for IAM bindings."
+  default = {}
 }

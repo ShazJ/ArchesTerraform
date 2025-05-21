@@ -80,10 +80,9 @@ module "storage_bucket" {
 }
 
 module "service_accounts" {
-  source                = "./modules/service_account"
-  project_id            = var.project_id
-  service_accounts      = var.service_accounts
-  service_account_roles = var.service_account_roles
+  source           = "./modules/service_account"
+  project_id       = var.project_id
+  service_accounts = var.service_accounts
 }
 
 module "compute_network_prd" {
