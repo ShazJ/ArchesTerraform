@@ -70,26 +70,26 @@ runs:
     #     GOOGLE_APPLICATION_CREDENTIALS: $GOOGLE_APPLICATION_CREDENTIALS
 
     #genericise this - maybe allow injection of actions?
-    # - name: Import existing KMS key rings
-    #   uses: ./.github/actions/terraform/gcp/import-kms-keyrings
-    #   with:
-    #     service_account: ${{ inputs.service_account }}
-    #     project_id: ${{ inputs.project_id }}
-    #     location: europe-west2
-    #     keyring_names: data-store-keyring-uat,data-store-keyring-uat-prd
+    - name: Import existing KMS key rings
+      uses: ./.github/actions/terraform/gcp/import-kms-keyrings
+      with:
+        service_account: ${{ inputs.service_account }}
+        project_id: ${{ inputs.project_id }}
+        location: europe-west2
+        keyring_names: data-store-keyring-uat,data-store-keyring-uat-prd
 
-    # - name: Terraform Validate
-    #   run: terraform validate
-    #   shell: bash
-    #   #working-directory: ./environments/${{ steps.set-env.outputs.environment }}
+    - name: Terraform Validate
+      run: terraform validate
+      shell: bash
+      #working-directory: ./environments/${{ steps.set-env.outputs.environment }}
 
-    # - name: Terraform Plan
-    #   run: terraform plan -out=tfplan
-    #   shell: bash
-    #   #working-directory: ./environments/${{ steps.set-env.outputs.environment }}
+    - name: Terraform Plan
+      run: terraform plan -out=tfplan
+      shell: bash
+      #working-directory: ./environments/${{ steps.set-env.outputs.environment }}
 
-    # # Apply
-    # - name: Terraform Apply
-    #   run: terraform apply -auto-approve tfplan
-    #   shell: bash
-    #   #working-directory: ./environments/${{ steps.set-env.outputs.environment }}
+    # Apply
+    - name: Terraform Apply
+      run: terraform apply -auto-approve tfplan
+      shell: bash
+      #working-directory: ./environments/${{ steps.set-env.outputs.environment }}
