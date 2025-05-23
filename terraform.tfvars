@@ -55,7 +55,7 @@ addresses = {
 
 firewalls = {
   letsencrpt_egress = {
-    name      = "letsencrpt_egress"
+    name      = "letsencrpt-egress"
     network   = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/coral-network"
     direction = "EGRESS"
     priority  = 1000
