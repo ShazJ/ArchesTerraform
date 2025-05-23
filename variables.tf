@@ -257,7 +257,7 @@ variable "clusters" {
       workload_config = object({
         audit_mode = string
       })
-      workload_vulnerability_mode = string
+      # workload_vulnerability_mode = string
     })
     release_channel = object({
       channel = string

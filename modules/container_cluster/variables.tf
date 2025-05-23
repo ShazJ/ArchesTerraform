@@ -248,7 +248,7 @@ variable "protect_config" {
     workload_config = object({
       audit_mode = string
     })
-    workload_vulnerability_mode = string
+    # workload_vulnerability_mode = string
   })
 }
 

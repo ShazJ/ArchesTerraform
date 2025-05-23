@@ -163,7 +163,7 @@ resource "google_container_cluster" "cluster" {
     workload_config {
       audit_mode = var.protect_config.workload_config.audit_mode
     }
-    workload_vulnerability_mode = var.protect_config.workload_vulnerability_mode
+    # workload_vulnerability_mode = var.protect_config.workload_vulnerability_mode
   }
 
   release_channel {

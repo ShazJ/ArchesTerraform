@@ -391,7 +391,7 @@ module "container_cluster" {
     workload_config = {
       audit_mode = each.value.protect_config.workload_config.audit_mode
     }
-    workload_vulnerability_mode = each.value.protect_config.workload_vulnerability_mode
+    # workload_vulnerability_mode = each.value.protect_config.workload_vulnerability_mode
   }
   release_channel = {
     channel = each.value.release_channel.channel
