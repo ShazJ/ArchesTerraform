@@ -162,15 +162,15 @@ buckets = {
     public_access_prevention    = "inherited"
     uniform_bucket_level_access = true
     cors                        = []
-    # cors = [{
-    #   max_age_seconds = 3600
-    #   method          = ["GET"]
-    #   origin          = ["https://coral-her.flaxandteal.co.uk"]
-    #   response_header = ["Content-Type"]
-    # }]
-    # encryption = {
-    #   default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat-prd/cryptoKeys/data-store-key-uat-prd"
-    # }
+    cors = [{
+      max_age_seconds = 3600
+      method          = ["GET"]
+      origin          = ["https://coral-her.flaxandteal.co.uk"]
+      response_header = ["Content-Type"]
+    }]
+    encryption = {
+      default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat-prd/cryptoKeys/data-store-key-uat-prd"
+    }
     logging = {
       log_bucket        = "log-store-eu-west-2"
       log_object_prefix = "sji.crl-data-store-uat-eu-west-2-prd"
@@ -185,15 +185,15 @@ buckets = {
     uniform_bucket_level_access = true
     cors                        = []
     encryption                  = null
-    # cors = [{
-    #   max_age_seconds = 3600
-    #   method          = ["GET", "HEAD", "PUT", "POST", "DELETE"]
-    #   origin          = ["https://coral-uat.flaxandteal.co.uk"]
-    #   response_header = ["*"]
-    # }]
-    # encryption = {
-    #   default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat/cryptoKeys/data-store-key-uat"
-    # }
+    cors = [{
+      max_age_seconds = 3600
+      method          = ["GET", "HEAD", "PUT", "POST", "DELETE"]
+      origin          = ["https://coral-uat.flaxandteal.co.uk"]
+      response_header = ["*"]
+    }]
+    encryption = {
+      default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat/cryptoKeys/data-store-key-uat"
+    }
     logging = {
       log_bucket        = "log-store-eu-west-2"
       log_object_prefix = "sji.crl-data-store-uat-eu-west-2"
