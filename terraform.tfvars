@@ -672,16 +672,16 @@ clusters = {
     }
     protect_config = {
       workload_config = {
-        audit_mode = "MODE_UNSPECIFIED"
+        audit_mode = "DISABLED"
       }
-      workload_vulnerability_mode = "WORKLOAD_VULNERABILITY_MODE_UNSPECIFIED"
+      workload_vulnerability_mode = "WORKLOAD_VULNERABILITY_DISABLED"
     }
     release_channel = {
       channel = "REGULAR"
     }
     security_posture_config = {
-      mode               = "MODE_UNSPECIFIED"
-      vulnerability_mode = "VULNERABILITY_MODE_UNSPECIFIED"
+      mode               = "BASIC"
+      vulnerability_mode = "VULNERABILITY_DISABLED"
     }
     service_external_ips_config = {
       enabled = false
