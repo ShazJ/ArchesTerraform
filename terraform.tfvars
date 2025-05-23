@@ -248,22 +248,22 @@ service_accounts = {
     description     = "Service account for GKE cluster in production"
     allow_iam_roles = true
     roles = [
-      "container.clusterAdmin",                    # Kubernetes Engine Cluster Admin
-      "compute.viewer",                            # Compute Viewer
-      "logging.logWriter",                         # Logs Writer
-      "monitoring.metricWriter",                   # Monitoring Metric Writer
-      "roles/artifactregistry.reader",             # Artifact Registry Reader
-      "roles/artifactregistry.serviceAgent",       # Artifact Registry Service Agent
-      "roles/source.reader",                       # Source Repository Reader
-      "roles/source.serviceAgent",                 # Source Repository Service Agent
-      "roles/container.nodeServiceAccount",        # Kubernetes Engine Node Service Account
-      "roles/iam.serviceAccountTokenCreator",      # Service Account Token Creator 
-      "roles/stackdriver.resourceMetadata.writer", # Stackdriver Resource Metadata Writer
-      "roles/storage.objectViewer",                # Storage Object Viewer
-      "roles/container.clusterAdmin",              # Kubernetes Engine Cluster Admin
-      "roles/compute.viewer",                      # Compute Viewer
-      "roles/logging.logWriter",                   # Logs Writer  
-      "roles/monitoring.metricWriter"              # Monitoring Metric Writer 
+      "container.clusterAdmin",              # Kubernetes Engine Cluster Admin
+      "compute.viewer",                      # Compute Viewer
+      "logging.logWriter",                   # Logs Writer
+      "monitoring.metricWriter",             # Monitoring Metric Writer
+      "artifactregistry.reader",             # Artifact Registry Reader
+      "artifactregistry.serviceAgent",       # Artifact Registry Service Agent
+      "source.reader",                       # Source Repository Reader
+      "source.serviceAgent",                 # Source Repository Service Agent
+      "container.nodeServiceAccount",        # Kubernetes Engine Node Service Account
+      "iam.serviceAccountTokenCreator",      # Service Account Token Creator 
+      "stackdriver.resourceMetadata.writer", # Stackdriver Resource Metadata Writer
+      "storage.objectViewer",                # Storage Object Viewer
+      "container.clusterAdmin",              # Kubernetes Engine Cluster Admin
+      "compute.viewer",                      # Compute Viewer
+      "logging.logWriter",                   # Logs Writer  
+      "monitoring.metricWriter"              # Monitoring Metric Writer 
     ]
   }
   "arches_k8s_stg" = {
@@ -272,14 +272,14 @@ service_accounts = {
     description     = "Service account for GKE cluster in production"
     allow_iam_roles = true
     roles = [
-      "roles/artifactregistry.reader",             # Artifact Registry Reader
-      "roles/container.nodeServiceAccount",        # Kubernetes Engine Node Service Account
-      "roles/logging.logWriter",                   # Logs Writer
-      "roles/monitoring.metricWriter",             # Monitoring Metric Writer
-      "roles/stackdriver.resourceMetadata.writer", # Stackdriver Resource Metadata Writer
-      "roles/storage.objectViewer",                # Storage Object Viewer
-      "roles/container.clusterAdmin",              # Kubernetes Engine Cluster Admin
-      "roles/compute.viewer"                       # Compute Viewer    
+      "artifactregistry.reader",             # Artifact Registry Reader
+      "container.nodeServiceAccount",        # Kubernetes Engine Node Service Account
+      "logging.logWriter",                   # Logs Writer
+      "monitoring.metricWriter",             # Monitoring Metric Writer
+      "stackdriver.resourceMetadata.writer", # Stackdriver Resource Metadata Writer
+      "storage.objectViewer",                # Storage Object Viewer
+      "container.clusterAdmin",              # Kubernetes Engine Cluster Admin
+      "compute.viewer"                       # Compute Viewer    
     ]
   }
   "arches_uat_prd" = {
@@ -309,14 +309,14 @@ service_accounts = {
     description     = "Service account for CI"
     allow_iam_roles = true
     roles = [
-      "roles/compute.admin",                      # Compute Engine Admin
-      "roles/storage.admin",                      # Storage Admin
-      "roles/iam.serviceAccountUser",             # Service Account User
-      "roles/container.admin",                    # Kubernetes Engine Admin
-      "roles/artifactregistry.admin",             # Artifact Registry Administrator
-      "roles/cloudbuild.builds.builder",          # Cloud Build Service Account
-      "roles/storage.objectAdmin",                # Storage Object Administrator
-      "roles/composer.environmentAndStorageAdmin" # Environment and Storage Object Administrator
+      "compute.admin",                      # Compute Engine Admin
+      "storage.admin",                      # Storage Admin
+      "iam.serviceAccountUser",             # Service Account User
+      "container.admin",                    # Kubernetes Engine Admin
+      "artifactregistry.admin",             # Artifact Registry Administrator
+      "cloudbuild.builds.builder",          # Cloud Build Service Account
+      "storage.objectAdmin",                # Storage Object Administrator
+      "composer.environmentAndStorageAdmin" # Environment and Storage Object Administrator
     ]
   }
   "flux_prd" = {
@@ -339,7 +339,7 @@ service_accounts = {
     display_name    = "Github Actions Service Account"
     description     = "Service account for github actions"
     allow_iam_roles = true
-    roles           = ["roles/artifactregistry.writer"]
+    roles           = ["artifactregistry.writer"]
   }
 }
 
