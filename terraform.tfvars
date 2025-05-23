@@ -37,20 +37,20 @@ addresses = {
   #   network_tier = "PREMIUM"
   #   purpose      = "" #"EXTERNAL"
   # },
-  # nat_auto_1 = {
-  #   name         = "nat-auto-ip-6086885-2-1720490595712813"
-  #   address      = "34.147.134.205"
-  #   address_type = "EXTERNAL"
-  #   network_tier = "PREMIUM"
-  #   purpose      = "NAT_AUTO"
-  # },
-  # nat_auto_2 = {
-  #   name         = "nat-auto-ip-15970522-0-1676784907194161"
-  #   address      = "35.234.135.79"
-  #   address_type = "EXTERNAL"
-  #   network_tier = "PREMIUM"
-  #   purpose      = "NAT_AUTO"
-  # }
+  nat_auto_1 = {
+    name         = "nat-auto-ip-6086885-2-1720490595712813"
+    address      = "34.147.134.205"
+    address_type = "EXTERNAL"
+    network_tier = "PREMIUM"
+    purpose      = "NAT_AUTO"
+  },
+  nat_auto_2 = {
+    name         = "nat-auto-ip-15970522-0-1676784907194161"
+    address      = "35.234.135.79"
+    address_type = "EXTERNAL"
+    network_tier = "PREMIUM"
+    purpose      = "NAT_AUTO"
+  }
 }
 
 firewalls = {
@@ -106,42 +106,6 @@ firewalls = {
     }]
     description = "Allow ingress for Coral staging GKE cluster"
   },
-  #   # default_icmp = {
-  #   #   name          = "default-allow-icmp"
-  #   #   network       = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/default"
-  #   #   direction     = "INGRESS"
-  #   #   priority      = 65534
-  #   #   source_ranges = ["0.0.0.0/0"]
-  #   #   target_tags   = []
-  #   #   description   = "Allow ICMP from anywhere"
-  #   #   allow = [{
-  #   #     protocol = "icmp"
-  #   #     ports    = []
-  #   #   }]
-  #   # },
-  #   default_internal = {
-  #     name          = "default-allow-internal"
-  #     network       = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/default"
-  #     direction     = "INGRESS"
-  #     priority      = 65534
-  #     source_ranges = ["10.128.0.0/9"]
-  #     target_tags   = []
-  #     description   = "Allow internal traffic on the default network"
-  #     allow = [
-  #       {
-  #         protocol = "tcp"
-  #         ports    = ["0-65535"]
-  #       },
-  #       {
-  #         protocol = "udp"
-  #         ports    = ["0-65535"]
-  #       },
-  #       {
-  #         protocol = "icmp"
-  #         ports    = []
-  #       }
-  #     ]
-  #   }
 }
 #sji todo! bucket naming lol
 buckets = {
@@ -248,12 +212,11 @@ service_accounts = {
     description     = "Service account for GKE cluster in production"
     allow_iam_roles = true
     roles = [
-      "container.clusterAdmin",  # Kubernetes Engine Cluster Admin
-      "compute.viewer",          # Compute Viewer
-      "logging.logWriter",       # Logs Writer
-      "monitoring.metricWriter", # Monitoring Metric Writer
-      "artifactregistry.reader", # Artifact Registry Reader
-      # "artifactregistry.serviceAgent",       # Artifact Registry Service Agent
+      "container.clusterAdmin",              # Kubernetes Engine Cluster Admin
+      "compute.viewer",                      # Compute Viewer
+      "logging.logWriter",                   # Logs Writer
+      "monitoring.metricWriter",             # Monitoring Metric Writer
+      "artifactregistry.reader",             # Artifact Registry Reader
       "container.nodeServiceAccount",        # Kubernetes Engine Node Service Account
       "iam.serviceAccountTokenCreator",      # Service Account Token Creator 
       "stackdriver.resourceMetadata.writer", # Stackdriver Resource Metadata Writer
@@ -307,13 +270,8 @@ service_accounts = {
     description     = "Service account for CI"
     allow_iam_roles = true
     roles = [
-      # "compute.admin",             # Compute Engine Admin
-      # "storage.admin",             # Storage Admin
-      # "iam.serviceAccountUser",    # Service Account User
-      # "container.admin",           # Kubernetes Engine Admin
       "artifactregistry.admin",    # Artifact Registry Administrator
       "cloudbuild.builds.builder", # Cloud Build Service Account
-      # "storage.objectAdmin",       # Storage Object Administrator
     ]
   }
   "flux_prd" = {
@@ -551,7 +509,6 @@ clusters = {
       workload_config = {
         audit_mode = "DISABLED"
       }
-      # workload_vulnerability_mode = "WORKLOAD_VULNERABILITY_DISABLED"
     }
     release_channel = {
       channel = "REGULAR"
@@ -716,7 +673,6 @@ clusters = {
       workload_config = {
         audit_mode = "DISABLED"
       }
-      # workload_vulnerability_mode = "WORKLOAD_VULNERABILITY_DISABLED"
     }
     release_channel = {
       channel = "REGULAR"

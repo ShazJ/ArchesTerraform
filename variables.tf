@@ -98,12 +98,6 @@ variable "service_accounts" {
   default = {}
 }
 
-# variable "service_account_email" { #sji todo - maybe?
-#   description = "Service account email for additional bindings (optional)"
-#   type        = string
-#   default     = null
-# }
-
 variable "routers" {
   description = "Map of compute routers"
   type = map(object({
@@ -259,7 +253,6 @@ variable "clusters" {
       workload_config = object({
         audit_mode = string
       })
-      # workload_vulnerability_mode = string
     })
     release_channel = object({
       channel = string
