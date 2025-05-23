@@ -25,12 +25,12 @@ variable "priority" {
 
 variable "source_ranges" {
   description = "The source IP ranges for the Firewall rule"
-  type        = list(string)
+  type        = optional(list(string))
 }
 
 variable "destination_ranges" {
   description = "The destination IP ranges for the Firewall rule"
-  type        = list(string)
+  type        = optional(list(string))
 }
 
 variable "target_tags" {

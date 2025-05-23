@@ -50,8 +50,8 @@ variable "firewalls" {
     network            = string
     direction          = string
     priority           = number
-    source_ranges      = list(string)
-    destination_ranges = list(string)
+    source_ranges      = optional(list(string), [])
+    destination_ranges = optional(list(string), [])
     target_tags        = optional(list(string), [])
     allow = list(object({
       protocol = string
