@@ -307,13 +307,14 @@ service_accounts = {
     description     = "Service account for CI"
     allow_iam_roles = true
     roles = [
-      "compute.admin",             # Compute Engine Admin
-      "storage.admin",             # Storage Admin
-      "iam.serviceAccountUser",    # Service Account User
-      "container.admin",           # Kubernetes Engine Admin
+      # "compute.admin",             # Compute Engine Admin
+      # "storage.admin",             # Storage Admin
+      # "iam.serviceAccountUser",    # Service Account User
+      # "container.admin",           # Kubernetes Engine Admin
       "artifactregistry.admin",    # Artifact Registry Administrator
       "cloudbuild.builds.builder", # Cloud Build Service Account
-      "storage.objectAdmin",       # Storage Object Administrator
+      # "storage.objectAdmin",       # Storage Object Administrator
+      "environment.admin", # Environment and Storage Object Administrator
     ]
   }
   "flux_prd" = {
