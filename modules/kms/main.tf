@@ -58,6 +58,6 @@ resource "google_kms_crypto_key_iam_member" "crypto_key_iam" {
   }
   crypto_key_id = google_kms_crypto_key.crypto_key[each.key].id
   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
-  member        = "serviceAccount:${var.service_accounts[each.value.service_account_key].account_id}@${var.service_accounts[each.value.service_account_key].project_id}.iam.gserviceaccount.com"
+  member        = "serviceAccount:${var.service_accounts[each.value.service_account_key].account_id}@${var.project_id}.iam.gserviceaccount.com"
 }
 #member = "serviceAccount:${var.service_accounts[each.value.service_account_key].account_id}@${var.service_accounts[each.value.service_account_key].project_id}.iam.gserviceaccount.com"
