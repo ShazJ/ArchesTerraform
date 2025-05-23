@@ -54,38 +54,38 @@ addresses = {
 }
 
 firewalls = {
-  # letsencrpt_egress = {
-  #   name          = "letsencrpt_egress"
-  #   network       = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/coral-network"
-  #   direction     = "EGRESS"
-  #   priority      = 1000
-  #   allow =[{
-  #     ports    = ["443"]
-  #     protocol = "tcp"
-  #   }]
-  #   description = "Encrypt egress"
-  # },
-  # k8s_fw_prd = {
-  #   name          = "k8s-fw"
-  #   network       = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/coral-network-prd"
-  #   direction     = "INGRESS"
-  #   priority      = 1000
-  #   destination_ranges = ["34.142.75.32"]
-  #   source_ranges = ["0.0.0.0/0"]
-  #   target_tags   = ["gke-k8s-coral-prd-8669f3f6-node"]
-  #   description = "{\"kubernetes.io/service-name\":\"istio-system/istio-gateway\", \"kubernetes.io/service-ip\":\"34.142.75.32\"}"
-  # },
-  # k8s_fw = {
-  #   name          = "k8s-fw"
-  #   network       = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/coral-network"
-  #   direction     = "INGRESS"
-  #   priority      = 1000
-  #   destination_ranges = ["34.89.106.198"]
-  #   source_ranges = ["0.0.0.0/0"]
-  #   target_tags   = ["gke-k8s-coral-stg-4b674dca-node"]
-  #   description = "{\"kubernetes.io/service-name\":\"istio-system/istio-gateway\", \"kubernetes.io/service-ip\":\"34.89.106.198\"}"
+  letsencrpt_egress = {
+    name          = "letsencrpt_egress"
+    network       = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/coral-network"
+    direction     = "EGRESS"
+    priority      = 1000
+    allow =[{
+      ports    = ["443"]
+      protocol = "tcp"
+    }]
+    description = "Encrypt egress"
+  },
+  k8s_fw_prd = {
+    name          = "k8s-fw"
+    network       = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/coral-network-prd"
+    direction     = "INGRESS"
+    priority      = 1000
+    destination_ranges = ["34.142.75.32"]
+    source_ranges = ["0.0.0.0/0"]
+    target_tags   = ["gke-k8s-coral-prd-8669f3f6-node"]
+    description = "{\"kubernetes.io/service-name\":\"istio-system/istio-gateway\", \"kubernetes.io/service-ip\":\"34.142.75.32\"}"
+  },
+  k8s_fw = {
+    name          = "k8s-fw"
+    network       = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/coral-network"
+    direction     = "INGRESS"
+    priority      = 1000
+    destination_ranges = ["34.89.106.198"]
+    source_ranges = ["0.0.0.0/0"]
+    target_tags   = ["gke-k8s-coral-stg-4b674dca-node"]
+    description = "{\"kubernetes.io/service-name\":\"istio-system/istio-gateway\", \"kubernetes.io/service-ip\":\"34.89.106.198\"}"
 
-  # },
+  },
   coral_prd = {
     name          = "allow-ingress-coral-prd"
     network       = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/coral-network-prd"
@@ -112,42 +112,42 @@ firewalls = {
     }]
     description = "Allow ingress for Coral staging GKE cluster"
   },
-  # default_icmp = {
-  #   name          = "default-allow-icmp"
-  #   network       = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/default"
-  #   direction     = "INGRESS"
-  #   priority      = 65534
-  #   source_ranges = ["0.0.0.0/0"]
-  #   target_tags   = []
-  #   description   = "Allow ICMP from anywhere"
-  #   allow = [{
-  #     protocol = "icmp"
-  #     ports    = []
-  #   }]
-  # },
-  # default_internal = {
-  #   name          = "default-allow-internal"
-  #   network       = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/default"
-  #   direction     = "INGRESS"
-  #   priority      = 65534
-  #   source_ranges = ["10.128.0.0/9"]
-  #   target_tags   = []
-  #   description   = "Allow internal traffic on the default network"
-  #   allow = [
-  #     {
-  #       protocol = "tcp"
-  #       ports    = ["0-65535"]
-  #     },
-  #     {
-  #       protocol = "udp"
-  #       ports    = ["0-65535"]
-  #     },
-  #     {
-  #       protocol = "icmp"
-  #       ports    = []
-  #     }
-  #   ]
-  # }
+  default_icmp = {
+    name          = "default-allow-icmp"
+    network       = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/default"
+    direction     = "INGRESS"
+    priority      = 65534
+    source_ranges = ["0.0.0.0/0"]
+    target_tags   = []
+    description   = "Allow ICMP from anywhere"
+    allow = [{
+      protocol = "icmp"
+      ports    = []
+    }]
+  },
+  default_internal = {
+    name          = "default-allow-internal"
+    network       = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/default"
+    direction     = "INGRESS"
+    priority      = 65534
+    source_ranges = ["10.128.0.0/9"]
+    target_tags   = []
+    description   = "Allow internal traffic on the default network"
+    allow = [
+      {
+        protocol = "tcp"
+        ports    = ["0-65535"]
+      },
+      {
+        protocol = "udp"
+        ports    = ["0-65535"]
+      },
+      {
+        protocol = "icmp"
+        ports    = []
+      }
+    ]
+  }
 }
 #sji todo! bucket naming lol
 buckets = {
