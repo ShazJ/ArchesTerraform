@@ -6,6 +6,7 @@ variable "project_id" {
 variable "service_accounts" {
   description = "Map of service account configurations"
   type = map(object({
+    project_id   = string
     account_id   = string
     display_name = string
     description  = string
