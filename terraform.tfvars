@@ -314,7 +314,6 @@ service_accounts = {
       "artifactregistry.admin",    # Artifact Registry Administrator
       "cloudbuild.builds.builder", # Cloud Build Service Account
       # "storage.objectAdmin",       # Storage Object Administrator
-      "environment.admin", # Environment and Storage Object Administrator
     ]
   }
   "flux_prd" = {
