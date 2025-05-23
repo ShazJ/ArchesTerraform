@@ -101,8 +101,9 @@ variable "service_accounts" {
 variable "routers" {
   description = "Map of compute routers"
   type = map(object({
-    name    = string
-    network = string
+    name       = string
+    network    = string
+    subnetwork = string
   }))
 }
 

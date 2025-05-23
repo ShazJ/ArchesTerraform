@@ -13,6 +13,10 @@ variable "network" {
   type        = string
 }
 
+variable "subnetwork" {
+  type = string
+}
+
 variable "region" {
   description = "The region for the Router"
   type        = string
