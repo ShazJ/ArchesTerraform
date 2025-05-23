@@ -9,6 +9,7 @@ variable "service_accounts" {
     account_id   = string
     display_name = string
     description  = string
+    allow_iam_roles  = bool
     roles        = optional(list(string), [])
   }))
   default = {}

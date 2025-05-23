@@ -43,28 +43,6 @@ module "compute_firewall" {
   description        = each.value.description
 }
 
-# resource "google_compute_network" "network" {
-#   for_each = {
-#     prd = "coral-network-prd"
-#     stg = "coral-network"
-#   }
-#   project                 = var.project_id
-#   name                    = each.value
-#   auto_create_subnetworks = false
-# }
-
-# resource "google_compute_subnetwork" "subnetwork" {
-#   for_each = {
-#     prd = "coral-subnetwork-prd"
-#     stg = "coral-subnetwork"
-#   }
-#   project       = var.project_id
-#   name          = each.value
-#   network       = google_compute_network.network[each.key].name
-#   region        = var.region
-#   ip_cidr_range = "10.0.0.0/16" # Adjust as needed
-# }
-
 module "storage_bucket" {
   for_each                    = var.buckets
   source                      = "./modules/storage_bucket"
@@ -76,7 +54,7 @@ module "storage_bucket" {
   public_access_prevention    = each.value.public_access_prevention
   uniform_bucket_level_access = each.value.uniform_bucket_level_access
   cors                        = each.value.cors
-  # encryption                  = each.value.encryption
+  encryption                  = each.value.encryption
   logging = each.value.logging
 }
 

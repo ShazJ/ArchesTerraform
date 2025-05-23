@@ -246,18 +246,47 @@ service_accounts = {
     account_id   = "coral-arches-k8s-coral-prd"
     display_name = "Coral Production GKE Service Account"
     description  = "Service account for GKE cluster in production"
-    roles        = ["container.clusterAdmin", "compute.viewer", "logging.logWriter", "monitoring.metricWriter"]
+    allow_iam_roles  = true
+    roles = [
+      "container.clusterAdmin",                    # Kubernetes Engine Cluster Admin
+      "compute.viewer",                            # Compute Viewer
+      "logging.logWriter",                         # Logs Writer
+      "monitoring.metricWriter",                   # Monitoring Metric Writer
+      "roles/artifactregistry.reader",             # Artifact Registry Reader
+      "roles/artifactregistry.serviceAgent",       # Artifact Registry Service Agent
+      "roles/source.reader",                       # Source Repository Reader
+      "roles/source.serviceAgent",                 # Source Repository Service Agent
+      "roles/container.nodeServiceAccount",        # Kubernetes Engine Node Service Account
+      "roles/iam.serviceAccountTokenCreator",      # Service Account Token Creator 
+      "roles/stackdriver.resourceMetadata.writer", # Stackdriver Resource Metadata Writer
+      "roles/storage.objectViewer",                # Storage Object Viewer
+      "roles/container.clusterAdmin",              # Kubernetes Engine Cluster Admin
+      "roles/compute.viewer",                      # Compute Viewer
+      "roles/logging.logWriter",                   # Logs Writer  
+      "roles/monitoring.metricWriter"              # Monitoring Metric Writer 
+    ]
   }
   "arches_k8s_stg" = {
     account_id   = "coral-arches-k8s-coral-stg"
     display_name = "Coral Production GKE Service Account"
     description  = "Service account for GKE cluster in production"
-    roles        = ["container.clusterAdmin", "compute.viewer", "logging.logWriter", "monitoring.metricWriter"]
+    allow_iam_roles  = true
+    roles = [
+      "roles/artifactregistry.reader",             # Artifact Registry Reader
+      "roles/container.nodeServiceAccount",        # Kubernetes Engine Node Service Account
+      "roles/logging.logWriter",                   # Logs Writer
+      "roles/monitoring.metricWriter",             # Monitoring Metric Writer
+      "roles/stackdriver.resourceMetadata.writer", # Stackdriver Resource Metadata Writer
+      "roles/storage.objectViewer",                # Storage Object Viewer
+      "roles/container.clusterAdmin",              # Kubernetes Engine Cluster Admin
+      "roles/compute.viewer"                       # Compute Viewer    
+    ]
   }
   "arches_uat_prd" = {
     account_id   = "coral-arches-uat-prd"
     display_name = "Coral Production Arches Service Account"
     description  = "Service account for Coral production Arches"
+    allow_iam_roles  = false
     roles        = ["storage.objectAdmin"]
   }
   "arches_uat" = {
@@ -270,25 +299,46 @@ service_accounts = {
     account_id   = "coral-ci-prd"
     display_name = "Coral Production CI Service Account"
     description  = "Service account for CI in production"
-    roles        = ["compute.admin", "storage.admin", "iam.serviceAccountUser", "container.admin"]
+    allow_iam_roles  = false
+    roles        = ["compute.admin", "storage.admin", "container.admin"]
   }
   "ci" = {
     account_id   = "coral-ci"
     display_name = "Coral CI Service Account"
     description  = "Service account for CI"
-    roles        = ["compute.admin", "storage.admin", "iam.serviceAccountUser", "container.admin"]
+    allow_iam_roles  = true
+    roles        = [
+      "roles/compute.admin",                     # Compute Engine Admin
+      "roles/storage.admin",                     # Storage Admin
+      "roles/iam.serviceAccountUser",            # Service Account User
+      "roles/container.admin",                   # Kubernetes Engine Admin
+      "roles/artifactregistry.admin",            # Artifact Registry Administrator
+      "roles/cloudbuild.builds.builder",         # Cloud Build Service Account
+      "roles/storage.objectAdmin",              # Storage Object Administrator
+      "roles/composer.environmentAndStorageAdmin" # Environment and Storage Object Administrator
+    ]
   }
   "flux_prd" = {
     account_id   = "coral-flux-prd"
     display_name = "Coral Production Flux Service Account"
     description  = "Service account for Flux in production"
+    allow_iam_roles  = false
     roles        = ["container.developer", "cloudkms.cryptoKeyEncrypterDecrypter"]
   }
   "gl_ci_prd" = {
     account_id   = "coral-gl-ci-prd"
     display_name = "Coral Production Data Operations Service Account"
+    allow_iam_roles  = false
     description  = "Service account for data operations in production"
+    
     roles        = ["bigquery.dataEditor", "storage.objectAdmin"]
+  }
+  "github-actions" = {
+    account_id   = "github-actions"
+    display_name = "Github Actions Service Account"
+    description  = "Service account for github actions"
+    allow_iam_roles  = true
+    roles        = ["roles/artifactregistry.writer"]
   }
 }
 
