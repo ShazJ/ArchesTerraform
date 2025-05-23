@@ -288,13 +288,16 @@ routers = {
   prd = {
     name    = "coral-network-router-prd"
     network = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/coral-network-prd"
-    subnetworks = [
+    subnetwork = [
       "https://www.googleapis.com/compute/v1/projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork-prd"
     ]
   },
   stg = {
     name    = "coral-network-router"
     network = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/coral-network"
+    subnetwork = [
+      "https://www.googleapis.com/compute/v1/projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork"
+    ]
   }
 }
 
