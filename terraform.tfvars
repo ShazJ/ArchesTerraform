@@ -248,14 +248,12 @@ service_accounts = {
     description     = "Service account for GKE cluster in production"
     allow_iam_roles = true
     roles = [
-      "container.clusterAdmin",              # Kubernetes Engine Cluster Admin
-      "compute.viewer",                      # Compute Viewer
-      "logging.logWriter",                   # Logs Writer
-      "monitoring.metricWriter",             # Monitoring Metric Writer
-      "artifactregistry.reader",             # Artifact Registry Reader
-      "artifactregistry.serviceAgent",       # Artifact Registry Service Agent
-      "source.reader",                       # Source Repository Reader
-      "source.serviceAgent",                 # Source Repository Service Agent
+      "container.clusterAdmin",  # Kubernetes Engine Cluster Admin
+      "compute.viewer",          # Compute Viewer
+      "logging.logWriter",       # Logs Writer
+      "monitoring.metricWriter", # Monitoring Metric Writer
+      "artifactregistry.reader", # Artifact Registry Reader
+      # "artifactregistry.serviceAgent",       # Artifact Registry Service Agent
       "container.nodeServiceAccount",        # Kubernetes Engine Node Service Account
       "iam.serviceAccountTokenCreator",      # Service Account Token Creator 
       "stackdriver.resourceMetadata.writer", # Stackdriver Resource Metadata Writer
@@ -309,14 +307,13 @@ service_accounts = {
     description     = "Service account for CI"
     allow_iam_roles = true
     roles = [
-      "compute.admin",                      # Compute Engine Admin
-      "storage.admin",                      # Storage Admin
-      "iam.serviceAccountUser",             # Service Account User
-      "container.admin",                    # Kubernetes Engine Admin
-      "artifactregistry.admin",             # Artifact Registry Administrator
-      "cloudbuild.builds.builder",          # Cloud Build Service Account
-      "storage.objectAdmin",                # Storage Object Administrator
-      "composer.environmentAndStorageAdmin" # Environment and Storage Object Administrator
+      "compute.admin",             # Compute Engine Admin
+      "storage.admin",             # Storage Admin
+      "iam.serviceAccountUser",    # Service Account User
+      "container.admin",           # Kubernetes Engine Admin
+      "artifactregistry.admin",    # Artifact Registry Administrator
+      "cloudbuild.builds.builder", # Cloud Build Service Account
+      "storage.objectAdmin",       # Storage Object Administrator
     ]
   }
   "flux_prd" = {
