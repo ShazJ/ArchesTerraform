@@ -509,7 +509,7 @@ clusters = {
       workload_config = {
         audit_mode = "DISABLED"
       }
-      workload_vulnerability_mode = "VULNERABILITY_DISABLED"
+      workload_vulnerability_mode = "WORKLOAD_VULNERABILITY_DISABLED"
     }
     release_channel = {
       channel = "REGULAR"
