@@ -37,20 +37,6 @@ addresses = {
   #   network_tier = "PREMIUM"
   #   purpose      = "" #"EXTERNAL"
   # },
-  nat_auto_1 = {
-    name         = "nat-auto-ip-6086885-2-1720490595712813"
-    address      = "34.147.134.205"
-    address_type = "EXTERNAL"
-    network_tier = "PREMIUM"
-    purpose      = "NAT_AUTO"
-  },
-  nat_auto_2 = {
-    name         = "nat-auto-ip-15970522-0-1676784907194161"
-    address      = "35.234.135.79"
-    address_type = "EXTERNAL"
-    network_tier = "PREMIUM"
-    purpose      = "NAT_AUTO"
-  }
 }
 
 firewalls = {
@@ -300,7 +286,7 @@ service_accounts = {
 
 routers = {
   prd = {
-    name    = "coral-network-router-prd"
+    name    = "coral-network-router-prd" 
     network = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/coral-network-prd"
   },
   stg = {
