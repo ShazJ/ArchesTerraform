@@ -290,11 +290,11 @@ service_accounts = {
     roles           = ["storage.objectAdmin"]
   }
   "arches_uat" = {
-    account_id   = "coral-arches-uat"
-    display_name = "Coral UAT Arches Service Account"
-    description  = "Service account for Coral UAT Arches"
+    account_id      = "coral-arches-uat"
+    display_name    = "Coral UAT Arches Service Account"
+    description     = "Service account for Coral UAT Arches"
     allow_iam_roles = false
-    roles        = ["storage.objectAdmin", "cloudkms.cryptoKeyEncrypterDecrypter"]
+    roles           = ["storage.objectAdmin", "cloudkms.cryptoKeyEncrypterDecrypter"]
   }
   "ci_prd" = {
     account_id      = "coral-ci-prd"
