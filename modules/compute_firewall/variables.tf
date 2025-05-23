@@ -28,6 +28,11 @@ variable "source_ranges" {
   type        = list(string)
 }
 
+variable "destination_ranges" {
+  description = "The destination IP ranges for the Firewall rule"
+  type        = list(string)
+}
+
 variable "target_tags" {
   description = "The target tags for the Firewall rule"
   type        = list(string)

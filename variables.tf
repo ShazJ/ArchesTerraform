@@ -46,12 +46,13 @@ variable "addresses" {
 variable "firewalls" {
   description = "Map of firewall rules"
   type = map(object({
-    name          = string
-    network       = string
-    direction     = string
-    priority      = number
-    source_ranges = list(string)
-    target_tags   = optional(list(string), [])
+    name               = string
+    network            = string
+    direction          = string
+    priority           = number
+    source_ranges      = list(string)
+    destination_ranges = list(string)
+    target_tags        = optional(list(string), [])
     allow = list(object({
       protocol = string
       ports    = optional(list(string))

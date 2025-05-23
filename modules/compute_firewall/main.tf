@@ -1,12 +1,14 @@
 resource "google_compute_firewall" "firewall" {
-  project       = var.project_id
-  name          = var.name
-  network       = var.network
-  direction     = var.direction
-  priority      = var.priority
-  source_ranges = var.source_ranges
-  description   = var.description
-  target_tags   = length(var.target_tags) > 0 ? var.target_tags : null
+  project     = var.project_id
+  name        = var.name
+  network     = var.network
+  direction   = var.direction
+  priority    = var.priority
+  description = var.description
+  target_tags = length(var.target_tags) > 0 ? var.target_tags : null
+
+  source_ranges      = var.direction == "INGRESS" ? var.source_ranges : null
+  destination_ranges = var.direction == "EGRESS" ? var.destination_ranges : null
 
   dynamic "allow" {
     for_each = var.allow

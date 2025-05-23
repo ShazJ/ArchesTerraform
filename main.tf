@@ -28,18 +28,19 @@ module "compute_address" {
 }
 
 module "compute_firewall" {
-  depends_on    = [module.compute_subnetwork, module.compute_subnetwork_prd]
-  for_each      = var.firewalls
-  source        = "./modules/compute_firewall"
-  project_id    = var.project_id
-  name          = each.value.name
-  network       = each.value.network
-  direction     = each.value.direction
-  priority      = each.value.priority
-  source_ranges = each.value.source_ranges
-  target_tags   = each.value.target_tags
-  allow         = each.value.allow
-  description   = each.value.description
+  depends_on         = [module.compute_subnetwork, module.compute_subnetwork_prd]
+  for_each           = var.firewalls
+  source             = "./modules/compute_firewall"
+  project_id         = var.project_id
+  name               = each.value.name
+  network            = each.value.network
+  direction          = each.value.direction
+  priority           = each.value.priority
+  source_ranges      = each.value.source_ranges
+  destination_ranges = each.value.destination_ranges
+  target_tags        = each.value.target_tags
+  allow              = each.value.allow
+  description        = each.value.description
 }
 
 # resource "google_compute_network" "network" {

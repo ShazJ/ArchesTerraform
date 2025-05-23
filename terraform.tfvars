@@ -65,20 +65,6 @@ firewalls = {
     }]
     description = "Encrypt egress"
   },
-  # k8s_fw_prd = {
-  #   name               = "k8s-fw"
-  #   network            = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/coral-network-prd"
-  #   direction          = "INGRESS"
-  #   priority           = 1000
-  #   destination_ranges = ["34.142.75.32"]
-  #   source_ranges      = ["0.0.0.0/0"]
-  #   target_tags        = ["gke-k8s-coral-prd-8669f3f6-node"]
-  #   description        = "{\"kubernetes.io/service-name\":\"istio-system/istio-gateway\", \"kubernetes.io/service-ip\":\"34.142.75.32\"}"
-  #   allow = [{
-  #     ports    = ["80", "443", "15021"]
-  #     protocol = "tcp"
-  #   }]
-  # },
   k8s_fw = {
     name               = "k8s-fw"
     network            = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/coral-network"
