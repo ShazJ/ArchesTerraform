@@ -1,12 +1,10 @@
 name: Terraform Deployment
 
-# on: sji!
-#     workflow_run:
-#       workflows: ["Security Scan"] sonar?!
-#       types:
-#         - completed
-
 on:
+  workflow_run:
+      workflows: ["Security Scan"]
+      types:
+        - completed
   workflow_dispatch:
   push:
     branches:
@@ -51,15 +49,20 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
+      - name: Get Terraform Version
+        uses: ./.github/actions/terraform/version
+
       - name: Terraform Quality Check
         uses: ./.github/actions/terraform/quality
+        with:
+          terraform_version: ${{ steps.tf-version.outputs.version }}
 
           # or here?
 
       - name: Terraform Build
         uses: ./.github/actions/terraform/build
         with:
-          terraform_version: 1.5.0
+          terraform_version: ${{ steps.tf-version.outputs.version }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account: ${{ secrets.TF_SA }}
           

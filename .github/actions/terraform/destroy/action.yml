@@ -4,8 +4,7 @@ description: Runs terraform init, validate, fmt, and plan
 inputs:
   terraform_version:
     description: Terraform version to use
-    required: false
-    default: "1.11.3" #sji todo
+    required: true
 
 runs:
   using: "composite"
