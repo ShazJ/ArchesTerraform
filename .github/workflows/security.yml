@@ -3,15 +3,13 @@ name: Security Scanning
 # TODO
 
 on:
-  workflow_dispatch:  # Manual trigger as currently there are many erors - sji todo!
-  # pull_request:
-  #   paths:
-  #     - '**.tf'
-  # push:
-  #   branches:
-  #     - main
-  #     - dev
-
+  push:
+    branches: 
+      - '**' 
+      #sji todo - turn on!
+  #schedule:
+  #  - cron: '0 2 * * *'  # Nightly at 2 AM UTC
+  
 permissions:
   contents: read
   security-events: write

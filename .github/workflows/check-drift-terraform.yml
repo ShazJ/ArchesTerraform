@@ -1,0 +1,58 @@
+name: Terraform Drift Check
+
+on:
+  push:
+    branches: [main] #sji todo - turn on!
+  #schedule:
+  #  - cron: '0 2 * * *'  # Nightly at 2 AM UTC
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  GOOGLE_CREDENTIALS: ${{ secrets.TF_SA }}
+
+jobs:
+  terraform-drift:
+    runs-on: ubuntu-latest
+    name: Terraform Drift Check
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate with GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.TF_SA }}'
+          export_environment_variables: true
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.5.0"
+
+      - name: Terraform Drift Check
+        uses: ./.github/actions/terraform/drify
+
+      - name: Terraform Init
+        run: terraform init -upgrade
+
+      - name: Terraform Plan (Check for Drift)
+        id: tf-plan
+        run: |
+          terraform plan -detailed-exitcode
+        continue-on-error: true
+
+      - name: Handle Drift Exit Code
+        run: |
+          if [[ "${{ steps.tf-plan.outcome }}" == "success" && "${{ steps.tf-plan.conclusion }}" == "success" ]]; then
+            echo "✅ No drift detected."
+          else
+            echo "⚠️ Drift detected or error occurred."
+            exit 1
+          fi
