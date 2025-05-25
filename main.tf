@@ -156,31 +156,6 @@ module "compute_router" {
   depends_on = [module.compute_network, module.compute_network_prd]
 }
 
-module "compute_resource_policy" {
-  source     = "./modules/compute_resource_policy"
-  project_id = var.project_id
-  name       = "coral-postgres"
-  region     = var.region
-  snapshot_schedule_policy = {
-    retention_policy = {
-      max_retention_days    = 14
-      on_source_disk_delete = "APPLY_RETENTION_POLICY"
-    }
-    schedule = {
-      daily_schedule = {
-        days_in_cycle = 1
-        start_time    = "19:00"
-      }
-    }
-    snapshot_properties = {
-      labels = {
-        purpose = "db"
-      }
-      storage_locations = ["europe-west2"]
-    }
-  }
-}
-
 module "kms_key_ring" {
   for_each         = var.kms_key_rings
   source           = "./modules/kms"
@@ -191,23 +166,6 @@ module "kms_key_ring" {
   labels           = each.value.labels
   service_accounts = var.service_accounts
 }
-
-# module "kms_crypto_key" {
-#   for_each   = var.crypto_keys
-#   source     = "./modules/kms"
-#   project_id = var.project_id
-#   name       = each.value.name
-#   key_ring   = module.kms_key_ring[each.key].key_ring_id
-#   rotation_period = each.value.rotation_period
-# }
-# module "kms_key_ring_iam" {
-#   for_each   = var.kms_key_ring_iam_bindings
-#   source     = "./modules/kms"
-#   project_id = var.project_id
-#   key_ring   = module.kms_key_ring[each.key].key_ring_id
-#   role       = each.value.role
-#   members    = each.value.members
-# }
 
 module "container_cluster" {
   depends_on = [module.compute_subnetwork, module.compute_subnetwork_prd, module.service_accounts]
@@ -337,7 +295,6 @@ module "container_cluster" {
     workload_config = {
       audit_mode = each.value.protect_config.workload_config.audit_mode
     }
-    # workload_vulnerability_mode = each.value.protect_config.workload_vulnerability_mode
   }
   release_channel = {
     channel = each.value.release_channel.channel
