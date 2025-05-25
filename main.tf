@@ -323,7 +323,6 @@ module "snapshot_policy" {
 }
 
 # Root module to manage GKE node pools for multiple environments
-# Root module to manage GKE node pools for multiple environments
 module "gke_node_pools" {
   source = "./modules/container_node_pool"
 
@@ -344,7 +343,7 @@ module "gke_node_pools" {
   node_pools = each.value.node_pools
 }
 
-# Enable the container API #do likewise with others sji todo
+# Enable the container API
 resource "google_project_service" "container_api" {
   service = "container.googleapis.com"
 }

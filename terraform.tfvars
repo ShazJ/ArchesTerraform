@@ -775,7 +775,7 @@ snapshot_policies = {
       }
       storage_locations = ["europe-west2"]
     }
-  } #, archive monthly? sji todo - see Phil
+  } #, archive monthly? sji todo - see Phil, maybe not needed also can we chuck anything older than a day into cold? or everything?
   # "coral-monthly" = {
   #   retention_policy = {
   #     max_retention_days    = 90
