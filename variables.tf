@@ -274,14 +274,6 @@ variable "clusters" {
   }))
 }
 
-variable "project_id" {
-  type = string
-}
-
-variable "region" {
-  type = string
-}
-
 variable "snapshot_policies" {
   description = "Map of snapshot policies"
   type = map(object({

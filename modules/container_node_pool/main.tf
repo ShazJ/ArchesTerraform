@@ -1,11 +1,11 @@
 resource "google_container_node_pool" "node_pool" {
-  name       = var.name
-  cluster    = var.cluster
-  location   = var.location
-  project    = var.project
-  node_count = var.node_count
-  node_locations = var.node_locations
-  version    = var.version
+  name               = var.name
+  cluster            = var.cluster
+  location           = var.location
+  project            = var.project
+  node_count         = var.node_count
+  node_locations     = var.node_locations
+  version            = var.version
   initial_node_count = var.initial_node_count
 
   autoscaling {

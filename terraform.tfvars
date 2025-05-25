@@ -342,13 +342,13 @@ kms_key_rings = {
 
 clusters = {
   prd = {
-    name               = "k8s-coral-prd"
-    location           = "europe-west2-a"
-    network            = "projects/coral-459111/global/networks/coral-network-prd"
-    subnetwork         = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork-prd"
-    node_version       = "1.31.7-gke.1265000"
-    min_master_version = "1.31.7-gke.1265000"
-    initial_node_count = 1
+    name                     = "k8s-coral-prd"
+    location                 = "europe-west2-a"
+    network                  = "projects/coral-459111/global/networks/coral-network-prd"
+    subnetwork               = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork-prd"
+    node_version             = "1.31.7-gke.1265000"
+    min_master_version       = "1.31.7-gke.1265000"
+    initial_node_count       = 1
     remove_default_node_pool = true
     node_config = {
       disk_size_gb    = 50
@@ -410,7 +410,7 @@ clusters = {
       istio_config = {
         disabled = true
         auth     = "AUTH_MUTUAL_TLS"
-      } 
+      }
     }
     cluster_autoscaling = {
       autoscaling_profile = "BALANCED"
@@ -686,7 +686,7 @@ clusters = {
 }
 
 snapshot_policies = {
-  name    = "corel-postgres"
+  name = "corel-postgres"
   daily = {
     retention_policy = {
       max_retention_days    = 14

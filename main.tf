@@ -356,12 +356,12 @@ module "container_cluster" {
 }
 
 module "snapshot_policy" {
-  source = "./modules/compute_resource_policy"
+  source   = "./modules/compute_resource_policy"
   for_each = var.snapshot_policies
 
-  project_id = var.project_id
-  region     = var.region
-  name       = each.key
+  project_id               = var.project_id
+  region                   = var.region
+  name                     = each.key
   snapshot_schedule_policy = each.value
 }
 
