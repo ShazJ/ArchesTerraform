@@ -323,6 +323,7 @@ module "snapshot_policy" {
 }
 
 # Root module to manage GKE node pools for multiple environments
+# Root module to manage GKE node pools for multiple environments
 module "gke_node_pools" {
   source = "./modules/container_node_pool"
 
@@ -340,45 +341,10 @@ module "gke_node_pools" {
 
   depends_on_container_api = [google_project_service.container_api]
 
-  node_pools = {
-    default = {
-      machine_type       = each.key == "prd" ? "e2-standard-8" : "e2-standard-8"
-      disk_size_gb       = 50
-      disk_type          = each.key == "prd" ? "pd-balanced" : "pd-standard"
-      image_type         = "COS_CONTAINERD"
-      auto_repair        = true
-      auto_upgrade       = true
-      min_node_count     = 1
-      max_node_count     = 10
-      initial_node_count = 1
-      max_pods_per_node  = 8
-      location_policy    = "ANY"
-      max_surge          = 1
-      max_unavailable    = 0
-      preemptible        = each.key == "stg" ? true : false
-      spot               = each.key == "stg" ? true : false
-      labels = {
-        "TF_used_by"  = each.key == "prd" ? "k8s-coral-prd" : "k8s-coral-stg"
-        "TF_used_for" = "gke"
-      }
-      tags = each.key == "prd" ? ["gke-k8s-coral-prd-np-tf-cejctx"] : ["gke-k8s-coral-stg-np-tf-cejctx"]
-      metadata = {
-        "disable-legacy-endpoints" = "true"
-      }
-      node_taints = []
-      gpu_type    = null
-      shielded_instance_config = {
-        enable_secure_boot          = false
-        enable_integrity_monitoring = true
-      }
-      workload_metadata_config = {
-        mode = "GKE_METADATA"
-      }
-    }
-  }
+  node_pools = each.value.node_pools
 }
 
-# Enable the container API
+# Enable the container API #do likewise with others sji todo
 resource "google_project_service" "container_api" {
   service = "container.googleapis.com"
 }

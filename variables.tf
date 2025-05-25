@@ -271,6 +271,42 @@ variable "clusters" {
     workload_identity_config = object({
       workload_pool = string
     })
+    node_pools = map(object({
+      machine_type       = string
+      disk_size_gb       = number
+      disk_type          = string
+      image_type         = string
+      auto_repair        = bool
+      auto_upgrade       = bool
+      min_node_count     = number
+      max_node_count     = number
+      initial_node_count = number
+      max_pods_per_node  = number
+      location_policy    = string
+      max_surge          = number
+      max_unavailable    = number
+      preemptible        = bool
+      spot               = bool
+      labels             = map(string)
+      tags               = list(string)
+      metadata           = map(string)
+      node_taints = list(object({
+        key    = string
+        value  = string
+        effect = string
+      }))
+      gpu_type = object({
+        type  = string
+        count = number
+      })
+      shielded_instance_config = object({
+        enable_secure_boot          = bool
+        enable_integrity_monitoring = bool
+      })
+      workload_metadata_config = object({
+        mode = string
+      })
+    }))
   }))
 }
 

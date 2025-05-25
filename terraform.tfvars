@@ -518,6 +518,42 @@ clusters = {
     workload_identity_config = {
       workload_pool = "coral-459111.svc.id.goog"
     }
+    node_pools = {
+      prd = {
+        machine_type       = "e2-standard-8"
+        disk_size_gb       = 50
+        disk_type          = "pd-balanced"
+        image_type         = "COS_CONTAINERD"
+        auto_repair        = true
+        auto_upgrade       = true
+        min_node_count     = 1
+        max_node_count     = 10
+        initial_node_count = 1
+        max_pods_per_node  = 8
+        location_policy    = "ANY"
+        max_surge          = 1
+        max_unavailable    = 0
+        preemptible        = false
+        spot               = false
+        labels = {
+          "TF_used_by"  = "k8s-coral-prd"
+          "TF_used_for" = "gke"
+        }
+        tags = ["gke-k8s-coral-prd-np-tf-cejctx"]
+        metadata = {
+          "disable-legacy-endpoints" = "true"
+        }
+        node_taints = []
+        gpu_type    = null
+        shielded_instance_config = {
+          enable_secure_boot          = false
+          enable_integrity_monitoring = true
+        }
+        workload_metadata_config = {
+          mode = "GKE_METADATA"
+        }
+      }
+    }
   },
   stg = {
     name               = "k8s-coral-stg"
@@ -681,6 +717,42 @@ clusters = {
     }
     workload_identity_config = {
       workload_pool = "coral-459111.svc.id.goog"
+    }
+  }
+  node_pools = {
+    stg = {
+      machine_type       = "e2-standard-8"
+      disk_size_gb       = 50
+      disk_type          = "pd-standard"
+      image_type         = "COS_CONTAINERD"
+      auto_repair        = true
+      auto_upgrade       = true
+      min_node_count     = 1
+      max_node_count     = 10
+      initial_node_count = 1
+      max_pods_per_node  = 8
+      location_policy    = "ANY"
+      max_surge          = 1
+      max_unavailable    = 0
+      preemptible        = true
+      spot               = true
+      labels = {
+        "TF_used_by"  = "k8s-coral-stg"
+        "TF_used_for" = "gke"
+      }
+      tags = ["gke-k8s-coral-stg-np-tf-cejctx"]
+      metadata = {
+        "disable-legacy-endpoints" = "true"
+      }
+      node_taints = []
+      gpu_type    = null
+      shielded_instance_config = {
+        enable_secure_boot          = false
+        enable_integrity_monitoring = true
+      }
+      workload_metadata_config = {
+        mode = "GKE_METADATA"
+      }
     }
   }
 }
