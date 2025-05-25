@@ -579,7 +579,7 @@ clusters = {
       # istio_config = {
       #   disabled = true
       #   auth     = "AUTH_MUTUAL_TLS"
-      }
+      # }
     }
     cluster_autoscaling = {
       autoscaling_profile = "BALANCED"
