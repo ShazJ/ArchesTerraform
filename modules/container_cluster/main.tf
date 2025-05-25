@@ -1,18 +1,19 @@
 resource "google_container_cluster" "cluster" {
-  provider                  = google-beta
-  project                   = var.project_id
-  name                      = var.name
-  location                  = var.location
-  network                   = var.network
-  subnetwork                = var.subnetwork
-  initial_node_count        = var.initial_node_count
-  description               = var.description
-  enable_shielded_nodes     = var.enable_shielded_nodes
-  default_max_pods_per_node = var.default_max_pods_per_node
-  networking_mode           = var.networking_mode
-  min_master_version        = var.min_master_version
-  node_version              = var.node_version
-  deletion_protection       = false #sji - change!!!! true
+  provider = google-beta
+
+  name                     = var.name
+  location                 = var.location
+  network                  = var.network
+  subnetwork               = var.subnetwork
+  min_master_version       = var.min_master_version
+  remove_default_node_pool = var.remove_default_node_pool
+  initial_node_count       = var.initial_node_count
+
+  # Explicitly disable default node pool creation
+  node_pool {
+    name       = "default-pool"
+    node_count = 0
+  }
 
   node_config {
     disk_size_gb    = var.node_config.disk_size_gb
@@ -44,11 +45,8 @@ resource "google_container_cluster" "cluster" {
       disabled = var.ip_allocation_policy.pod_cidr_overprovision_config.disabled
     }
 
-    dynamic "additional_pod_ranges_config" {
-      for_each = var.ip_allocation_policy.additional_pod_ranges_config != null && length(var.ip_allocation_policy.additional_pod_ranges_config.pod_range_names) > 0 ? [var.ip_allocation_policy.additional_pod_ranges_config] : []
-      content {
-        pod_range_names = additional_pod_ranges_config.value.pod_range_names
-      }
+    additional_pod_ranges_config {
+      pod_range_names = var.ip_allocation_policy.additional_pod_ranges_config.pod_range_names
     }
   }
 
@@ -56,22 +54,27 @@ resource "google_container_cluster" "cluster" {
     dns_cache_config {
       enabled = var.addons_config.dns_cache_config.enabled
     }
+
     gce_persistent_disk_csi_driver_config {
       enabled = var.addons_config.gce_persistent_disk_csi_driver_config.enabled
     }
+
     horizontal_pod_autoscaling {
       disabled = var.addons_config.horizontal_pod_autoscaling.disabled
     }
+
     http_load_balancing {
       disabled = var.addons_config.http_load_balancing.disabled
     }
+
     network_policy_config {
       disabled = var.addons_config.network_policy_config.disabled
     }
-    # istio_config {
-    #   disabled = var.addons_config.istio_config.disabled
-    #   auth     = var.addons_config.istio_config.auth
-    # }
+
+    istio_config {
+      disabled = var.addons_config.istio_config.disabled
+      auth     = var.addons_config.istio_config.auth
+    }
   }
 
   cluster_autoscaling {
@@ -82,18 +85,23 @@ resource "google_container_cluster" "cluster" {
     type = var.cluster_telemetry.type
   }
 
-  # database_encryption {
-  #   state    = var.database_encryption.state
-  #   key_name = var.database_encryption.key_name
-  # }
+  database_encryption {
+    state    = var.database_encryption.state
+    key_name = var.database_encryption.key_name
+  }
+
+  default_max_pods_per_node = var.default_max_pods_per_node
 
   default_snat_status {
     disabled = var.default_snat_status.disabled
   }
 
-  # logging_config {
-  #   enable_components = var.logging_config.enable_components
-  # }
+  description           = var.description
+  enable_shielded_nodes = var.enable_shielded_nodes
+
+  logging_config {
+    enable_components = var.logging_config.enable_components
+  }
 
   maintenance_policy {
     recurring_window {
@@ -119,21 +127,21 @@ resource "google_container_cluster" "cluster" {
     }
   }
 
-  # monitoring_config {
-  #   dynamic "advanced_datapath_observability_config" {
-  #     for_each = var.monitoring_config.advanced_datapath_observability_config != null ? [var.monitoring_config.advanced_datapath_observability_config] : []
-  #     content {
-  #       enable_metrics = advanced_datapath_observability_config.value.enable_metrics
-  #       enable_relay   = advanced_datapath_observability_config.value.enable_relay
-  #     }
-  #   }
-  #   enable_components = var.monitoring_config.enable_components
-  # }
+  monitoring_config {
+    advanced_datapath_observability_config {
+      enable_metrics = var.monitoring_config.advanced_datapath_observability_config.enable_metrics
+      enable_relay   = var.monitoring_config.advanced_datapath_observability_config.enable_relay
+    }
+
+    enable_components = var.monitoring_config.enable_components
+  }
 
   network_policy {
     enabled  = var.network_policy.enabled
     provider = var.network_policy.provider
   }
+
+  networking_mode = var.networking_mode
 
   node_pool_defaults {
     node_config_defaults {
@@ -154,6 +162,7 @@ resource "google_container_cluster" "cluster" {
   private_cluster_config {
     enable_private_nodes   = var.private_cluster_config.enable_private_nodes
     master_ipv4_cidr_block = var.private_cluster_config.master_ipv4_cidr_block
+
     master_global_access_config {
       enabled = var.private_cluster_config.master_global_access_config.enabled
     }
@@ -163,7 +172,6 @@ resource "google_container_cluster" "cluster" {
     workload_config {
       audit_mode = var.protect_config.workload_config.audit_mode
     }
-    # workload_vulnerability_mode = var.protect_config.workload_vulnerability_mode
   }
 
   release_channel {
@@ -183,10 +191,9 @@ resource "google_container_cluster" "cluster" {
     enabled = var.vertical_pod_autoscaling.enabled
   }
 
-  dynamic "workload_identity_config" {
-    for_each = var.workload_identity_config != null ? [var.workload_identity_config] : []
-    content {
-      workload_pool = workload_identity_config.value.workload_pool
-    }
+  workload_identity_config {
+    workload_pool = var.workload_identity_config.workload_pool
   }
+
+  depends_on = [var.depends_on_container_api]
 }

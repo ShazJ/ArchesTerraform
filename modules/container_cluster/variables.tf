@@ -1,30 +1,40 @@
-variable "project_id" {
-  description = "The project ID to deploy resources"
-  type        = string
-}
-
 variable "name" {
-  description = "The name of the GKE cluster"
+  description = "Name of the GKE cluster"
   type        = string
 }
 
 variable "location" {
-  description = "The location (zone or region) for the GKE cluster"
+  description = "GKE cluster location (zone or region)"
   type        = string
 }
 
 variable "network" {
-  description = "The VPC network to deploy the GKE cluster"
+  description = "VPC network for the cluster"
   type        = string
 }
 
 variable "subnetwork" {
-  description = "The subnetwork to deploy the GKE cluster"
+  description = "Subnetwork for the cluster"
   type        = string
 }
 
+variable "min_master_version" {
+  description = "Minimum master version for the cluster"
+  type        = string
+}
+
+variable "remove_default_node_pool" {
+  description = "Whether to remove the default node pool"
+  type        = bool
+}
+
+variable "initial_node_count" {
+  description = "Initial node count for the default node pool"
+  type        = number
+}
+
 variable "node_config" {
-  description = "Node configuration for the GKE cluster"
+  description = "Node configuration for the cluster"
   type = object({
     disk_size_gb    = number
     disk_type       = string
@@ -34,19 +44,19 @@ variable "node_config" {
     metadata        = map(string)
     oauth_scopes    = list(string)
     service_account = string
-    labels          = map(string)
-    tags            = list(string)
     shielded_instance_config = object({
       enable_integrity_monitoring = bool
     })
     workload_metadata_config = object({
       mode = string
     })
+    labels = map(string)
+    tags   = list(string)
   })
 }
 
 variable "ip_allocation_policy" {
-  description = "IP allocation policy for the GKE cluster"
+  description = "IP allocation policy for the cluster"
   type = object({
     cluster_secondary_range_name  = string
     services_secondary_range_name = string
@@ -54,16 +64,14 @@ variable "ip_allocation_policy" {
     pod_cidr_overprovision_config = object({
       disabled = bool
     })
-    cluster_ipv4_cidr_block  = optional(string)
-    services_ipv4_cidr_block = optional(string)
-    additional_pod_ranges_config = optional(object({
+    additional_pod_ranges_config = object({
       pod_range_names = list(string)
-    }))
+    })
   })
 }
 
 variable "addons_config" {
-  description = "Addons configuration for the GKE cluster"
+  description = "Addons configuration for the cluster"
   type = object({
     dns_cache_config = object({
       enabled = bool
@@ -80,10 +88,10 @@ variable "addons_config" {
     network_policy_config = object({
       disabled = bool
     })
-    # istio_config = object({
-    #   disabled = bool
-    #   auth     = string
-    # })
+    istio_config = object({
+      disabled = bool
+      auth     = string
+    })
   })
 }
 
@@ -102,6 +110,7 @@ variable "cluster_telemetry" {
 }
 
 variable "database_encryption" {
+  description = "Database encryption configuration"
   type = object({
     state    = string
     key_name = string
@@ -109,7 +118,7 @@ variable "database_encryption" {
 }
 
 variable "default_max_pods_per_node" {
-  description = "Default maximum pods per node"
+  description = "Default max pods per node"
   type        = number
 }
 
@@ -121,18 +130,13 @@ variable "default_snat_status" {
 }
 
 variable "description" {
-  description = "Description of the GKE cluster"
+  description = "Description of the cluster"
   type        = string
 }
 
 variable "enable_shielded_nodes" {
   description = "Enable shielded nodes"
   type        = bool
-}
-
-variable "initial_node_count" {
-  description = "Initial node count for the GKE cluster"
-  type        = number
 }
 
 variable "logging_config" {
@@ -143,7 +147,7 @@ variable "logging_config" {
 }
 
 variable "maintenance_policy" {
-  description = "Maintenance policy configuration"
+  description = "Maintenance policy"
   type = object({
     recurring_window = object({
       end_time   = string
@@ -172,11 +176,6 @@ variable "master_authorized_networks_config" {
   })
 }
 
-variable "min_master_version" {
-  description = "Min master node version for the GKE cluster"
-  type        = string
-}
-
 variable "monitoring_config" {
   description = "Monitoring configuration"
   type = object({
@@ -197,22 +196,17 @@ variable "network_policy" {
 }
 
 variable "networking_mode" {
-  description = "Networking mode for the GKE cluster"
+  description = "Networking mode for the cluster"
   type        = string
 }
 
 variable "node_pool_defaults" {
-  description = "Node pool defaults configuration"
+  description = "Node pool defaults"
   type = object({
     node_config_defaults = object({
       logging_variant = string
     })
   })
-}
-
-variable "node_version" {
-  description = "Node version for the GKE cluster"
-  type        = string
 }
 
 variable "notification_config" {
@@ -236,7 +230,6 @@ variable "private_cluster_config" {
   type = object({
     enable_private_nodes   = bool
     master_ipv4_cidr_block = string
-
     master_global_access_config = object({
       enabled = bool
     })
@@ -249,7 +242,6 @@ variable "protect_config" {
     workload_config = object({
       audit_mode = string
     })
-    # workload_vulnerability_mode = string
   })
 }
 
@@ -287,5 +279,10 @@ variable "workload_identity_config" {
   type = object({
     workload_pool = string
   })
-  default = null
+}
+
+variable "depends_on_container_api" {
+  description = "Dependency on the container API enablement"
+  type        = any
+  default     = []
 }

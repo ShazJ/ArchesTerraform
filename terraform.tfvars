@@ -353,7 +353,7 @@ clusters = {
       disk_type       = "pd-balanced"
       image_type      = "COS_CONTAINERD"
       logging_variant = "DEFAULT"
-      machine_type    = "e2-standard-8"
+      machine_type    = "e2-standard-4"
       metadata = {
         disable-legacy-endpoints = "true"
       }
@@ -516,7 +516,7 @@ clusters = {
     }
     node_pools = {
       prd = {
-        machine_type       = "e2-standard-8"
+        machine_type       = "e2-standard-4"
         disk_size_gb       = 50
         disk_type          = "pd-balanced"
         image_type         = "COS_CONTAINERD"
@@ -565,7 +565,7 @@ clusters = {
       disk_type       = "pd-standard"
       image_type      = "COS_CONTAINERD"
       logging_variant = "DEFAULT"
-      machine_type    = "e2-standard-8"
+      machine_type    = "e2-standard-4"
       metadata = {
         disable-legacy-endpoints = "true"
       }
@@ -717,14 +717,14 @@ clusters = {
     }
     node_pools = {
       stg = {
-        machine_type       = "e2-standard-8"
+        machine_type       = "e2-standard-4"
         disk_size_gb       = 50
         disk_type          = "pd-standard"
         image_type         = "COS_CONTAINERD"
         auto_repair        = true
         auto_upgrade       = true
         min_node_count     = 1
-        max_node_count     = 8
+        max_node_count     = 3
         initial_node_count = 1
         max_pods_per_node  = 8
         location_policy    = "ANY"

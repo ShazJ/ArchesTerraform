@@ -167,162 +167,50 @@ module "kms_key_ring" {
   service_accounts = var.service_accounts
 }
 
+# Root module to manage GKE clusters and node pools for multiple environments
 module "container_cluster" {
-  depends_on = [module.compute_subnetwork, module.compute_subnetwork_prd, module.service_accounts]
-  for_each   = var.clusters
-  source     = "./modules/container_cluster"
-  project_id = var.project_id
-  name       = each.value.name
-  location   = each.value.location
-  network    = each.value.network
-  subnetwork = each.value.subnetwork
-  node_config = {
-    disk_size_gb    = each.value.node_config.disk_size_gb
-    disk_type       = each.value.node_config.disk_type
-    image_type      = each.value.node_config.image_type
-    logging_variant = each.value.node_config.logging_variant
-    machine_type    = each.value.node_config.machine_type
-    metadata        = each.value.node_config.metadata
-    oauth_scopes    = each.value.node_config.oauth_scopes
-    service_account = each.value.node_config.service_account
-    shielded_instance_config = {
-      enable_integrity_monitoring = each.value.node_config.shielded_instance_config.enable_integrity_monitoring
-    }
-    labels                   = each.value.node_config.labels
-    tags                     = each.value.node_config.tags
-    workload_metadata_config = each.value.node_config.workload_metadata_config
-  }
-  ip_allocation_policy = {
-    cluster_secondary_range_name  = each.value.ip_allocation_policy.cluster_secondary_range_name
-    services_secondary_range_name = each.value.ip_allocation_policy.services_secondary_range_name
-    stack_type                    = each.value.ip_allocation_policy.stack_type
-    pod_cidr_overprovision_config = {
-      disabled = each.value.ip_allocation_policy.pod_cidr_overprovision_config.disabled
-    }
-    additional_pod_ranges_config = each.value.ip_allocation_policy.additional_pod_ranges_config
-  }
-  addons_config = {
-    dns_cache_config = {
-      enabled = each.value.addons_config.dns_cache_config.enabled
-    }
-    gce_persistent_disk_csi_driver_config = {
-      enabled = each.value.addons_config.gce_persistent_disk_csi_driver_config.enabled
-    }
-    horizontal_pod_autoscaling = {
-      disabled = each.value.addons_config.horizontal_pod_autoscaling.disabled
-    }
-    http_load_balancing = {
-      disabled = each.value.addons_config.http_load_balancing.disabled
-    }
-    network_policy_config = {
-      disabled = each.value.addons_config.network_policy_config.disabled
-    }
-    # istio_config = {
-    #   disabled = each.value.addons_config.istio_config.disabled
-    #   auth     = each.value.addons_config.istio_config.auth
-    # }
-  }
-  cluster_autoscaling = {
-    autoscaling_profile = each.value.cluster_autoscaling.autoscaling_profile
-  }
-  cluster_telemetry = {
-    type = each.value.cluster_telemetry.type
-  }
-  database_encryption = {
-    state    = each.value.database_encryption.state
-    key_name = each.value.database_encryption.key_name
-  }
-  default_max_pods_per_node = each.value.default_max_pods_per_node
-  default_snat_status = {
-    disabled = each.value.default_snat_status.disabled
-  }
-  description           = each.value.description
-  enable_shielded_nodes = each.value.enable_shielded_nodes
-  initial_node_count    = each.value.initial_node_count
-  logging_config = {
-    enable_components = each.value.logging_config.enable_components
-  }
-  maintenance_policy = {
-    recurring_window = {
-      end_time   = each.value.maintenance_policy.recurring_window.end_time
-      recurrence = each.value.maintenance_policy.recurring_window.recurrence
-      start_time = each.value.maintenance_policy.recurring_window.start_time
-    }
-  }
-  master_auth = {
-    client_certificate_config = {
-      issue_client_certificate = each.value.master_auth.client_certificate_config.issue_client_certificate
-    }
-  }
-  master_authorized_networks_config = {
-    cidr_blocks = each.value.master_authorized_networks_config.cidr_blocks
-  }
-  monitoring_config = {
-    advanced_datapath_observability_config = {
-      enable_metrics = each.value.monitoring_config.advanced_datapath_observability_config.enable_metrics
-      enable_relay   = each.value.monitoring_config.advanced_datapath_observability_config.enable_relay
-    }
-    enable_components = each.value.monitoring_config.enable_components
-  }
-  network_policy = {
-    enabled  = each.value.network_policy.enabled
-    provider = each.value.network_policy.provider
-  }
-  networking_mode = each.value.networking_mode
-  node_pool_defaults = {
-    node_config_defaults = {
-      logging_variant = each.value.node_pool_defaults.node_config_defaults.logging_variant
-    }
-  }
-  node_version       = each.value.node_version
-  min_master_version = each.value.min_master_version
-  notification_config = {
-    pubsub = {
-      enabled = each.value.notification_config.pubsub.enabled
-    }
-  }
-  pod_security_policy_config = {
-    enabled = each.value.pod_security_policy_config.enabled
-  }
-  private_cluster_config = {
-    enable_private_nodes   = each.value.private_cluster_config.enable_private_nodes
-    master_ipv4_cidr_block = each.value.private_cluster_config.master_ipv4_cidr_block
-    master_global_access_config = {
-      enabled = each.value.private_cluster_config.master_global_access_config.enabled
-    }
-  }
-  protect_config = {
-    workload_config = {
-      audit_mode = each.value.protect_config.workload_config.audit_mode
-    }
-  }
-  release_channel = {
-    channel = each.value.release_channel.channel
-  }
-  security_posture_config = {
-    mode               = each.value.security_posture_config.mode
-    vulnerability_mode = each.value.security_posture_config.vulnerability_mode
-  }
-  service_external_ips_config = {
-    enabled = each.value.service_external_ips_config.enabled
-  }
-  vertical_pod_autoscaling = {
-    enabled = each.value.vertical_pod_autoscaling.enabled
-  }
-  workload_identity_config = each.value.workload_identity_config
+  source = "./modules/container_cluster"
+
+  for_each = var.clusters
+
+  name                              = each.value.name
+  location                          = each.value.location
+  network                           = each.value.network
+  subnetwork                        = each.value.subnetwork
+  min_master_version                = each.value.min_master_version
+  remove_default_node_pool          = each.value.remove_default_node_pool
+  initial_node_count                = each.value.initial_node_count
+  node_config                       = each.value.node_config
+  ip_allocation_policy              = each.value.ip_allocation_policy
+  addons_config                     = each.value.addons_config
+  cluster_autoscaling               = each.value.cluster_autoscaling
+  cluster_telemetry                 = each.value.cluster_telemetry
+  database_encryption               = each.value.database_encryption
+  default_max_pods_per_node         = each.value.default_max_pods_per_node
+  default_snat_status               = each.value.default_snat_status
+  description                       = each.value.description
+  enable_shielded_nodes             = each.value.enable_shielded_nodes
+  logging_config                    = each.value.logging_config
+  maintenance_policy                = each.value.maintenance_policy
+  master_auth                       = each.value.master_auth
+  master_authorized_networks_config = each.value.master_authorized_networks_config
+  monitoring_config                 = each.value.monitoring_config
+  network_policy                    = each.value.network_policy
+  networking_mode                   = each.value.networking_mode
+  node_pool_defaults                = each.value.node_pool_defaults
+  notification_config               = each.value.notification_config
+  pod_security_policy_config        = each.value.pod_security_policy_config
+  private_cluster_config            = each.value.private_cluster_config
+  protect_config                    = each.value.protect_config
+  release_channel                   = each.value.release_channel
+  security_posture_config           = each.value.security_posture_config
+  service_external_ips_config       = each.value.service_external_ips_config
+  vertical_pod_autoscaling          = each.value.vertical_pod_autoscaling
+  workload_identity_config          = each.value.workload_identity_config
+
+  depends_on_container_api = [google_project_service.container_api]
 }
 
-module "snapshot_policy" {
-  source   = "./modules/compute_resource_policy"
-  for_each = var.snapshot_policies
-
-  project_id               = var.project_id
-  region                   = var.region
-  name                     = each.key
-  snapshot_schedule_policy = each.value
-}
-
-# Root module to manage GKE node pools for multiple environments
 module "gke_node_pools" {
   source = "./modules/container_node_pool"
 
@@ -338,7 +226,7 @@ module "gke_node_pools" {
   subnetwork           = each.value.subnetwork
   default_network_tags = ["gke-cluster"]
 
-  depends_on_container_api = [google_project_service.container_api]
+  depends_on_container_resources = [module.container_cluster[each.key]]
 
   node_pools = each.value.node_pools
 }
@@ -346,4 +234,14 @@ module "gke_node_pools" {
 # Enable the container API
 resource "google_project_service" "container_api" {
   service = "container.googleapis.com"
+}
+
+module "snapshot_policy" {
+  source   = "./modules/compute_resource_policy"
+  for_each = var.snapshot_policies
+
+  project_id               = var.project_id
+  region                   = var.region
+  name                     = each.key
+  snapshot_schedule_policy = each.value
 }
