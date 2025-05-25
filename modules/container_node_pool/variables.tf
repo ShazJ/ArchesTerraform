@@ -1,93 +1,91 @@
-variable "project" {
+variable "cluster_name" {
+  description = "Name of the GKE cluster"
   type        = string
-  description = "The GCP project ID."
-}
-
-variable "cluster" {
-  type        = string
-  description = "The name of the GKE cluster."
 }
 
 variable "location" {
+  description = "GKE cluster location (zone or region)"
   type        = string
-  description = "The location (zone or region) for the node pool."
 }
 
-variable "name" {
+variable "node_version" {
+  description = "Kubernetes version for the node pool"
   type        = string
-  description = "The name of the node pool."
 }
 
-variable "version" {
+variable "service_account" {
+  description = "Service account for the node pool"
   type        = string
-  description = "The Kubernetes version for nodes in the pool."
 }
 
-variable "initial_node_count" {
-  type        = number
-  description = "Initial number of nodes for the node pool."
-}
-
-variable "node_count" {
-  type        = number
-  description = "Desired number of nodes in the node pool."
-}
-
-variable "node_locations" {
+variable "oauth_scopes" {
+  description = "OAuth scopes for the node pool"
   type        = list(string)
-  description = "List of zones where the node pool will be located."
 }
 
-variable "autoscaling" {
-  description = "Autoscaling settings for the node pool."
-  type = object({
-    location_policy      = string
-    total_max_node_count = number
-  })
+variable "workload_pool" {
+  description = "Workload identity pool for the node pool"
+  type        = string
 }
 
-variable "management" {
-  description = "Node management settings."
-  type = object({
-    auto_repair  = bool
-    auto_upgrade = bool
-  })
+variable "network" {
+  description = "VPC network for the node pool"
+  type        = string
 }
 
-variable "network_config" {
-  description = "Network configuration for the node pool."
-  type = object({
-    enable_private_nodes = bool
-    pod_ipv4_cidr_block  = string
-    pod_range            = string
-  })
+variable "subnetwork" {
+  description = "Subnetwork for the node pool"
+  type        = string
 }
 
-variable "node_config" {
-  description = "Node configuration block for the node pool."
-  type = object({
-    advanced_machine_features = object({
-      threads_per_core = number
+variable "default_network_tags" {
+  description = "Default network tags to apply to all node pools"
+  type        = list(string)
+  default     = []
+}
+
+variable "depends_on_container_api" {
+  description = "Dependency on the container API enablement"
+  type        = any
+  default     = []
+}
+
+variable "node_pools" {
+  description = "Map of node pool configurations"
+  type = map(object({
+    machine_type      = string
+    disk_size_gb     = number
+    disk_type        = string
+    image_type       = string
+    auto_repair      = bool
+    auto_upgrade     = bool
+    min_node_count   = number
+    max_node_count   = number
+    initial_node_count = number
+    max_pods_per_node = number
+    location_policy   = string
+    max_surge        = number
+    max_unavailable  = number
+    preemptible      = bool
+    spot             = bool
+    labels           = map(string)
+    tags             = list(string)
+    metadata         = map(string)
+    node_taints      = list(object({
+      key    = string
+      value  = string
+      effect = string
+    }))
+    gpu_type = object({
+      type  = string
+      count = number
     })
-    disk_size_gb    = number
-    disk_type       = string
-    image_type      = string
-    logging_variant = string
-    machine_type    = string
-    metadata        = map(string)
-    oauth_scopes    = list(string)
-    service_account = string
     shielded_instance_config = object({
+      enable_secure_boot          = bool
       enable_integrity_monitoring = bool
     })
-    spot = bool
-  })
-}
-
-variable "upgrade_settings" {
-  description = "Settings controlling node upgrades."
-  type = object({
-    max_surge = number
-    strategy  = string
-  })
+    workload_metadata_config = object({
+      mode = string
+    })
+  }))
 }

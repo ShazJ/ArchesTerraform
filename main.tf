@@ -322,21 +322,63 @@ module "snapshot_policy" {
   snapshot_schedule_policy = each.value
 }
 
-# module "container_node_pool" {
-#   source = "./modules/container_node_pool"
+# Root module to manage GKE node pools for multiple environments
+module "gke_node_pools" {
+  source = "./modules/container_node_pool"
 
-#   project         = var.project
-#   cluster         = var.cluster
-#   location        = var.location
-#   name            = var.name
-#   node_count      = var.node_count
-#   node_locations  = var.node_locations
-#   version         = var.version
-#   initial_node_count = var.initial_node_count
+  for_each = var.clusters
 
-#   autoscaling         = var.autoscaling
-#   management          = var.management
-#   network_config      = var.network_config
-#   node_config         = var.node_config
-#   upgrade_settings    = var.upgrade_settings
-# }
+  cluster_name    = each.value.name
+  location        = each.value.location
+  node_version    = each.value.node_version
+  service_account = each.value.node_config.service_account
+  oauth_scopes    = each.value.node_config.oauth_scopes
+  workload_pool   = each.value.workload_identity_config.workload_pool
+  network         = each.value.network
+  subnetwork      = each.value.subnetwork
+  default_network_tags = ["gke-cluster"]
+
+  depends_on_container_api = [google_project_service.container_api]
+
+  node_pools = {
+    default = {
+      machine_type      = each.key == "prd" ? "e2-standard-8" : "e2-standard-8"
+      disk_size_gb     = 50
+      disk_type        = each.key == "prd" ? "pd-balanced" : "pd-standard"
+      image_type       = "COS_CONTAINERD"
+      auto_repair      = true
+      auto_upgrade     = true
+      min_node_count   = 1
+      max_node_count   = 10
+      initial_node_count = 1
+      max_pods_per_node = 8
+      location_policy   = "ANY"
+      max_surge        = 1
+      max_unavailable  = 0
+      preemptible      = each.key == "stg" ? true : false
+      spot             = each.key == "stg" ? true : false
+      labels = {
+        "TF_used_by"  = each.key == "prd" ? "k8s-coral-prd" : "k8s-coral-stg"
+        "TF_used_for" = "gke"
+      }
+      tags = each.key == "prd" ? ["gke-k8s-coral-prd-np-tf-cejctx"] : ["gke-k8s-coral-stg-np-tf-cejctx"]
+      metadata = {
+        "disable-legacy-endpoints" = "true"
+      }
+      node_taints = []
+      gpu_type = null
+      shielded_instance_config = {
+        enable_secure_boot          = false
+        enable_integrity_monitoring = true
+      }
+      workload_metadata_config = {
+        mode = "GKE_METADATA"
+      }
+    }
+  }
+}
+
+# Enable the container API
+resource "google_project_service" "container_api" {
+  service = "container.googleapis.com"
+}
