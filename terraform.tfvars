@@ -23,20 +23,20 @@ repositories = {
 }
 
 addresses = {
-  istio_prd = {
-    name         = "istio-default-ingress-coral-prd"
-    address      = "34.142.75.32"
-    address_type = "EXTERNAL"
-    network_tier = "PREMIUM"
-    purpose      = "" #"EXTERNAL"
-  },
-  istio_stg = {
-    name         = "istio-default-ingress-coral-stg"
-    address      = "34.89.106.198"
-    address_type = "EXTERNAL"
-    network_tier = "PREMIUM"
-    purpose      = "" #"EXTERNAL"
-  },
+  # istio_prd = {
+  #   name         = "istio-default-ingress-coral-prd"
+  #   address      = "34.142.75.32"
+  #   address_type = "EXTERNAL"
+  #   network_tier = "PREMIUM"
+  #   purpose      = "" #"EXTERNAL"
+  # },
+  # istio_stg = {
+  #   name         = "istio-default-ingress-coral-stg"
+  #   address      = "34.89.106.198"
+  #   address_type = "EXTERNAL"
+  #   network_tier = "PREMIUM"
+  #   purpose      = "" #"EXTERNAL"
+  # },
 }
 
 firewalls = {
@@ -524,8 +524,8 @@ clusters = {
     location           = "europe-west2-a"
     network            = "projects/coral-459111/global/networks/coral-network"
     subnetwork         = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork"
-    node_version       = "1.31.6-gke.1064001"
-    min_master_version = "1.31.6-gke.1064001"
+    node_version       = "1.31.7-gke.1265000"
+    min_master_version = "1.31.7-gke.1265000"
     node_config = {
       disk_size_gb    = 50
       disk_type       = "pd-standard"
@@ -576,9 +576,9 @@ clusters = {
       network_policy_config = {
         disabled = true
       }
-      istio_config = {
-        disabled = true
-        auth     = "AUTH_MUTUAL_TLS"
+      # istio_config = {
+      #   disabled = true
+      #   auth     = "AUTH_MUTUAL_TLS"
       }
     }
     cluster_autoscaling = {
@@ -727,6 +727,7 @@ snapshot_policies = {
   #   }
   # }
 }
+
 
 # compute disc
 #google_compute_forwarding_rule
