@@ -354,3 +354,32 @@ module "container_cluster" {
   }
   workload_identity_config = each.value.workload_identity_config
 }
+
+module "snapshot_policy" {
+  source = "./modules/compute_resource_policy"
+  for_each = var.snapshot_policies
+
+  project_id = var.project_id
+  region     = var.region
+  name       = each.key
+  snapshot_schedule_policy = each.value
+}
+
+# module "container_node_pool" {
+#   source = "./modules/container_node_pool"
+
+#   project         = var.project
+#   cluster         = var.cluster
+#   location        = var.location
+#   name            = var.name
+#   node_count      = var.node_count
+#   node_locations  = var.node_locations
+#   version         = var.version
+#   initial_node_count = var.initial_node_count
+
+#   autoscaling         = var.autoscaling
+#   management          = var.management
+#   network_config      = var.network_config
+#   node_config         = var.node_config
+#   upgrade_settings    = var.upgrade_settings
+# }

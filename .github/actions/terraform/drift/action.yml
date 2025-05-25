@@ -33,7 +33,7 @@ runs:
       shell: bash
 
     - name: Terraform Plan
-      run: tterraform plan -detailed-exitcode
+      run: terraform plan -detailed-exitcode
       shell: bash
     #sji todo email/rocketchat or whatever but flag to team somehow
     - name: Handle Drift Exit Code

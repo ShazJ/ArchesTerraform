@@ -273,3 +273,32 @@ variable "clusters" {
     })
   }))
 }
+
+variable "project_id" {
+  type = string
+}
+
+variable "region" {
+  type = string
+}
+
+variable "snapshot_policies" {
+  description = "Map of snapshot policies"
+  type = map(object({
+    retention_policy = object({
+      max_retention_days    = number
+      on_source_disk_delete = string
+    })
+    schedule = object({
+      daily_schedule = object({
+        days_in_cycle = number
+        start_time    = string
+      })
+    })
+    snapshot_properties = object({
+      labels            = map(string)
+      storage_locations = list(string)
+    })
+  }))
+}
+

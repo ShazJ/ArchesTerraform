@@ -23,20 +23,20 @@ repositories = {
 }
 
 addresses = {
-  # istio_prd = {
-  #   name         = "istio-prd" #"istio-default-ingress-coral-prd"
-  #   address      = "34.142.75.32"
-  #   address_type = "EXTERNAL"
-  #   network_tier = "PREMIUM"
-  #   purpose      = "" #"EXTERNAL"
-  # },
-  # istio_stg = {
-  #   name         = "istio-stg" #"istio-default-ingress-coral-stg"
-  #   address      = "34.89.106.198"
-  #   address_type = "EXTERNAL"
-  #   network_tier = "PREMIUM"
-  #   purpose      = "" #"EXTERNAL"
-  # },
+  istio_prd = {
+    name         = "istio-default-ingress-coral-prd"
+    address      = "34.142.75.32"
+    address_type = "EXTERNAL"
+    network_tier = "PREMIUM"
+    purpose      = "" #"EXTERNAL"
+  },
+  istio_stg = {
+    name         = "istio-default-ingress-coral-stg"
+    address      = "34.89.106.198"
+    address_type = "EXTERNAL"
+    network_tier = "PREMIUM"
+    purpose      = "" #"EXTERNAL"
+  },
 }
 
 firewalls = {
@@ -346,8 +346,10 @@ clusters = {
     location           = "europe-west2-a"
     network            = "projects/coral-459111/global/networks/coral-network-prd"
     subnetwork         = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork-prd"
-    node_version       = "1.31.6-gke.1064001"
-    min_master_version = "1.31.6-gke.1064001"
+    node_version       = "1.31.7-gke.1265000"
+    min_master_version = "1.31.7-gke.1265000"
+    initial_node_count = 1
+    remove_default_node_pool = true
     node_config = {
       disk_size_gb    = 50
       disk_type       = "pd-balanced"
@@ -405,10 +407,10 @@ clusters = {
       network_policy_config = {
         disabled = true
       }
-      # istio_config = {
-      #   disabled = true
-      #   auth     = "AUTH_MUTUAL_TLS"
-      # } 
+      istio_config = {
+        disabled = true
+        auth     = "AUTH_MUTUAL_TLS"
+      } 
     }
     cluster_autoscaling = {
       autoscaling_profile = "BALANCED"
@@ -574,10 +576,10 @@ clusters = {
       network_policy_config = {
         disabled = true
       }
-      # istio_config = {
-      #   disabled = true
-      #   auth     = "AUTH_MUTUAL_TLS"
-      # }
+      istio_config = {
+        disabled = true
+        auth     = "AUTH_MUTUAL_TLS"
+      }
     }
     cluster_autoscaling = {
       autoscaling_profile = "BALANCED"
@@ -682,3 +684,29 @@ clusters = {
     }
   }
 }
+
+snapshot_policies = {
+  name    = "corel-postgres"
+  daily = {
+    retention_policy = {
+      max_retention_days    = 14
+      on_source_disk_delete = "APPLY_RETENTION_POLICY"
+    }
+    schedule = {
+      daily_schedule = {
+        days_in_cycle = 1
+        start_time    = "19:00"
+      }
+    }
+    snapshot_properties = {
+      labels = {
+        type = "db"
+      }
+      storage_locations = ["europe-west2"]
+    }
+  }
+}
+
+# compute disc
+#google_compute_forwarding_rule
+#google_compute_target_pool

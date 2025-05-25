@@ -1,0 +1,12 @@
+name: ZAP Security Scan
+description: Run ZAP security scan on GKE-exposed endpoint
+
+runs:
+  using: "composite"
+  steps:
+
+#write something to extract endpoints from the terraform code somehow?
+  - name: Run ZAP on GKE-exposed endpoint
+    uses: zaproxy/action-baseline@v0.10.0
+    with:
+      target: 'http://<your-app-ip>' #sji setup this!
