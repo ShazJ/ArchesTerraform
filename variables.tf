@@ -120,12 +120,16 @@ variable "kms_key_rings" {
 }
 
 variable "clusters" {
-  description = "Map of GKE cluster configurations"
+  description = "Map of GKE cluster configurations for different environments"
   type = map(object({
-    name       = string
-    location   = string
-    network    = string
-    subnetwork = string
+    name                     = string
+    location                 = string
+    node_version             = string
+    min_master_version       = string
+    network                  = string
+    subnetwork               = string
+    initial_node_count       = number
+    remove_default_node_pool = bool
     node_config = object({
       disk_size_gb    = number
       disk_type       = string
@@ -135,14 +139,14 @@ variable "clusters" {
       metadata        = map(string)
       oauth_scopes    = list(string)
       service_account = string
-      labels          = map(string)
-      tags            = list(string)
       shielded_instance_config = object({
         enable_integrity_monitoring = bool
       })
       workload_metadata_config = object({
         mode = string
       })
+      labels = map(string)
+      tags   = list(string)
     })
     ip_allocation_policy = object({
       cluster_secondary_range_name  = string
@@ -151,11 +155,9 @@ variable "clusters" {
       pod_cidr_overprovision_config = object({
         disabled = bool
       })
-      cluster_ipv4_cidr_block  = optional(string)
-      services_ipv4_cidr_block = optional(string)
-      additional_pod_ranges_config = optional(object({
+      additional_pod_ranges_config = object({
         pod_range_names = list(string)
-      }))
+      })
     })
     addons_config = object({
       dns_cache_config = object({
@@ -173,10 +175,10 @@ variable "clusters" {
       network_policy_config = object({
         disabled = bool
       })
-      # istio_config = object({
-      #   disabled = bool
-      #   auth     = string
-      # })
+      istio_config = object({
+        disabled = bool
+        auth     = string
+      })
     })
     cluster_autoscaling = object({
       autoscaling_profile = string
@@ -194,7 +196,6 @@ variable "clusters" {
     })
     description           = string
     enable_shielded_nodes = bool
-    initial_node_count    = number
     logging_config = object({
       enable_components = list(string)
     })
@@ -216,7 +217,6 @@ variable "clusters" {
         display_name = string
       }))
     })
-    min_master_version = string
     monitoring_config = object({
       advanced_datapath_observability_config = object({
         enable_metrics = bool
@@ -234,7 +234,6 @@ variable "clusters" {
         logging_variant = string
       })
     })
-    node_version = string
     notification_config = object({
       pubsub = object({
         enabled = bool
