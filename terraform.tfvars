@@ -519,7 +519,7 @@ clusters = {
         machine_type       = "e2-standard-8"
         disk_size_gb       = 50
         disk_type          = "pd-balanced"
-        image_type         = "COS_containerd"
+        image_type         = "COS_CONTAINERD"
         auto_repair        = true
         auto_upgrade       = true
         min_node_count     = 1
@@ -540,14 +540,14 @@ clusters = {
           "disable-legacy-endpoints" = "true"
         }
         node_taints = []
-      }
-      gpu_type = null
-      shielded_instance_config = {
-        enable_secure_boot          = false
-        enable_integrity_monitoring = true
-      }
-      workload_metadata_config = {
-        mode = "GKE_METADATA"
+        gpu_type    = null
+        shielded_instance_config = {
+          enable_secure_boot          = false
+          enable_integrity_monitoring = true
+        }
+        workload_metadata_config = {
+          mode = "GKE_METADATA"
+        }
       }
     }
   },
@@ -609,6 +609,10 @@ clusters = {
       }
       network_policy_config = {
         disabled = true
+      }
+      istio_config = {
+        disabled = true
+        auth     = "AUTH_MUTUAL_TLS"
       }
     }
     cluster_autoscaling = {
