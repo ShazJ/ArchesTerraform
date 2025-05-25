@@ -53,10 +53,6 @@ resource "google_container_cluster" "cluster" {
     autoscaling_profile = var.cluster_autoscaling.autoscaling_profile
   }
 
-  cluster_telemetry {
-    type = var.cluster_telemetry.type
-  }
-
   database_encryption {
     state    = var.database_encryption.state
     key_name = var.database_encryption.key_name

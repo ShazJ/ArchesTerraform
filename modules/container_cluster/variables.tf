@@ -75,13 +75,6 @@ variable "cluster_autoscaling" {
   })
 }
 
-variable "cluster_telemetry" {
-  description = "Cluster telemetry configuration"
-  type = object({
-    type = string
-  })
-}
-
 variable "database_encryption" {
   description = "Database encryption configuration"
   type = object({
