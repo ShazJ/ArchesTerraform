@@ -686,8 +686,7 @@ clusters = {
 }
 
 snapshot_policies = {
-  name = "corel-postgres"
-  daily = {
+  "coral-postgres" = {
     retention_policy = {
       max_retention_days    = 14
       on_source_disk_delete = "APPLY_RETENTION_POLICY"
@@ -700,11 +699,33 @@ snapshot_policies = {
     }
     snapshot_properties = {
       labels = {
-        type = "db"
+        purpose = "db"
       }
       storage_locations = ["europe-west2"]
     }
-  }
+  } #, archive monthly? sji todo - see Phil
+  # "coral-monthly" = {
+  #   retention_policy = {
+  #     max_retention_days    = 90
+  #     on_source_disk_delete = "KEEP_SNAPSHOTS"
+  #   }
+  #   schedule = {
+  #     weekly_schedule = {
+  #       day_of_weeks = [
+  #         {
+  #           day        = "MONDAY"
+  #           start_time = "02:00"
+  #         }
+  #       ]
+  #     }
+  #   }
+  #   snapshot_properties = {
+  #     labels = {
+  #       purpose = "archive"
+  #     }
+  #     storage_locations = ["europe-west2"]
+  #   }
+  # }
 }
 
 # compute disc

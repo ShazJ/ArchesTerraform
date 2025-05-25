@@ -282,15 +282,35 @@ variable "snapshot_policies" {
       on_source_disk_delete = string
     })
     schedule = object({
-      daily_schedule = object({
+      daily_schedule = optional(object({
         days_in_cycle = number
         start_time    = string
-      })
+      }))
+      hourly_schedule = optional(object({
+        hours_in_cycle = number
+        start_time     = string
+      }))
+      weekly_schedule = optional(object({
+        day_of_weeks = list(object({
+          day        = string
+          start_time = string
+        }))
+      }))
     })
     snapshot_properties = object({
       labels            = map(string)
       storage_locations = list(string)
     })
   }))
+  validation {
+    condition = alltrue([
+      for k, v in var.snapshot_policies : (
+        (v.schedule.daily_schedule != null ? 1 : 0) +
+        (v.schedule.hourly_schedule != null ? 1 : 0) +
+        (v.schedule.weekly_schedule != null ? 1 : 0)
+      ) == 1
+    ])
+    error_message = "Each snapshot policy must specify exactly one of daily_schedule, hourly_schedule, or weekly_schedule."
+  }
 }
 
