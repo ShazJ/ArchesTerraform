@@ -198,10 +198,10 @@ module "container_cluster" {
   node_pool_defaults                = each.value.node_pool_defaults
   notification_config               = each.value.notification_config
   pod_security_policy_config        = each.value.pod_security_policy_config
-  private_cluster_config            = each.value
+  private_cluster_config            = each.value.private_cluster_config
   protect_config                    = each.value.protect_config
-  release_channel                   = each.value
-  security_posture_config           = each.value
+  release_channel                   = each.value.release_channel
+  security_posture_config           = each.value.security_posture_config
   service_external_ips_config       = each.value.service_external_ips_config
   vertical_pod_autoscaling          = each.value.vertical_pod_autoscaling
   workload_identity_config          = each.value.workload_identity_config
@@ -232,7 +232,7 @@ module "gke_node_pools" {
 
 # Enable the container API
 resource "google_project_service" "container_api" {
-  project = "container.googleapis.com"
+  project = var.project_id
   service = "container.googleapis.com"
 }
 
