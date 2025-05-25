@@ -44,10 +44,10 @@ output "router_names" {
 #   value       = { for k, v in module.compute_route : k => v.route_name }
 # }
 
-output "resource_policy_name" {
-  description = "Name of Compute Resource Policy created"
-  value       = module.compute_resource_policy.policy_name
-}
+# output "resource_policy_name" {
+#   description = "Name of Compute Resource Policy created"
+#   value       = module.compute_resource_policy.policy_name
+# }
 
 # output "key_ring_names" {
 #   description = "Map of KMS Key Ring names created"
