@@ -179,8 +179,6 @@ module "container_cluster" {
   subnetwork                        = each.value.subnetwork
   min_master_version                = each.value.min_master_version
   remove_default_node_pool          = each.value.remove_default_node_pool
-  initial_node_count                = each.value.initial_node_count
-  node_config                       = each.value.node_config
   ip_allocation_policy              = each.value.ip_allocation_policy
   addons_config                     = each.value.addons_config
   cluster_autoscaling               = each.value.cluster_autoscaling
@@ -200,10 +198,10 @@ module "container_cluster" {
   node_pool_defaults                = each.value.node_pool_defaults
   notification_config               = each.value.notification_config
   pod_security_policy_config        = each.value.pod_security_policy_config
-  private_cluster_config            = each.value.private_cluster_config
+  private_cluster_config            = each.value
   protect_config                    = each.value.protect_config
-  release_channel                   = each.value.release_channel
-  security_posture_config           = each.value.security_posture_config
+  release_channel                   = each.value
+  security_posture_config           = each.value
   service_external_ips_config       = each.value.service_external_ips_config
   vertical_pod_autoscaling          = each.value.vertical_pod_autoscaling
   workload_identity_config          = each.value.workload_identity_config
@@ -226,6 +224,7 @@ module "gke_node_pools" {
   subnetwork           = each.value.subnetwork
   default_network_tags = ["gke-cluster"]
 
+  depends_on_container_api       = [google_project_service.container_api]
   depends_on_container_resources = [module.container_cluster[each.key]]
 
   node_pools = each.value.node_pools
@@ -233,6 +232,7 @@ module "gke_node_pools" {
 
 # Enable the container API
 resource "google_project_service" "container_api" {
+  project = "container.googleapis.com"
   service = "container.googleapis.com"
 }
 

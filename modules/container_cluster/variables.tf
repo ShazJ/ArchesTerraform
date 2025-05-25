@@ -28,33 +28,6 @@ variable "remove_default_node_pool" {
   type        = bool
 }
 
-variable "initial_node_count" {
-  description = "Initial node count for the default node pool"
-  type        = number
-}
-
-variable "node_config" {
-  description = "Node configuration for the cluster"
-  type = object({
-    disk_size_gb    = number
-    disk_type       = string
-    image_type      = string
-    logging_variant = string
-    machine_type    = string
-    metadata        = map(string)
-    oauth_scopes    = list(string)
-    service_account = string
-    shielded_instance_config = object({
-      enable_integrity_monitoring = bool
-    })
-    workload_metadata_config = object({
-      mode = string
-    })
-    labels = map(string)
-    tags   = list(string)
-  })
-}
-
 variable "ip_allocation_policy" {
   description = "IP allocation policy for the cluster"
   type = object({
@@ -118,7 +91,7 @@ variable "database_encryption" {
 }
 
 variable "default_max_pods_per_node" {
-  description = "Default max pods per node"
+  description = "Default maximum pods per node"
   type        = number
 }
 
@@ -135,7 +108,7 @@ variable "description" {
 }
 
 variable "enable_shielded_nodes" {
-  description = "Enable shielded nodes"
+  description = "Whether to enable shielded nodes"
   type        = bool
 }
 
@@ -147,7 +120,7 @@ variable "logging_config" {
 }
 
 variable "maintenance_policy" {
-  description = "Maintenance policy"
+  description = "Maintenance policy configuration"
   type = object({
     recurring_window = object({
       end_time   = string
@@ -201,7 +174,7 @@ variable "networking_mode" {
 }
 
 variable "node_pool_defaults" {
-  description = "Node pool defaults"
+  description = "Node pool defaults configuration"
   type = object({
     node_config_defaults = object({
       logging_variant = string

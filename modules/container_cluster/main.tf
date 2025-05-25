@@ -1,3 +1,4 @@
+# Define the GKE cluster
 resource "google_container_cluster" "cluster" {
   provider = google-beta
 
@@ -7,44 +8,20 @@ resource "google_container_cluster" "cluster" {
   subnetwork               = var.subnetwork
   min_master_version       = var.min_master_version
   remove_default_node_pool = var.remove_default_node_pool
-  initial_node_count       = var.initial_node_count
 
-  # Explicitly disable default node pool creation
+  # Empty node_pool block to ensure default pool is removed
   node_pool {
     name       = "default-pool"
     node_count = 0
-  }
-
-  node_config {
-    disk_size_gb    = var.node_config.disk_size_gb
-    disk_type       = var.node_config.disk_type
-    image_type      = var.node_config.image_type
-    logging_variant = var.node_config.logging_variant
-    machine_type    = var.node_config.machine_type
-    metadata        = var.node_config.metadata
-    oauth_scopes    = var.node_config.oauth_scopes
-    service_account = var.node_config.service_account
-    labels          = var.node_config.labels
-    tags            = var.node_config.tags
-
-    shielded_instance_config {
-      enable_integrity_monitoring = var.node_config.shielded_instance_config.enable_integrity_monitoring
-    }
-
-    workload_metadata_config {
-      mode = var.node_config.workload_metadata_config.mode
-    }
   }
 
   ip_allocation_policy {
     cluster_secondary_range_name  = var.ip_allocation_policy.cluster_secondary_range_name
     services_secondary_range_name = var.ip_allocation_policy.services_secondary_range_name
     stack_type                    = var.ip_allocation_policy.stack_type
-
     pod_cidr_overprovision_config {
       disabled = var.ip_allocation_policy.pod_cidr_overprovision_config.disabled
     }
-
     additional_pod_ranges_config {
       pod_range_names = var.ip_allocation_policy.additional_pod_ranges_config.pod_range_names
     }
@@ -54,23 +31,18 @@ resource "google_container_cluster" "cluster" {
     dns_cache_config {
       enabled = var.addons_config.dns_cache_config.enabled
     }
-
     gce_persistent_disk_csi_driver_config {
       enabled = var.addons_config.gce_persistent_disk_csi_driver_config.enabled
     }
-
     horizontal_pod_autoscaling {
       disabled = var.addons_config.horizontal_pod_autoscaling.disabled
     }
-
     http_load_balancing {
       disabled = var.addons_config.http_load_balancing.disabled
     }
-
     network_policy_config {
       disabled = var.addons_config.network_policy_config.disabled
     }
-
     istio_config {
       disabled = var.addons_config.istio_config.disabled
       auth     = var.addons_config.istio_config.auth
@@ -132,7 +104,6 @@ resource "google_container_cluster" "cluster" {
       enable_metrics = var.monitoring_config.advanced_datapath_observability_config.enable_metrics
       enable_relay   = var.monitoring_config.advanced_datapath_observability_config.enable_relay
     }
-
     enable_components = var.monitoring_config.enable_components
   }
 
@@ -162,7 +133,6 @@ resource "google_container_cluster" "cluster" {
   private_cluster_config {
     enable_private_nodes   = var.private_cluster_config.enable_private_nodes
     master_ipv4_cidr_block = var.private_cluster_config.master_ipv4_cidr_block
-
     master_global_access_config {
       enabled = var.private_cluster_config.master_global_access_config.enabled
     }
