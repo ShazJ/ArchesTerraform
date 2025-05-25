@@ -1,12 +1,18 @@
 name: ZAP Security Scan
-description: Run ZAP security scan on GKE-exposed endpoint
+description: Run ZAP CLI against one endpoint
+
+inputs:
+  target:
+    description: The URL to scan
+    required: true
 
 runs:
   using: "composite"
   steps:
-
-#write something to extract endpoints from the terraform code somehow?
-  - name: Run ZAP on GKE-exposed endpoint
-    uses: zaproxy/action-baseline@v0.10.0
-    with:
-      target: 'http://<your-app-ip>' #sji setup this!
+    - name: Run ZAP CLI
+      shell: bash
+      run: |
+        echo "Scanning ${{ inputs.target }} with ZAP..."
+        docker run -v $(pwd):/zap/wrk/:rw \
+          -t ghcr.io/zaproxy/zaproxy:stable \
+          zap-baseline.py -t "${{ inputs.target }}" -g gen.conf -r zap_report.html || true
