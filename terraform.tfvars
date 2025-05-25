@@ -52,6 +52,7 @@ firewalls = {
       protocol = "tcp"
     }]
     description = "Encrypt egress"
+    target_tags = []
   },
   k8s_fw = {
     name               = "k8s-fw"
@@ -61,7 +62,6 @@ firewalls = {
     destination_ranges = ["34.89.106.198"]
     source_ranges      = ["0.0.0.0/0"]
     target_tags        = ["gke-k8s-coral-stg-4b674dca-node"]
-    description        = "{\"kubernetes.io/service-name\":\"istio-system/istio-gateway\", \"kubernetes.io/service-ip\":\"34.89.106.198\"}"
     allow = [{
       ports    = ["80", "443", "15021"]
       protocol = "tcp"
@@ -79,7 +79,8 @@ firewalls = {
       protocol = "tcp"
       ports    = ["10250", "443", "15017", "8080", "15000"]
     }]
-    description = "Allow ingress for Coral production GKE cluster"
+    description        = "Allow ingress for Coral production GKE cluster"
+    destination_ranges = []
   },
   coral_stg = {
     name          = "allow-ingress-coral-stg"
@@ -92,10 +93,11 @@ firewalls = {
       protocol = "tcp"
       ports    = ["10250", "443", "15017", "8080", "15000"]
     }]
-    description = "Allow ingress for Coral staging GKE cluster"
+    description        = "Allow ingress for Coral staging GKE cluster"
+    destination_ranges = []
   },
 }
-#sji todo! bucket naming lol
+
 buckets = {
   data_store_prd = {
     name                        = "sjicrl-data-store-prd-eu-west-2-flax"
@@ -105,6 +107,8 @@ buckets = {
     public_access_prevention    = "enforced"
     uniform_bucket_level_access = true
     cors                        = []
+    encryption                  = null
+    logging                     = null
   },
   data_store_uat_prd = {
     name                        = "sjicrl-data-store-uat-eu-west-2-prd"
@@ -113,7 +117,6 @@ buckets = {
     force_destroy               = false
     public_access_prevention    = "inherited"
     uniform_bucket_level_access = true
-    cors                        = []
     cors = [{
       max_age_seconds = 3600
       method          = ["GET"]
@@ -135,8 +138,6 @@ buckets = {
     force_destroy               = false
     public_access_prevention    = "enforced"
     uniform_bucket_level_access = true
-    cors                        = []
-    encryption                  = null
     cors = [{
       max_age_seconds = 3600
       method          = ["GET", "HEAD", "PUT", "POST", "DELETE"]
@@ -160,6 +161,7 @@ buckets = {
     uniform_bucket_level_access = true
     encryption                  = null
     cors                        = []
+    logging                     = null
   },
   log_store = {
     name                        = "sjicrl-log-store-eu-west-2"
@@ -170,9 +172,10 @@ buckets = {
     uniform_bucket_level_access = true
     encryption                  = null
     cors                        = []
+    logging                     = null
   },
   artifacts_us = {
-    name                        = "sjiartifacts-coral-459111-appspot-com" #artifacts.coral-370212.appspot.com
+    name                        = "sjiartifacts-coral-459111-appspot-com"
     location                    = "US"
     storage_class               = "STANDARD"
     force_destroy               = false
@@ -180,9 +183,10 @@ buckets = {
     uniform_bucket_level_access = false
     encryption                  = null
     cors                        = []
+    logging                     = null
   },
   artifacts_eu = {
-    name                        = "sjieu-artifacts-coral-459111-appspot-com" #eu.artifacts.coral-370212.appspot.com
+    name                        = "sjieu-artifacts-coral-459111-appspot-com"
     location                    = "EU"
     storage_class               = "STANDARD"
     force_destroy               = false
@@ -190,6 +194,7 @@ buckets = {
     uniform_bucket_level_access = false
     encryption                  = null
     cors                        = []
+    logging                     = null
   }
 }
 
@@ -200,35 +205,31 @@ service_accounts = {
     description     = "Service account for GKE cluster in production"
     allow_iam_roles = true
     roles = [
-      "container.clusterAdmin",              # Kubernetes Engine Cluster Admin
-      "compute.viewer",                      # Compute Viewer
-      "logging.logWriter",                   # Logs Writer
-      "monitoring.metricWriter",             # Monitoring Metric Writer
-      "artifactregistry.reader",             # Artifact Registry Reader
-      "container.nodeServiceAccount",        # Kubernetes Engine Node Service Account
-      "iam.serviceAccountTokenCreator",      # Service Account Token Creator 
-      "stackdriver.resourceMetadata.writer", # Stackdriver Resource Metadata Writer
-      "storage.objectViewer",                # Storage Object Viewer
-      "container.clusterAdmin",              # Kubernetes Engine Cluster Admin
-      "compute.viewer",                      # Compute Viewer
-      "logging.logWriter",                   # Logs Writer  
-      "monitoring.metricWriter"              # Monitoring Metric Writer 
+      "container.clusterAdmin",
+      "compute.viewer",
+      "logging.logWriter",
+      "monitoring.metricWriter",
+      "artifactregistry.reader",
+      "container.nodeServiceAccount",
+      "iam.serviceAccountTokenCreator",
+      "stackdriver.resourceMetadata.writer",
+      "storage.objectViewer"
     ]
   }
   "arches_k8s_stg" = {
     account_id      = "coral-arches-k8s-coral-stg"
-    display_name    = "Coral Production GKE Service Account"
-    description     = "Service account for GKE cluster in production"
+    display_name    = "Coral Staging GKE Service Account"
+    description     = "Service account for GKE cluster in staging"
     allow_iam_roles = true
     roles = [
-      "artifactregistry.reader",             # Artifact Registry Reader
-      "container.nodeServiceAccount",        # Kubernetes Engine Node Service Account
-      "logging.logWriter",                   # Logs Writer
-      "monitoring.metricWriter",             # Monitoring Metric Writer
-      "stackdriver.resourceMetadata.writer", # Stackdriver Resource Metadata Writer
-      "storage.objectViewer",                # Storage Object Viewer
-      "container.clusterAdmin",              # Kubernetes Engine Cluster Admin
-      "compute.viewer"                       # Compute Viewer    
+      "artifactregistry.reader",
+      "container.nodeServiceAccount",
+      "logging.logWriter",
+      "monitoring.metricWriter",
+      "stackdriver.resourceMetadata.writer",
+      "storage.objectViewer",
+      "container.clusterAdmin",
+      "compute.viewer"
     ]
   }
   "arches_uat_prd" = {
@@ -258,8 +259,8 @@ service_accounts = {
     description     = "Service account for CI"
     allow_iam_roles = true
     roles = [
-      "artifactregistry.admin",    # Artifact Registry Administrator
-      "cloudbuild.builds.builder", # Cloud Build Service Account
+      "artifactregistry.admin",
+      "cloudbuild.builds.builder"
     ]
   }
   "flux_prd" = {
@@ -272,10 +273,9 @@ service_accounts = {
   "gl_ci_prd" = {
     account_id      = "coral-gl-ci-prd"
     display_name    = "Coral Production Data Operations Service Account"
-    allow_iam_roles = false
     description     = "Service account for data operations in production"
-
-    roles = ["bigquery.dataEditor", "storage.objectAdmin"]
+    allow_iam_roles = false
+    roles           = ["bigquery.dataEditor", "storage.objectAdmin"]
   }
   "github-actions" = {
     account_id      = "github-actions"
@@ -304,8 +304,7 @@ kms_key_rings = {
     name       = "data-store-keyring-uat-prd"
     infix_name = "infix1"
     location   = "europe-west2"
-    project_id = "coral-459111" #sji todo! this should be a var
-    #service_account_key = "coral-flux-prd@coral-459111.iam.gserviceaccount.com"
+    project_id = "coral-459111"
     crypto_keys = {
       "data-store-key-uat-prd" = {
         name                = "data-store-key-uat-prd"
@@ -325,8 +324,7 @@ kms_key_rings = {
     name       = "data-store-keyring-uat"
     infix_name = "infix1"
     location   = "europe-west2"
-    project_id = "coral-459111" #sji todo! this should be a var
-    #service_account_key = "coral-arches-uat"
+    project_id = "coral-459111"
     crypto_keys = {
       "data-store-key-uat" = {
         name                = "data-store-key-uat"
@@ -428,8 +426,6 @@ clusters = {
     }
     description           = "Generated by Terraform"
     enable_shielded_nodes = true
-    initial_node_count    = 1
-
     logging_config = {
       enable_components = ["SYSTEM_COMPONENTS", "WORKLOADS"]
     }
@@ -523,11 +519,11 @@ clusters = {
         machine_type       = "e2-standard-8"
         disk_size_gb       = 50
         disk_type          = "pd-balanced"
-        image_type         = "COS_CONTAINERD"
+        image_type         = "COS_containerd"
         auto_repair        = true
         auto_upgrade       = true
         min_node_count     = 1
-        max_node_count     = 10
+        max_node_count     = 2
         initial_node_count = 1
         max_pods_per_node  = 8
         location_policy    = "ANY"
@@ -544,24 +540,26 @@ clusters = {
           "disable-legacy-endpoints" = "true"
         }
         node_taints = []
-        gpu_type    = null
-        shielded_instance_config = {
-          enable_secure_boot          = false
-          enable_integrity_monitoring = true
-        }
-        workload_metadata_config = {
-          mode = "GKE_METADATA"
-        }
+      }
+      gpu_type = null
+      shielded_instance_config = {
+        enable_secure_boot          = false
+        enable_integrity_monitoring = true
+      }
+      workload_metadata_config = {
+        mode = "GKE_METADATA"
       }
     }
   },
   stg = {
-    name               = "k8s-coral-stg"
-    location           = "europe-west2-a"
-    network            = "projects/coral-459111/global/networks/coral-network"
-    subnetwork         = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork"
-    node_version       = "1.31.7-gke.1265000"
-    min_master_version = "1.31.7-gke.1265000"
+    name                     = "k8s-coral-stg"
+    location                 = "europe-west2-a"
+    network                  = "projects/coral-459111/global/networks/coral-network"
+    subnetwork               = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork"
+    node_version             = "1.31.6-gke.1064001"
+    min_master_version       = "1.31.6-gke.1064001"
+    initial_node_count       = 1
+    remove_default_node_pool = true
     node_config = {
       disk_size_gb    = 50
       disk_type       = "pd-standard"
@@ -576,14 +574,14 @@ clusters = {
       shielded_instance_config = {
         enable_integrity_monitoring = true
       }
+      workload_metadata_config = {
+        mode = "GKE_METADATA"
+      }
       labels = {
         TF_used_by  = "k8s-coral-stg"
         TF_used_for = "gke"
       }
       tags = ["gke-k8s-coral-stg-np-tf-cejctx"]
-      workload_metadata_config = {
-        mode = "GKE_METADATA"
-      }
     }
     ip_allocation_policy = {
       cluster_secondary_range_name  = "pod-ranges"
@@ -612,10 +610,6 @@ clusters = {
       network_policy_config = {
         disabled = true
       }
-      # istio_config = {
-      #   disabled = true
-      #   auth     = "AUTH_MUTUAL_TLS"
-      # }
     }
     cluster_autoscaling = {
       autoscaling_profile = "BALANCED"
@@ -633,15 +627,14 @@ clusters = {
     }
     description           = "Generated by Terraform"
     enable_shielded_nodes = true
-    initial_node_count    = 1
     logging_config = {
       enable_components = ["SYSTEM_COMPONENTS", "WORKLOADS"]
     }
     maintenance_policy = {
       recurring_window = {
-        end_time   = "2025-05-11T23:00:00Z"
+        end_time   = "2025-05-25T23:00:00Z"
         recurrence = "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR"
-        start_time = "2025-05-11T19:00:00Z"
+        start_time = "2025-05-25T19:00:00Z"
       }
     }
     master_auth = {
@@ -718,47 +711,47 @@ clusters = {
     workload_identity_config = {
       workload_pool = "coral-459111.svc.id.goog"
     }
-  }
-  node_pools = {
-    stg = {
-      machine_type       = "e2-standard-8"
-      disk_size_gb       = 50
-      disk_type          = "pd-standard"
-      image_type         = "COS_CONTAINERD"
-      auto_repair        = true
-      auto_upgrade       = true
-      min_node_count     = 1
-      max_node_count     = 10
-      initial_node_count = 1
-      max_pods_per_node  = 8
-      location_policy    = "ANY"
-      max_surge          = 1
-      max_unavailable    = 0
-      preemptible        = true
-      spot               = true
-      labels = {
-        "TF_used_by"  = "k8s-coral-stg"
-        "TF_used_for" = "gke"
-      }
-      tags = ["gke-k8s-coral-stg-np-tf-cejctx"]
-      metadata = {
-        "disable-legacy-endpoints" = "true"
-      }
-      node_taints = []
-      gpu_type    = null
-      shielded_instance_config = {
-        enable_secure_boot          = false
-        enable_integrity_monitoring = true
-      }
-      workload_metadata_config = {
-        mode = "GKE_METADATA"
+    node_pools = {
+      stg = {
+        machine_type       = "e2-standard-8"
+        disk_size_gb       = 50
+        disk_type          = "pd-standard"
+        image_type         = "COS_CONTAINERD"
+        auto_repair        = true
+        auto_upgrade       = true
+        min_node_count     = 1
+        max_node_count     = 8
+        initial_node_count = 1
+        max_pods_per_node  = 8
+        location_policy    = "ANY"
+        max_surge          = 1
+        max_unavailable    = 0
+        preemptible        = true
+        spot               = false
+        labels = {
+          "TF_used_by"  = "k8s-coral-stg"
+          "TF_used_for" = "gke"
+        }
+        tags = ["gke-k8s-coral-stg-np-tf-cejctx"]
+        metadata = {
+          "disable-legacy-endpoints" = "true"
+        }
+        node_taints = []
+        gpu_type    = null
+        shielded_instance_config = {
+          enable_secure_boot          = false
+          enable_integrity_monitoring = true
+        }
+        workload_metadata_config = {
+          mode = "GKE_METADATA"
+        }
       }
     }
   }
 }
 
 snapshot_policies = {
-  "coral-postgres" = {
+  coral-postgres = {
     retention_policy = {
       max_retention_days    = 14
       on_source_disk_delete = "APPLY_RETENTION_POLICY"
@@ -775,32 +768,5 @@ snapshot_policies = {
       }
       storage_locations = ["europe-west2"]
     }
-  } #, archive monthly? sji todo - see Phil, maybe not needed also can we chuck anything older than a day into cold? or everything?
-  # "coral-monthly" = {
-  #   retention_policy = {
-  #     max_retention_days    = 90
-  #     on_source_disk_delete = "KEEP_SNAPSHOTS"
-  #   }
-  #   schedule = {
-  #     weekly_schedule = {
-  #       day_of_weeks = [
-  #         {
-  #           day        = "MONDAY"
-  #           start_time = "02:00"
-  #         }
-  #       ]
-  #     }
-  #   }
-  #   snapshot_properties = {
-  #     labels = {
-  #       purpose = "archive"
-  #     }
-  #     storage_locations = ["europe-west2"]
-  #   }
-  # }
+  }
 }
-
-
-# compute disc
-#google_compute_forwarding_rule
-#google_compute_target_pool
