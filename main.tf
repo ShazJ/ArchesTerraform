@@ -328,35 +328,35 @@ module "gke_node_pools" {
 
   for_each = var.clusters
 
-  cluster_name    = each.value.name
-  location        = each.value.location
-  node_version    = each.value.node_version
-  service_account = each.value.node_config.service_account
-  oauth_scopes    = each.value.node_config.oauth_scopes
-  workload_pool   = each.value.workload_identity_config.workload_pool
-  network         = each.value.network
-  subnetwork      = each.value.subnetwork
+  cluster_name         = each.value.name
+  location             = each.value.location
+  node_version         = each.value.node_version
+  service_account      = each.value.node_config.service_account
+  oauth_scopes         = each.value.node_config.oauth_scopes
+  workload_pool        = each.value.workload_identity_config.workload_pool
+  network              = each.value.network
+  subnetwork           = each.value.subnetwork
   default_network_tags = ["gke-cluster"]
 
   depends_on_container_api = [google_project_service.container_api]
 
   node_pools = {
     default = {
-      machine_type      = each.key == "prd" ? "e2-standard-8" : "e2-standard-8"
-      disk_size_gb     = 50
-      disk_type        = each.key == "prd" ? "pd-balanced" : "pd-standard"
-      image_type       = "COS_CONTAINERD"
-      auto_repair      = true
-      auto_upgrade     = true
-      min_node_count   = 1
-      max_node_count   = 10
+      machine_type       = each.key == "prd" ? "e2-standard-8" : "e2-standard-8"
+      disk_size_gb       = 50
+      disk_type          = each.key == "prd" ? "pd-balanced" : "pd-standard"
+      image_type         = "COS_CONTAINERD"
+      auto_repair        = true
+      auto_upgrade       = true
+      min_node_count     = 1
+      max_node_count     = 10
       initial_node_count = 1
-      max_pods_per_node = 8
-      location_policy   = "ANY"
-      max_surge        = 1
-      max_unavailable  = 0
-      preemptible      = each.key == "stg" ? true : false
-      spot             = each.key == "stg" ? true : false
+      max_pods_per_node  = 8
+      location_policy    = "ANY"
+      max_surge          = 1
+      max_unavailable    = 0
+      preemptible        = each.key == "stg" ? true : false
+      spot               = each.key == "stg" ? true : false
       labels = {
         "TF_used_by"  = each.key == "prd" ? "k8s-coral-prd" : "k8s-coral-stg"
         "TF_used_for" = "gke"
@@ -366,7 +366,7 @@ module "gke_node_pools" {
         "disable-legacy-endpoints" = "true"
       }
       node_taints = []
-      gpu_type = null
+      gpu_type    = null
       shielded_instance_config = {
         enable_secure_boot          = false
         enable_integrity_monitoring = true

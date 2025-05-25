@@ -70,11 +70,6 @@ resource "google_container_node_pool" "node_pool" {
     }
   }
 
-  network_config {
-    network    = var.network
-    subnetwork = var.subnetwork
-  }
-
   lifecycle {
     ignore_changes = [initial_node_count]
   }
