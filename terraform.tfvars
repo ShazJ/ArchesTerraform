@@ -23,20 +23,6 @@ repositories = {
 }
 
 addresses = {
-  # istio_prd = {
-  #   name         = "istio-default-ingress-coral-prd"
-  #   address      = "34.142.75.32"
-  #   address_type = "EXTERNAL"
-  #   network_tier = "PREMIUM"
-  #   purpose      = "" #"EXTERNAL"
-  # },
-  # istio_stg = {
-  #   name         = "istio-default-ingress-coral-stg"
-  #   address      = "34.89.106.198"
-  #   address_type = "EXTERNAL"
-  #   network_tier = "PREMIUM"
-  #   purpose      = "" #"EXTERNAL"
-  # },
 }
 
 firewalls = {
@@ -66,7 +52,6 @@ firewalls = {
       ports    = ["80", "443", "15021"]
       protocol = "tcp"
     }]
-    description = "{\"kubernetes.io/service-name\":\"istio-system/istio-gateway\", \"kubernetes.io/service-ip\":\"34.142.75.32\"}"
   },
   coral_prd = {
     name          = "allow-ingress-coral-prd"
@@ -405,10 +390,6 @@ clusters = {
       network_policy_config = {
         disabled = true
       }
-      istio_config = {
-        disabled = true
-        auth     = "AUTH_MUTUAL_TLS"
-      }
     }
     cluster_autoscaling = {
       autoscaling_profile = "BALANCED"
@@ -609,10 +590,6 @@ clusters = {
       }
       network_policy_config = {
         disabled = true
-      }
-      istio_config = {
-        disabled = true
-        auth     = "AUTH_MUTUAL_TLS"
       }
     }
     cluster_autoscaling = {
