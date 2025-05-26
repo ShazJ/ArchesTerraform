@@ -153,11 +153,12 @@ module "compute_router" {
   network    = each.value.network
   subnetwork = each.value.subnetwork
   region     = var.region
-  depends_on = [module.compute_network, module.compute_network_prd]
+  depends_on = [module.compute_subnetwork, module.compute_subnetwork_prd]
 }
 
 module "kms_key_ring" {
   for_each         = var.kms_key_rings
+  depends_on = [ module.service_accounts ]
   source           = "./modules/kms"
   project_id       = var.project_id
   name             = each.value.name
@@ -170,6 +171,7 @@ module "kms_key_ring" {
 # Root module to manage GKE clusters and node pools for multiple environments
 module "container_cluster" {
   source = "./modules/container_cluster"
+  depends_on = [ module.compute_subnetwork, module.compute_subnetwork_prd, module.compute_network, module.compute_network_prd, module.compute_router ]
 
   for_each = var.clusters
 
