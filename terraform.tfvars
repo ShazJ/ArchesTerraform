@@ -1,35 +1,35 @@
-project_id    = "coral-459111"
-project_infix = "coral"
-location      = "europe-west2"
-region        = "europe-west2"
-format        = "DOCKER"
-mode          = "STANDARD_REPOSITORY"
+project_id = "coral-459111"
+location   = "europe-west2"
+region     = "europe-west2"
+format     = "DOCKER"
+mode       = "STANDARD_REPOSITORY"
 
 repositories = {
   arches = {
     repository_id          = "arches"
-    description            = "Core Arches images for ${var.project_infix} (see *static* for deployable)"
+    description            = "Core Arches images for Coral (see *static* for deployable)"
     cleanup_policy_dry_run = true
   },
   arches_prd = {
     repository_id          = "arches-prd"
-    description            = "Core Arches images for ${var.project_infix} (see *static* for deployable)"
+    description            = "Core Arches images for Coral (see *static* for deployable)"
     cleanup_policy_dry_run = true
   },
   archesdata_prd = {
     repository_id          = "archesdata-prd"
-    description            = "Core Arches images for ${var.project_infix} (see *static* for deployable)"
+    description            = "Core Arches images for Coral (see *static* for deployable)"
     cleanup_policy_dry_run = true
   }
 }
 
 addresses = {
+
 }
 
 firewalls = {
   letsencrpt_egress = {
     name               = "letsencrpt-egress"
-    network            = "https://www.googleapis.com/compute/v1/projects/${var.project_id}/global/networks/${var.project_infix}-network"
+    network            = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/coral-network"
     direction          = "EGRESS"
     priority           = 1000
     destination_ranges = ["0.0.0.0/0"]
@@ -43,43 +43,43 @@ firewalls = {
   },
   k8s_fw = {
     name               = "k8s-fw"
-    network            = "https://www.googleapis.com/compute/v1/projects/${var.project_id}/global/networks/${var.project_infix}-network"
+    network            = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/coral-network"
     direction          = "INGRESS"
     priority           = 1000
     destination_ranges = ["34.89.106.198"]
     source_ranges      = ["0.0.0.0/0"]
-    target_tags        = ["gke-k8s-${var.project_infix}-stg-4b674dca-node"]
+    target_tags        = ["gke-k8s-coral-stg-4b674dca-node"]
     allow = [{
       ports    = ["80", "443", "15021"]
       protocol = "tcp"
     }]
   },
-  prd = {
-    name          = "allow-ingress-${var.project_infix}-prd"
-    network       = "https://www.googleapis.com/compute/v1/projects/${var.project_id}/global/networks/${var.project_infix}-network-prd"
+  coral_prd = {
+    name          = "allow-ingress-coral-prd"
+    network       = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/coral-network-prd"
     direction     = "INGRESS"
     priority      = 1000
     source_ranges = ["172.16.0.0/28"]
-    target_tags   = ["gke-k8s-${var.project_infix}-prd-np-tf-8r35wt"]
+    target_tags   = ["gke-k8s-coral-prd-np-tf-8r35wt"]
     allow = [{
       protocol = "tcp"
       ports    = ["10250", "443", "15017", "8080", "15000"]
     }]
-    description        = "Allow ingress for ${var.project_infix} production GKE cluster"
+    description        = "Allow ingress for Coral production GKE cluster"
     destination_ranges = []
   },
-  stg = {
-    name          = "allow-ingress-${var.project_infix}-stg"
-    network       = "https://www.googleapis.com/compute/v1/projects/${var.project_id}/global/networks/${var.project_infix}-network"
+  coral_stg = {
+    name          = "allow-ingress-coral-stg"
+    network       = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/coral-network"
     direction     = "INGRESS"
     priority      = 1000
     source_ranges = ["172.16.0.0/28"]
-    target_tags   = ["gke-k8s-${var.project_infix}-stg-np-tf-cejctx"]
+    target_tags   = ["gke-k8s-coral-stg-np-tf-cejctx"]
     allow = [{
       protocol = "tcp"
       ports    = ["10250", "443", "15017", "8080", "15000"]
     }]
-    description        = "Allow ingress for ${var.project_infix} staging GKE cluster"
+    description        = "Allow ingress for Coral staging GKE cluster"
     destination_ranges = []
   },
 }
@@ -110,7 +110,7 @@ buckets = {
       response_header = ["Content-Type"]
     }]
     encryption = {
-      default_kms_key_name = "projects/${var.project_id}/locations/europe-west2/keyRings/data-store-keyring-uat-prd/cryptoKeys/data-store-key-uat-prd"
+      default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat-prd/cryptoKeys/data-store-key-uat-prd"
     }
     logging = {
       log_bucket        = "log-store-eu-west-2"
@@ -131,7 +131,7 @@ buckets = {
       response_header = ["*"]
     }]
     encryption = {
-      default_kms_key_name = "projects/${var.project_id}/locations/europe-west2/keyRings/data-store-keyring-uat/cryptoKeys/data-store-key-uat"
+      default_kms_key_name = "projects/coral-459111/locations/europe-west2/keyRings/data-store-keyring-uat/cryptoKeys/data-store-key-uat"
     }
     logging = {
       log_bucket        = "log-store-eu-west-2"
@@ -161,7 +161,7 @@ buckets = {
     logging                     = null
   },
   artifacts_us = {
-    name                        = "sjiartifacts-${var.project_id}-appspot-com"
+    name                        = "sjiartifacts-coral-459111-appspot-com"
     location                    = "US"
     storage_class               = "STANDARD"
     force_destroy               = false
@@ -172,7 +172,7 @@ buckets = {
     logging                     = null
   },
   artifacts_eu = {
-    name                        = "sjieu-artifacts-${var.project_id}-appspot-com"
+    name                        = "sjieu-artifacts-coral-459111-appspot-com"
     location                    = "EU"
     storage_class               = "STANDARD"
     force_destroy               = false
@@ -186,8 +186,8 @@ buckets = {
 
 service_accounts = {
   "arches_k8s_prd" = {
-    account_id      = "${var.project_infix}-arches-k8s-${var.project_infix}-prd"
-    display_name    = "${var.project_infix} Production GKE Service Account"
+    account_id      = "coral-arches-k8s-coral-prd"
+    display_name    = "Coral Production GKE Service Account"
     description     = "Service account for GKE cluster in production"
     allow_iam_roles = true
     roles = [
@@ -203,8 +203,8 @@ service_accounts = {
     ]
   }
   "arches_k8s_stg" = {
-    account_id      = "${var.project_infix}-arches-k8s-${var.project_infix}-stg"
-    display_name    = "${var.project_infix} Staging GKE Service Account"
+    account_id      = "coral-arches-k8s-coral-stg"
+    display_name    = "Coral Staging GKE Service Account"
     description     = "Service account for GKE cluster in staging"
     allow_iam_roles = true
     roles = [
@@ -219,29 +219,29 @@ service_accounts = {
     ]
   }
   "arches_uat_prd" = {
-    account_id      = "${var.project_infix}-arches-uat-prd"
-    display_name    = "${var.project_infix} Production Arches Service Account"
-    description     = "Service account for ${var.project_infix} production Arches"
+    account_id      = "coral-arches-uat-prd"
+    display_name    = "Coral Production Arches Service Account"
+    description     = "Service account for Coral production Arches"
     allow_iam_roles = false
     roles           = ["storage.objectAdmin"]
   }
   "arches_uat" = {
-    account_id      = "${var.project_infix}-arches-uat"
-    display_name    = "${var.project_infix} UAT Arches Service Account"
-    description     = "Service account for ${var.project_infix} UAT Arches"
+    account_id      = "coral-arches-uat"
+    display_name    = "Coral UAT Arches Service Account"
+    description     = "Service account for Coral UAT Arches"
     allow_iam_roles = false
     roles           = ["storage.objectAdmin", "cloudkms.cryptoKeyEncrypterDecrypter"]
   }
   "ci_prd" = {
-    account_id      = "${var.project_infix}-ci-prd"
-    display_name    = "${var.project_infix} Production CI Service Account"
+    account_id      = "coral-ci-prd"
+    display_name    = "Coral Production CI Service Account"
     description     = "Service account for CI in production"
     allow_iam_roles = false
     roles           = ["compute.admin", "storage.admin", "container.admin"]
   }
   "ci" = {
-    account_id      = "${var.project_infix}-ci"
-    display_name    = "${var.project_infix} CI Service Account"
+    account_id      = "coral-ci"
+    display_name    = "Coral CI Service Account"
     description     = "Service account for CI"
     allow_iam_roles = true
     roles = [
@@ -250,15 +250,15 @@ service_accounts = {
     ]
   }
   "flux_prd" = {
-    account_id      = "${var.project_infix}-flux-prd"
-    display_name    = "${var.project_infix} Production Flux Service Account"
+    account_id      = "coral-flux-prd"
+    display_name    = "Coral Production Flux Service Account"
     description     = "Service account for Flux in production"
     allow_iam_roles = false
     roles           = ["container.developer", "cloudkms.cryptoKeyEncrypterDecrypter"]
   }
   "gl_ci_prd" = {
-    account_id      = "${var.project_infix}-gl-ci-prd"
-    display_name    = "${var.project_infix} Production Data Operations Service Account"
+    account_id      = "coral-gl-ci-prd"
+    display_name    = "Coral Production Data Operations Service Account"
     description     = "Service account for data operations in production"
     allow_iam_roles = false
     roles           = ["bigquery.dataEditor", "storage.objectAdmin"]
@@ -274,14 +274,14 @@ service_accounts = {
 
 routers = {
   prd = {
-    name       = "${var.project_infix}-network-router-prd"
-    network    = "https://www.googleapis.com/compute/v1/projects/${var.project_id}/global/networks/${var.project_infix}-network-prd"
-    subnetwork = "https://www.googleapis.com/compute/v1/projects/${var.project_id}/regions/europe-west2/subnetworks/${var.project_infix}-subnetwork-prd"
+    name       = "coral-network-router-prd"
+    network    = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/coral-network-prd"
+    subnetwork = "https://www.googleapis.com/compute/v1/projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork-prd"
   },
   stg = {
-    name       = "${var.project_infix}-network-router"
-    network    = "https://www.googleapis.com/compute/v1/projects/${var.project_id}/global/networks/${var.project_infix}-network"
-    subnetwork = "https://www.googleapis.com/compute/v1/projects/${var.project_id}/regions/europe-west2/subnetworks/${var.project_infix}-subnetwork"
+    name       = "coral-network-router"
+    network    = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/coral-network"
+    subnetwork = "https://www.googleapis.com/compute/v1/projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork"
   }
 }
 
@@ -290,7 +290,7 @@ kms_key_rings = {
     name       = "data-store-keyring-uat-prd"
     infix_name = "infix1"
     location   = "europe-west2"
-    project_id = "${var.project_id}"
+    project_id = "coral-459111"
     crypto_keys = {
       "data-store-key-uat-prd" = {
         name                = "data-store-key-uat-prd"
@@ -310,7 +310,7 @@ kms_key_rings = {
     name       = "data-store-keyring-uat"
     infix_name = "infix1"
     location   = "europe-west2"
-    project_id = "${var.project_id}"
+    project_id = "coral-459111"
     crypto_keys = {
       "data-store-key-uat" = {
         name                = "data-store-key-uat"
@@ -326,10 +326,10 @@ kms_key_rings = {
 
 clusters = {
   prd = {
-    name                     = "k8s-${var.project_infix}-prd"
+    name                     = "k8s-coral-prd"
     location                 = "europe-west2-a"
-    network                  = "projects/${var.project_id}/global/networks/${var.project_infix}-network-prd"
-    subnetwork               = "projects/${var.project_id}/regions/europe-west2/subnetworks/${var.project_infix}-subnetwork-prd"
+    network                  = "projects/coral-459111/global/networks/coral-network-prd"
+    subnetwork               = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork-prd"
     node_version             = "1.31.7-gke.1265000"
     min_master_version       = "1.31.7-gke.1265000"
     initial_node_count       = 1
@@ -351,7 +351,7 @@ clusters = {
         "https://www.googleapis.com/auth/servicecontrol",
         "https://www.googleapis.com/auth/trace.append"
       ]
-      service_account = "${var.project_infix}-arches-k8s-${var.project_infix}-prd@${var.project_id}.iam.gserviceaccount.com"
+      service_account = "coral-arches-k8s-coral-prd@coral-459111.iam.gserviceaccount.com"
       shielded_instance_config = {
         enable_integrity_monitoring = true
       }
@@ -359,10 +359,10 @@ clusters = {
         mode = "GKE_METADATA"
       }
       labels = {
-        TF_used_by  = "k8s-${var.project_infix}-prd"
+        TF_used_by  = "k8s-coral-prd"
         TF_used_for = "gke"
       }
-      tags = ["gke-k8s-${var.project_infix}-prd-np-tf-cejctx"]
+      tags = ["gke-k8s-coral-prd-np-tf-cejctx"]
     }
     ip_allocation_policy = {
       cluster_secondary_range_name  = "pod-ranges"
@@ -372,7 +372,7 @@ clusters = {
         disabled = false
       }
       additional_pod_ranges_config = {
-        pod_range_names = ["gke-${var.project_infix}-cluster-pods-f3c8dd1b"]
+        pod_range_names = ["gke-coral-cluster-pods-f3c8dd1b"]
       }
     }
     addons_config = {
@@ -494,7 +494,7 @@ clusters = {
       enabled = false
     }
     workload_identity_config = {
-      workload_pool = "${var.project_id}.svc.id.goog"
+      workload_pool = "coral-459111.svc.id.goog"
     }
     node_pools = {
       prd = {
@@ -514,10 +514,10 @@ clusters = {
         preemptible        = false
         spot               = false
         labels = {
-          "TF_used_by"  = "k8s-${var.project_infix}-prd"
+          "TF_used_by"  = "k8s-coral-prd"
           "TF_used_for" = "gke"
         }
-        tags = ["gke-k8s-${var.project_infix}-prd-np-tf-cejctx"]
+        tags = ["gke-k8s-coral-prd-np-tf-cejctx"]
         metadata = {
           "disable-legacy-endpoints" = "true"
         }
@@ -534,10 +534,10 @@ clusters = {
     }
   },
   stg = {
-    name                     = "k8s-${var.project_infix}-stg"
+    name                     = "k8s-coral-stg"
     location                 = "europe-west2-a"
-    network                  = "projects/${var.project_id}/global/networks/${var.project_infix}-network"
-    subnetwork               = "projects/${var.project_id}/regions/europe-west2/subnetworks/${var.project_infix}-subnetwork"
+    network                  = "projects/coral-459111/global/networks/coral-network"
+    subnetwork               = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork"
     node_version             = "1.31.7-gke.1265000"
     min_master_version       = "1.31.7-gke.1265000"
     initial_node_count       = 1
@@ -552,7 +552,7 @@ clusters = {
         disable-legacy-endpoints = "true"
       }
       oauth_scopes    = ["https://www.googleapis.com/auth/cloud-platform"]
-      service_account = "${var.project_infix}-arches-k8s-${var.project_infix}-stg@${var.project_id}.iam.gserviceaccount.com"
+      service_account = "coral-arches-k8s-coral-stg@coral-459111.iam.gserviceaccount.com"
       shielded_instance_config = {
         enable_integrity_monitoring = true
       }
@@ -560,10 +560,10 @@ clusters = {
         mode = "GKE_METADATA"
       }
       labels = {
-        TF_used_by  = "k8s-${var.project_infix}-stg"
+        TF_used_by  = "k8s-coral-stg"
         TF_used_for = "gke"
       }
-      tags = ["gke-k8s-${var.project_infix}-stg-np-tf-cejctx"]
+      tags = ["gke-k8s-coral-stg-np-tf-cejctx"]
     }
     ip_allocation_policy = {
       cluster_secondary_range_name  = "pod-ranges"
@@ -573,7 +573,7 @@ clusters = {
         disabled = false
       }
       additional_pod_ranges_config = {
-        pod_range_names = ["gke-${var.project_infix}-cluster-pods-f3c8dd1b"]
+        pod_range_names = ["gke-coral-cluster-pods-f3c8dd1b"]
       }
     }
     addons_config = {
@@ -691,7 +691,7 @@ clusters = {
       enabled = false
     }
     workload_identity_config = {
-      workload_pool = "${var.project_id}.svc.id.goog"
+      workload_pool = "coral-459111.svc.id.goog"
     }
     node_pools = {
       stg = {
@@ -711,10 +711,10 @@ clusters = {
         preemptible        = true
         spot               = false
         labels = {
-          "TF_used_by"  = "k8s-${var.project_infix}-stg"
+          "TF_used_by"  = "k8s-coral-stg"
           "TF_used_for" = "gke"
         }
-        tags = ["gke-k8s-${var.project_infix}-stg-np-tf-cejctx"]
+        tags = ["gke-k8s-coral-stg-np-tf-cejctx"]
         metadata = {
           "disable-legacy-endpoints" = "true"
         }
