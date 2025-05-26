@@ -1,7 +1,5 @@
 name: Security Scanning
 
-# TODO
-
 on:
   push:
     branches: 

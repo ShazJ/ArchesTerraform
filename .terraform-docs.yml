@@ -3,7 +3,7 @@ version: 0.20.0
 # Output configuration
 output-file: README.md
 output-format: markdown document
-output-mode: inject  # updates a section in README.md instead of overwriting
+output-mode: inject  # update between <!-- BEGIN_TF_DOCS --> and <!-- END_TF_DOCS -->
 
 # Sections to include
 sections:
@@ -24,7 +24,7 @@ sort:
   enabled: true
   criteria: name
 
-# Settings for inputs and outputs
+# Input/output formatting
 settings:
   anchor: true
   color: true

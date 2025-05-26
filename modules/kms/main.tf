@@ -47,7 +47,7 @@ resource "google_kms_crypto_key" "crypto_key" {
   rotation_period = "100000s"
 
   lifecycle {
-    prevent_destroy = false
+    prevent_destroy = false #true sji todo
   }
 }
 

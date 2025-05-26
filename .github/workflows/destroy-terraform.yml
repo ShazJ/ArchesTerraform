@@ -1,21 +1,12 @@
 name: Terraform Destroy
 
-# on: sji!
-#     workflow_run:
-#       workflows: ["Security Scan"] sonar?!
-#       types:
-#         - completed
 on:
-  # push:
-  #   branches:
-  #     - dev
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-# iif: == 'success' sji! }}
   terraform-destroy:
     name: Terraform Destroy
     runs-on: ubuntu-latest
