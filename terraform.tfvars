@@ -119,7 +119,7 @@ firewalls = {
   },
   k8s_fw = {
     name               = "k8s-fw"
-    description = "Kubernetes traffic"
+    description        = "Kubernetes traffic"
     network            = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/coral-network"
     direction          = "INGRESS"
     priority           = 1000
