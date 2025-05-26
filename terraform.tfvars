@@ -1,9 +1,9 @@
-project_id = "coral-459111"
+project_id    = "coral-459111"
 project_infix = "coral"
-location   = "europe-west2"
-region     = "europe-west2"
-format     = "DOCKER"
-mode       = "STANDARD_REPOSITORY"
+location      = "europe-west2"
+region        = "europe-west2"
+format        = "DOCKER"
+mode          = "STANDARD_REPOSITORY"
 
 repositories = {
   arches = {
@@ -733,7 +733,7 @@ clusters = {
 }
 
 snapshot_policies = {
-  ${var.project_infix}-postgres = {
+  coral-postgres = {
     retention_policy = {
       max_retention_days    = 14
       on_source_disk_delete = "APPLY_RETENTION_POLICY"
