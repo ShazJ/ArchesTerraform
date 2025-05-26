@@ -516,7 +516,7 @@ clusters = {
     }
     node_pools = {
       prd = {
-        machine_type       = "e2-standard-8"
+        machine_type       = "e2-standard-4" #"e2-standard-8"
         disk_size_gb       = 50
         disk_type          = "pd-balanced"
         image_type         = "COS_CONTAINERD"
@@ -524,7 +524,7 @@ clusters = {
         auto_upgrade       = true
         min_node_count     = 1
         max_node_count     = 8
-        initial_node_count = 7
+        initial_node_count = 1 #7
         max_pods_per_node  = 64
         location_policy    = "ANY"
         max_surge          = 1
