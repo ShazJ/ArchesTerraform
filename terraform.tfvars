@@ -46,6 +46,7 @@ networks = {
 subnetworks = {
   subnet_stg = {
     name                       = "coral-subnetwork"
+    project_id                 = "coral-459111"
     region                     = "europe-west1"
     ip_cidr_range              = "10.2.0.0/16"
     private_ip_google_access   = true
@@ -75,6 +76,7 @@ subnetworks = {
   }
   subnet_prd = {
     name                       = "coral-subnetwork-prd"
+    project_id                 = "coral-459111"
     region                     = "europe-west1"
     ip_cidr_range              = "10.2.0.0/16"
     private_ip_google_access   = true
