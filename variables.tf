@@ -36,6 +36,7 @@ variable "networks" {
   description = "Map of networks to create"
   type = map(object({
     name                                      = string
+    project_id                                = string
     auto_create_subnetworks                   = bool
     routing_mode                              = string
     network_firewall_policy_enforcement_order = string
@@ -45,9 +46,19 @@ variable "networks" {
 variable "subnetworks" {
   description = "Map of subnetworks to create"
   type = map(object({
-    name                     = string
-    ip_cidr_range            = string
-    private_ip_google_access = bool
+    name                       = string
+    project_id                 = string
+    region                     = string
+    network                    = string
+    ip_cidr_range              = string
+    private_ip_google_access   = bool
+    private_ipv6_google_access = string
+    purpose                    = string
+    stack_type                 = string # "IPV4_ONLY", "DUAL_STACK", or "IPV6_ONLY"
+    secondary_ip_ranges = optional(list(object({
+      range_name    = string
+      ip_cidr_range = string
+    })), [])
   }))
 }
 
