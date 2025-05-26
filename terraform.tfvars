@@ -29,12 +29,14 @@ addresses = {
 networks = {
   coral_network_stg = {
     name                                      = "coral-network"
+    project_id                                = "coral-459111"
     auto_create_subnetworks                   = false
     routing_mode                              = "REGIONAL"
     network_firewall_policy_enforcement_order = "AFTER_CLASSIC_FIREWALL"
   },
   coral_network_prd = {
     name                                      = "coral-network-prd"
+    project_id                                = "coral-459111"
     auto_create_subnetworks                   = false
     routing_mode                              = "REGIONAL"
     network_firewall_policy_enforcement_order = "AFTER_CLASSIC_FIREWALL"
