@@ -26,6 +26,81 @@ addresses = {
 
 }
 
+networks = {
+  coral_network_stg = {
+    name                                      = "coral-network"
+    auto_create_subnetworks                   = false
+    routing_mode                              = "REGIONAL"
+    network_firewall_policy_enforcement_order = "AFTER_CLASSIC_FIREWALL"
+  },
+  coral_network_prd = {
+    name                                      = "coral-network-prd"
+    auto_create_subnetworks                   = false
+    routing_mode                              = "REGIONAL"
+    network_firewall_policy_enforcement_order = "AFTER_CLASSIC_FIREWALL"
+  }
+}
+
+subnetworks = {
+  subnet_stg = {
+    region                     = "europe-west1"
+    ip_cidr_range              = "10.2.0.0/16"
+    private_ip_google_access   = true
+    private_ipv6_google_access = "DISABLE_GOOGLE_ACCESS"
+    purpose                    = "PRIVATE"
+    stack_type                 = "IPV4_ONLY"
+    network                    = "coral-network" # matches key in `networks`
+
+    secondary_ip_ranges = [
+      {
+        range_name    = "services-range"
+        ip_cidr_range = "192.168.0.0/20"
+      },
+      {
+        range_name    = "pod-ranges"
+        ip_cidr_range = "192.168.64.0/20"
+      },
+      {
+        range_name    = "gke-coral-cluster-pods-f3c8dd1b"
+        ip_cidr_range = "10.196.0.0/14"
+      },
+      {
+        range_name    = "gke-coral-cluster-services-f3c8dd1b"
+        ip_cidr_range = "10.200.0.0/20"
+      }
+    ]
+  }
+  subnet_prd = {
+    name                       = "coral-subnetwork-prd"
+    region                     = "europe-west1"
+    ip_cidr_range              = "10.2.0.0/16"
+    private_ip_google_access   = true
+    private_ipv6_google_access = "DISABLE_GOOGLE_ACCESS"
+    purpose                    = "PRIVATE"
+    stack_type                 = "IPV4_ONLY"
+    network                    = "coral-network-prd" # matches key in `networks`
+
+    secondary_ip_ranges = [
+      {
+        range_name    = "services-range"
+        ip_cidr_range = "192.168.0.0/20"
+      },
+      {
+        range_name    = "pod-ranges"
+        ip_cidr_range = "192.168.64.0/20"
+      },
+      {
+        range_name    = "gke-coral-cluster-pods-f3c8dd1b"
+        ip_cidr_range = "10.196.0.0/14"
+      },
+      {
+        range_name    = "gke-coral-cluster-services-f3c8dd1b"
+        ip_cidr_range = "10.200.0.0/20"
+      }
+    ]
+  }
+}
+
 firewalls = {
   letsencrpt_egress = {
     name               = "letsencrpt-egress"
@@ -367,13 +442,13 @@ clusters = {
     ip_allocation_policy = {
       cluster_secondary_range_name  = "pod-ranges"
       services_secondary_range_name = "services-range"
-      stack_type                    = "IPV4"
-      pod_cidr_overprovision_config = {
-        disabled = false
-      }
-      additional_pod_ranges_config = {
-        pod_range_names = ["gke-coral-cluster-pods-f3c8dd1b"]
-      }
+      # stack_type                    = "IPV4"
+      # pod_cidr_overprovision_config = {
+      #   disabled = false
+      # }
+      # additional_pod_ranges_config = {
+      #   pod_range_names = ["gke-coral-cluster-pods-f3c8dd1b"]
+      # }
     }
     addons_config = {
       dns_cache_config = {
@@ -568,13 +643,13 @@ clusters = {
     ip_allocation_policy = {
       cluster_secondary_range_name  = "pod-ranges"
       services_secondary_range_name = "services-range"
-      stack_type                    = "IPV4"
-      pod_cidr_overprovision_config = {
-        disabled = false
-      }
-      additional_pod_ranges_config = {
-        pod_range_names = ["gke-coral-cluster-pods-f3c8dd1b"]
-      }
+      # stack_type                    = "IPV4"
+      # pod_cidr_overprovision_config = {
+      #   disabled = false
+      # }
+      # additional_pod_ranges_config = {
+      #   pod_range_names = ["gke-coral-cluster-pods-f3c8dd1b"]
+      # }
     }
     addons_config = {
       dns_cache_config = {

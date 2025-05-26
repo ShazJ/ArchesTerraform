@@ -28,7 +28,7 @@ module "compute_address" {
 }
 
 module "compute_firewall" {
-  depends_on         = [module.compute_subnetwork, module.compute_subnetwork_prd]
+  depends_on         = [module.compute_subnetwork]
   for_each           = var.firewalls
   source             = "./modules/compute_firewall"
   project_id         = var.project_id
@@ -64,85 +64,30 @@ module "service_accounts" {
   service_accounts = var.service_accounts
 }
 
-module "compute_network_prd" {
-  source                                    = "./modules/compute_network"
-  project_id                                = var.project_id
-  name                                      = "coral-network-prd"
-  auto_create_subnetworks                   = false
-  routing_mode                              = "REGIONAL"
-  network_firewall_policy_enforcement_order = "AFTER_CLASSIC_FIREWALL"
-}
-
 module "compute_network" {
+  for_each                                  = var.networks
   source                                    = "./modules/compute_network"
   project_id                                = var.project_id
-  name                                      = "coral-network"
-  auto_create_subnetworks                   = false
-  routing_mode                              = "REGIONAL"
-  network_firewall_policy_enforcement_order = "AFTER_CLASSIC_FIREWALL"
-}
-
-module "compute_subnetwork_prd" {
-  source                     = "./modules/compute_subnetwork"
-  project_id                 = var.project_id
-  name                       = "coral-subnetwork-prd"
-  network                    = module.compute_network_prd.network_self_link
-  region                     = var.region
-  ip_cidr_range              = "10.2.0.0/16"
-  private_ip_google_access   = true
-  private_ipv6_google_access = "DISABLE_GOOGLE_ACCESS"
-  purpose                    = "PRIVATE"
-  stack_type                 = "IPV4_ONLY"
-  secondary_ip_ranges = [
-    {
-      range_name    = "services-range"
-      ip_cidr_range = "192.168.0.0/20"
-    },
-    {
-      range_name    = "pod-ranges"
-      ip_cidr_range = "192.168.64.0/20"
-    },
-    {
-      range_name    = "gke-coral-cluster-pods-f3c8dd1b"
-      ip_cidr_range = "10.196.0.0/14"
-    },
-    {
-      range_name    = "gke-coral-cluster-services-f3c8dd1b"
-      ip_cidr_range = "10.200.0.0/20"
-    }
-  ]
+  name                                      = each.value.name
+  auto_create_subnetworks                   = each.value.auto_create_subnetworks
+  routing_mode                              = each.value.routing_mode
+  network_firewall_policy_enforcement_order = each.value.network_firewall_policy_enforcement_order
 }
 
 module "compute_subnetwork" {
-  depends_on                 = [module.compute_network, module.compute_network_prd]
+  for_each                   = var.subnetworks
   source                     = "./modules/compute_subnetwork"
   project_id                 = var.project_id
-  name                       = "coral-subnetwork"
-  network                    = module.compute_network.network_self_link
+  name                       = each.value.name
   region                     = var.region
-  ip_cidr_range              = "10.2.0.0/16"
-  private_ip_google_access   = true
-  private_ipv6_google_access = "DISABLE_GOOGLE_ACCESS"
-  purpose                    = "PRIVATE"
-  stack_type                 = "IPV4_ONLY"
-  secondary_ip_ranges = [
-    {
-      range_name    = "services-range"
-      ip_cidr_range = "192.168.0.0/20"
-    },
-    {
-      range_name    = "pod-ranges"
-      ip_cidr_range = "192.168.64.0/20"
-    },
-    {
-      range_name    = "gke-coral-cluster-pods-f3c8dd1b"
-      ip_cidr_range = "10.196.0.0/14"
-    },
-    {
-      range_name    = "gke-coral-cluster-services-f3c8dd1b"
-      ip_cidr_range = "10.200.0.0/20"
-    }
-  ]
+  network                    = each.value.network
+  ip_cidr_range              = each.value.ip_cidr_range
+  private_ip_google_access   = each.value.private_ip_google_access
+  depends_on                 = [module.compute_network]
+  private_ipv6_google_access = each.value.private_ipv6_google_access
+  purpose                    = each.value.purpose
+  stack_type                 = each.value.stack_type
+  secondary_ip_ranges        = each.value.secondary_ip_ranges
 }
 
 module "compute_router" {
@@ -153,7 +98,7 @@ module "compute_router" {
   network    = each.value.network
   subnetwork = each.value.subnetwork
   region     = var.region
-  depends_on = [module.compute_subnetwork, module.compute_subnetwork_prd]
+  depends_on = [module.compute_subnetwork]
 }
 
 module "kms_key_ring" {
@@ -171,7 +116,7 @@ module "kms_key_ring" {
 # Root module to manage GKE clusters and node pools for multiple environments
 module "container_cluster" {
   source     = "./modules/container_cluster"
-  depends_on = [module.compute_subnetwork, module.compute_subnetwork_prd, module.compute_network, module.compute_network_prd, module.compute_router]
+  depends_on = [module.compute_subnetwork, module.compute_network, module.compute_router]
 
   for_each = var.clusters
 

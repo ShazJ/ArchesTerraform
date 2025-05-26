@@ -32,6 +32,25 @@ variable "repositories" {
   }))
 }
 
+variable "networks" {
+  description = "Map of networks to create"
+  type = map(object({
+    name                                      = string
+    auto_create_subnetworks                   = bool
+    routing_mode                              = string
+    network_firewall_policy_enforcement_order = string
+  }))
+}
+
+variable "subnetworks" {
+  description = "Map of subnetworks to create"
+  type = map(object({
+    name                     = string
+    ip_cidr_range            = string
+    private_ip_google_access = bool
+  }))
+}
+
 variable "addresses" {
   description = "Map of compute addresses"
   type = map(object({

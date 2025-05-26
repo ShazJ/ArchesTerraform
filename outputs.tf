@@ -18,21 +18,21 @@ output "bucket_names" {
   value       = { for k, v in module.storage_bucket : k => v.bucket_name }
 }
 
-output "network_names" {
-  description = "Names of Compute Networks created"
-  value = {
-    prd = module.compute_network_prd.network_name
-    stg = module.compute_network.network_name
-  }
-}
+# output "network_names" {
+#   description = "Names of Compute Networks created"
+#   value = {
+#     prd = module.compute_network_prd.network_name
+#     stg = module.compute_network.network_name
+#   }
+# }
 
-output "subnetwork_names" {
-  description = "Names of Compute Subnetworks created"
-  value = {
-    prd = module.compute_subnetwork_prd.subnetwork_name
-    stg = module.compute_subnetwork.subnetwork_name
-  }
-}
+# output "subnetwork_names" {
+#   description = "Names of Compute Subnetworks created"
+#   value = {
+#     prd = module.compute_subnetwork_prd.subnetwork_name
+#     stg = module.compute_subnetwork.subnetwork_name
+#   }
+# }
 
 output "router_names" {
   description = "Map of Compute Router names created"
