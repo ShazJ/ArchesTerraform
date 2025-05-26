@@ -43,6 +43,7 @@ networks = {
 
 subnetworks = {
   subnet_stg = {
+    name                       = "coral-subnetwork"
     region                     = "europe-west1"
     ip_cidr_range              = "10.2.0.0/16"
     private_ip_google_access   = true
@@ -118,6 +119,7 @@ firewalls = {
   },
   k8s_fw = {
     name               = "k8s-fw"
+    description = "Kubernetes traffic"
     network            = "https://www.googleapis.com/compute/v1/projects/coral-459111/global/networks/coral-network"
     direction          = "INGRESS"
     priority           = 1000
@@ -442,13 +444,13 @@ clusters = {
     ip_allocation_policy = {
       cluster_secondary_range_name  = "pod-ranges"
       services_secondary_range_name = "services-range"
-      # stack_type                    = "IPV4"
-      # pod_cidr_overprovision_config = {
-      #   disabled = false
-      # }
-      # additional_pod_ranges_config = {
-      #   pod_range_names = ["gke-coral-cluster-pods-f3c8dd1b"]
-      # }
+      stack_type                    = "IPV4"
+      pod_cidr_overprovision_config = {
+        disabled = false
+      }
+      additional_pod_ranges_config = {
+        pod_range_names = ["gke-coral-cluster-pods-f3c8dd1b"]
+      }
     }
     addons_config = {
       dns_cache_config = {
