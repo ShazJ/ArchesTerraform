@@ -3,6 +3,11 @@ variable "project_id" {
   type        = string
 }
 
+variable "project_infix" {
+  description = "The project infox to name resources"
+  type        = string
+}
+
 variable "location" {
   description = "The location (zone or region) for resources"
   type        = string
