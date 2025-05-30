@@ -12,6 +12,7 @@ resource "google_container_cluster" "cluster" {
   deletion_protection = false
 
   # Empty node_pool block to ensure default pool is removed
+  # This is a best practice for production clusters to have full control over node configurations.
   node_pool {
     name       = "default-pool"
     node_count = 0
@@ -108,11 +109,11 @@ resource "google_container_cluster" "cluster" {
 
   networking_mode = var.networking_mode
 
-  node_pool_defaults {
-    node_config_defaults {
-      logging_variant = var.node_pool_defaults.node_config_defaults.logging_variant
-    }
-  }
+  # node_pool_defaults {
+  #   node_config_defaults {
+  #     logging_variant = var.node_pool_defaults.node_config_defaults.logging_variant
+  #   }
+  # }
 
   notification_config {
     pubsub {
