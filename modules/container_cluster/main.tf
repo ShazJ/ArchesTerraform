@@ -7,16 +7,9 @@ resource "google_container_cluster" "cluster" {
   network                  = var.network
   subnetwork               = var.subnetwork
   min_master_version       = var.min_master_version
-  remove_default_node_pool = var.remove_default_node_pool
+  remove_default_node_pool = true #best practice for production clusters to have full control over node configurations
 
   deletion_protection = false
-
-  # Empty node_pool block to ensure default pool is removed
-  # This is a best practice for production clusters to have full control over node configurations.
-  node_pool {
-    name       = "default-pool"
-    node_count = 0
-  }
 
   ip_allocation_policy {
     cluster_secondary_range_name  = var.ip_allocation_policy.cluster_secondary_range_name
