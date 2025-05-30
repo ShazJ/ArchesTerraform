@@ -7,6 +7,7 @@ resource "google_container_cluster" "cluster" {
   network                  = var.network
   subnetwork               = var.subnetwork
   min_master_version       = var.min_master_version
+  initial_node_count       = 1
   remove_default_node_pool = true #best practice for production clusters to have full control over node configurations
 
   deletion_protection = false
@@ -101,12 +102,6 @@ resource "google_container_cluster" "cluster" {
   }
 
   networking_mode = var.networking_mode
-
-  # node_pool_defaults {
-  #   node_config_defaults {
-  #     logging_variant = var.node_pool_defaults.node_config_defaults.logging_variant
-  #   }
-  # }
 
   notification_config {
     pubsub {
