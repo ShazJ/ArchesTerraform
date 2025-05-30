@@ -163,8 +163,8 @@ module "gke_node_pools" {
   cluster_name         = each.value.name
   location             = each.value.location
   node_version         = each.value.node_version
-  service_account      = each.value.node_config.service_account
-  oauth_scopes         = each.value.node_config.oauth_scopes
+  service_account      = each.value.node_pools.default.service_account
+  oauth_scopes         = each.value.node_pools.default.oauth_scopes
   workload_pool        = each.value.workload_identity_config.workload_pool
   network              = each.value.network
   subnetwork           = each.value.subnetwork
