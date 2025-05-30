@@ -827,14 +827,13 @@ snapshot_policies = {
 
 clusters = {
   prd = {
-    name                     = "k8s-coral-prd"
-    location                 = "europe-west2-a"
-    network                  = "projects/coral-459111/global/networks/coral-network-prd"
-    subnetwork               = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork-prd"
-    node_version             = "1.31.7-gke.1265000"
-    min_master_version       = "1.31.7-gke.1265000"
-    initial_node_count       = 1
-    remove_default_node_pool = true
+    name               = "k8s-coral-prd"
+    location           = "europe-west2-a"
+    network            = "projects/coral-459111/global/networks/coral-network-prd"
+    subnetwork         = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork-prd"
+    node_version       = "1.31.7-gke.1265000"
+    min_master_version = "1.31.7-gke.1265000"
+    initial_node_count = 1
 
     ip_allocation_policy = {
       cluster_secondary_range_name  = "pod-ranges"
@@ -1003,14 +1002,13 @@ clusters = {
   },
 
   stg = {
-    name                     = "k8s-coral-stg"
-    location                 = "europe-west2-a"
-    network                  = "projects/coral-459111/global/networks/coral-network"
-    subnetwork               = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork"
-    node_version             = "1.31.7-gke.1265000"
-    min_master_version       = "1.31.7-gke.1265000"
-    initial_node_count       = 1
-    remove_default_node_pool = true
+    name               = "k8s-coral-stg"
+    location           = "europe-west2-a"
+    network            = "projects/coral-459111/global/networks/coral-network"
+    subnetwork         = "projects/coral-459111/regions/europe-west2/subnetworks/coral-subnetwork"
+    node_version       = "1.31.7-gke.1265000"
+    min_master_version = "1.31.7-gke.1265000"
+    initial_node_count = 1
 
     ip_allocation_policy = {
       cluster_secondary_range_name  = "pod-ranges"

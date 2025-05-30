@@ -152,32 +152,13 @@ variable "kms_key_rings" {
 variable "clusters" {
   description = "Map of GKE cluster configurations for different environments"
   type = map(object({
-    name                     = string
-    location                 = string
-    node_version             = string
-    min_master_version       = string
-    network                  = string
-    subnetwork               = string
-    initial_node_count       = number
-    remove_default_node_pool = bool
-    # node_config = object({
-    #   disk_size_gb    = number
-    #   disk_type       = string
-    #   image_type      = string
-    #   logging_variant = string
-    #   machine_type    = string
-    #   metadata        = map(string)
-    #   oauth_scopes    = list(string)
-    #   service_account = string
-    #   shielded_instance_config = object({
-    #     enable_integrity_monitoring = bool
-    #   })
-    #   workload_metadata_config = object({
-    #     mode = string
-    #   })
-    #   labels = map(string)
-    #   tags   = list(string)
-    # })
+    name               = string
+    location           = string
+    node_version       = string
+    min_master_version = string
+    network            = string
+    subnetwork         = string
+    initial_node_count = number
     ip_allocation_policy = object({
       cluster_secondary_range_name  = string
       services_secondary_range_name = string
@@ -291,43 +272,51 @@ variable "clusters" {
     workload_identity_config = object({
       workload_pool = string
     })
-    node_pools = map(object({
-      machine_type       = string
-      disk_size_gb       = number
-      disk_type          = string
-      image_type         = string
-      auto_repair        = bool
-      auto_upgrade       = bool
-      min_node_count     = number
-      max_node_count     = number
-      initial_node_count = number
-      max_pods_per_node  = number
-      location_policy    = string
-      max_surge          = number
-      max_unavailable    = number
-      preemptible        = bool
-      spot               = bool
-      labels             = map(string)
-      tags               = list(string)
-      metadata           = map(string)
-      node_taints = list(object({
-        key    = string
-        value  = string
-        effect = string
-      }))
-      gpu_type = object({
-        type  = string
-        count = number
-      })
-      shielded_instance_config = object({
-        enable_secure_boot          = bool
-        enable_integrity_monitoring = bool
-      })
-      workload_metadata_config = object({
-        mode = string
-      })
-    }))
+    node_config = object({
+      service_account = string
+      oauth_scopes    = list(string)
+    })
   }))
+}
+
+variable "node_pools" {
+  description = "Map of node pools per cluster"
+  type = map(map(object({
+    machine_type       = string
+    disk_size_gb       = number
+    disk_type          = string
+    image_type         = string
+    auto_repair        = bool
+    auto_upgrade       = bool
+    min_node_count     = number
+    max_node_count     = number
+    initial_node_count = number
+    max_pods_per_node  = number
+    location_policy    = string
+    max_surge          = number
+    max_unavailable    = number
+    preemptible        = bool
+    spot               = bool
+    labels             = map(string)
+    tags               = list(string)
+    metadata           = map(string)
+    node_taints = list(object({
+      key    = string
+      value  = string
+      effect = string
+    }))
+    gpu_type = object({
+      type  = string
+      count = number
+    })
+    shielded_instance_config = object({
+      enable_secure_boot          = bool
+      enable_integrity_monitoring = bool
+    })
+    workload_metadata_config = object({
+      mode = string
+    })
+  })))
 }
 
 variable "snapshot_policies" {
