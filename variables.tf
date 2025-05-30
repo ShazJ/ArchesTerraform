@@ -160,24 +160,24 @@ variable "clusters" {
     subnetwork               = string
     initial_node_count       = number
     remove_default_node_pool = bool
-    node_config = object({
-      disk_size_gb    = number
-      disk_type       = string
-      image_type      = string
-      logging_variant = string
-      machine_type    = string
-      metadata        = map(string)
-      oauth_scopes    = list(string)
-      service_account = string
-      shielded_instance_config = object({
-        enable_integrity_monitoring = bool
-      })
-      workload_metadata_config = object({
-        mode = string
-      })
-      labels = map(string)
-      tags   = list(string)
-    })
+    # node_config = object({
+    #   disk_size_gb    = number
+    #   disk_type       = string
+    #   image_type      = string
+    #   logging_variant = string
+    #   machine_type    = string
+    #   metadata        = map(string)
+    #   oauth_scopes    = list(string)
+    #   service_account = string
+    #   shielded_instance_config = object({
+    #     enable_integrity_monitoring = bool
+    #   })
+    #   workload_metadata_config = object({
+    #     mode = string
+    #   })
+    #   labels = map(string)
+    #   tags   = list(string)
+    # })
     ip_allocation_policy = object({
       cluster_secondary_range_name  = string
       services_secondary_range_name = string
